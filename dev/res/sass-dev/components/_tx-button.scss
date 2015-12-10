@@ -7,36 +7,33 @@ $tx-button-hover: $blue;
 $tx-button-background: $blue;
 $tx-button-backgroundHover: $white;
 $tx-button-borderWidth: 2px;
-$tx-button-borderColor: $blue;
+$tx-button-borderColor: $tx-button-background;
 
-%tx-buttonStyle {
-  @extend %tx-buttonHoverStyle;
+%tx-button {
+  @extend %tx-buttonHover;
   height: ($tx-button-height - $tx-button-borderWidth * 2);
   padding: 0 ($tx-button-padding - $tx-button-borderWidth);
   border: $tx-button-borderWidth solid $tx-button-borderColor;
   color: $tx-button-color;
   background: $tx-button-background;
   transition: $UITransition;
-}
 
-%tx-buttonLinkStyle {
-  @extend %tx-buttonStyle;
-  text-decoration: none;
-  line-height: ($tx-button-height - $tx-button-borderWidth * 2);
+  &-link {
+    @extend %tx-button;
+    text-decoration: none;
+    line-height: ($tx-button-height - $tx-button-borderWidth * 2);
 
-  &:visited {
-    color: $tx-button-color;
-    background: $tx-button-background;
+    &:visited {
+      color: $tx-button-color;
+      background: $tx-button-background;
+    }
+
   }
 
-}
-
-%tx-buttonInputStyle {
-  @extend %tx-buttonStyle;
-  cursor: pointer;
-}
-
-%tx-buttonHoverStyle {
+  &-input {
+    @extend %tx-button;
+    cursor: pointer;
+  }
 
   &:hover,
   &:active {

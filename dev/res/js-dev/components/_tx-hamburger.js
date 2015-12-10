@@ -1,14 +1,16 @@
-/* jshint browser:true, jquery:true */
+/* jshint browser:true */
+/* exported initHamburger */
 
-'use strict';
+function initHamburger(object) {
 
-$(document).ready(function() {
+  var activeClassName = ' ' + object.className + '-is-active';
 
-  var NAV_TOGGLE = $('.navToggle');
-
-  NAV_TOGGLE.on('click touch', function(event) {
+  function toggle(event) {
+    var currentClassName = object.className;
     event.preventDefault();
-    NAV_TOGGLE.toggleClass('navToggle-is-active');
-  });
+    object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
+  }
 
-});
+  object.addEventListener('click', toggle);
+
+}

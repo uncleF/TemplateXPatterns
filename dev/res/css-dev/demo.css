@@ -7,45 +7,55 @@
   background: #337ab7;
   -webkit-transition: 0.15s;
   transition: 0.15s; }
-
-.buttonLink {
-  text-decoration: none;
-  line-height: 44px; }
-  .buttonLink:visited {
-    color: #fff;
-    background: #337ab7; }
-
-.buttonInput {
-  cursor: pointer; }
-
-.buttonLink:hover, .buttonInput:hover, .buttonLink:active, .buttonInput:active {
-  color: #337ab7;
-  background: #fff; }
+  .buttonLink {
+    text-decoration: none;
+    line-height: 44px; }
+    .buttonLink:visited {
+      color: #fff;
+      background: #337ab7; }
+  .buttonInput {
+    cursor: pointer; }
+  .buttonLink:hover, .buttonInput:hover, .buttonLink:active, .buttonInput:active {
+    color: #337ab7;
+    background: #fff; }
 
 /* Hamburger */
 .navToggle {
-  width: 25px;
   height: 19px;
   color: #d9534f;
+  text-decoration: none;
   line-height: 19px; }
-  .navToggle:visited, .navToggle:hover, .navToggle:active {
-    color: #d9534f; }
   .navToggle:before, .navToggle:after {
     left: 0; }
   .navToggle:before {
     top: 0; }
   .navToggle:after {
     bottom: 0; }
+  .navToggle:visited, .navToggle:hover, .navToggle:active {
+    color: #d9534f; }
+  .navToggle-is-active:before {
+    -webkit-transform: translateY(8px) rotate(-45deg);
+    -ms-transform: translateY(8px) rotate(-45deg);
+    transform: translateY(8px) rotate(-45deg); }
+  .navToggle-is-active:after {
+    -webkit-transform: translateY(-8px) rotate(-135deg);
+    -ms-transform: translateY(-8px) rotate(-135deg);
+    transform: translateY(-8px) rotate(-135deg); }
 
-.navToggle-is-active:before {
-  -webkit-transform: translateY(8px) rotate(-45deg);
-  -ms-transform: translateY(8px) rotate(-45deg);
-  transform: translateY(8px) rotate(-45deg); }
-
-.navToggle-is-active:after {
-  -webkit-transform: translateY(-8px) rotate(-135deg);
-  -ms-transform: translateY(-8px) rotate(-135deg);
-  transform: translateY(-8px) rotate(-135deg); }
+.navToggleLabel {
+  position: relative;
+  top: 0;
+  display: block;
+  padding: 0 0 0 30px; }
+  .navToggleLabel:before {
+    top: 50%;
+    left: 0;
+    margin: -1.5px 0 0; }
+  .navToggle-is-active .navToggleLabel:before {
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
 
 .navToggle:before, .navToggle:after, .navToggleLabel:before {
   display: block;
@@ -59,22 +69,6 @@
   transform-origin: 50% 50%;
   -webkit-transition: 0.3s;
   transition: 0.3s; }
-
-.navToggleLabel {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  padding: 0 0 0 10px; }
-  .navToggleLabel:before {
-    top: 50%;
-    right: 100%;
-    margin: -1.5px 0 0; }
-
-.navToggle-is-active .navToggleLabel:before {
-  opacity: 0;
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg); }
 
 /* Hightlight */
 .hightlight {
@@ -137,14 +131,46 @@
   margin: -4px 0 0 -4px;
   background: #337ab7; }
 
+/* Overlay */
+.overlay {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(51, 51, 51, 0.75);
+  text-align: center;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translateX(-100%) translateZ(0);
+  transform: translateX(-100%) translateZ(0);
+  -webkit-transition: opacity 0.15s, visibility 0.0001s 0.15s, -webkit-transform 0.0001s 0.15s;
+  transition: opacity 0.15s, visibility 0.0001s 0.15s, transform 0.0001s 0.15s; }
+  .overlay:before {
+    display: inline-block;
+    content: "";
+    position: relative;
+    width: 0;
+    height: 100%;
+    vertical-align: middle; }
+  .overlay-is-active {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transform: translateX(0) translateZ(0);
+    transform: translateX(0) translateZ(0);
+    -webkit-transition: opacity 0.15s, visibility 0.0001s, -webkit-transform 0.0001s;
+    transition: opacity 0.15s, visibility 0.0001s, transform 0.0001s; }
+
 /* Buttons */
 .buttonLink {
   display: inline-block; }
 
 /* Hamburger */
 .navToggle {
-  position: relative;
-  display: block; }
+  display: inline-block;
+  position: relative; }
 
 /* Highlight */
 .narrowTextHolder {
@@ -154,4 +180,6 @@
 .checkboxLabel, .radioLabel {
   display: inline-block;
   border: 0; }
+
+/* Overlay */
 /*# sourceMappingURL=demo.css.map */

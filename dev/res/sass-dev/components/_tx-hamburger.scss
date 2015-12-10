@@ -1,25 +1,19 @@
 /* Hamburger */
 
-$tx-ham-width: 25px;
-$tx-ham-height: 19px;
-$tx-ham-lineWidth: 3px;
-$tx-ham-lineColor: $red;
+$tx-hamburger-width: 25px;
+$tx-hamburger-height: 19px;
+$tx-hamburger-lineWidth: 3px;
+$tx-hamburger-lineColor: $red;
 
-%tx-hamburgerStyle {
-  width: $tx-ham-width;
-  height: $tx-ham-height;
-  color: $tx-ham-lineColor;
-  line-height: $tx-ham-height;
-
-  &:visited,
-  &:hover,
-  &:active {
-    color: $tx-ham-lineColor;
-  }
+%tx-hamburger {
+  height: $tx-hamburger-height;
+  color: $tx-hamburger-lineColor;
+  text-decoration: none;
+  line-height: $tx-hamburger-height;
 
   &:before,
   &:after {
-    @extend %tx-hamburgerLineStyle;
+    @extend %tx-hamburgerLine;
     left: 0;
   }
 
@@ -31,49 +25,55 @@ $tx-ham-lineColor: $red;
     bottom: 0;
   }
 
+  &:visited,
+  &:hover,
+  &:active {
+    color: $tx-hamburger-lineColor;
+  }
+
+  &-is-active {
+
+    &:before {
+      transform: translateY($tx-hamburger-height / 2 - $tx-hamburger-lineWidth / 2) rotate(-45deg);
+    }
+
+    &:after {
+      transform: translateY($tx-hamburger-height / -2 + $tx-hamburger-lineWidth / 2) rotate(-135deg);
+    }
+
+  }
+
 }
 
-%tx-hamburgerActiveStyle {
+%tx-hamburgerleLabel {
+  position: relative;
+  top: 0;
+  display: block;
+  padding: 0 0 0 ($tx-hamburger-width + 5px);
 
   &:before {
-    transform: translateY($tx-ham-height / 2 - $tx-ham-lineWidth / 2) rotate(-45deg);
+    @extend %tx-hamburgerLine;
+    top: 50%;
+    left: 0;
+    margin: ($tx-hamburger-lineWidth / -2) 0 0;
   }
 
-  &:after {
-    transform: translateY($tx-ham-height / -2 + $tx-ham-lineWidth / 2) rotate(-135deg);
+  &-is-active {
+
+    &:before {
+      opacity: 0;
+      transform: rotate(-45deg);
+    }
+
   }
 
 }
 
-%tx-hamburgerLineStyle {
+%tx-hamburgerLine {
   @include tx-pseudo;
-  width: $tx-ham-width;
-  height: $tx-ham-lineWidth;
-  background: $tx-ham-lineColor;
+  width: $tx-hamburger-width;
+  height: $tx-hamburger-lineWidth;
+  background: $tx-hamburger-lineColor;
   transform-origin: 50% 50%;
   transition: $UITransition * 2;
-}
-
-%tx-hamburgerleLabelStyle {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  padding: 0 0 0 10px;
-
-  &:before {
-    @extend %tx-hamburgerLineStyle;
-    top: 50%;
-    right: 100%;
-    margin: ($tx-ham-lineWidth / -2) 0 0;
-  }
-
-}
-
-%tx-hamburgerleLabelActiveStyle {
-
-  &:before {
-    opacity: 0;
-    transform: rotate(-45deg);
-  }
-
 }

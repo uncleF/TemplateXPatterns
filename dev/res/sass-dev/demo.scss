@@ -4,18 +4,19 @@
 @import 'components/tx-hamburger';
 @import 'components/tx-highlight';
 @import 'components/tx-checkRadio';
+@import 'components/tx-overlay';
 
 
 
 /* Buttons */
 
 .buttonLink {
-  @extend %tx-buttonLinkStyle;
+  @extend %tx-button-link;
   @include tx-inline-block;
 }
 
 .buttonInput {
-  @extend %tx-buttonInputStyle;
+  @extend %tx-button-input;
 }
 
 
@@ -23,21 +24,21 @@
 /* Hamburger */
 
 .navToggle {
-  @extend %tx-hamburgerStyle;
+  @extend %tx-hamburger;
+  @include tx-inline-block;
   position: relative;
-  display: block;
 
   &-is-active {
-    @extend %tx-hamburgerActiveStyle;
+    @extend %tx-hamburger-is-active;
   }
 
 }
 
 .navToggleLabel {
-  @extend %tx-hamburgerleLabelStyle;
+  @extend %tx-hamburgerleLabel;
 
   .navToggle-is-active & {
-    @extend %tx-hamburgerleLabelActiveStyle;
+    @extend %tx-hamburgerleLabel-is-active;
   }
 
 }
@@ -47,7 +48,7 @@
 /* Highlight */
 
 .hightlight {
-  @extend %tx-hightlightStyle;
+  @extend %tx-hightlight;
 }
 
 .narrowTextHolder {
@@ -58,25 +59,38 @@
 
 /* Checkbox & Radio Button */
 
-%labelStyle {
+%label {
   @include tx-inline-block;
   border: 0;
 }
 
 .checkbox {
-  @extend %tx-checkboxStyle;
+  @extend %tx-checkbox;
 }
 
 .checkboxLabel {
-  @extend %tx-checkboxLabelStyle;
-  @extend %labelStyle;
+  @extend %tx-checkboxLabel;
+  @extend %label;
 }
 
 .radio {
-  @extend %tx-radioStyle;
+  @extend %tx-radio;
 }
 
 .radioLabel {
-  @extend %tx-radioLabelStyle;
-  @extend %labelStyle;
+  @extend %tx-radioLabel;
+  @extend %label;
+}
+
+
+
+/* Overlay */
+
+.overlay {
+  @extend %tx-overlay;
+
+  &-is-active {
+    @extend %tx-overlay-is-active;
+  }
+
 }
