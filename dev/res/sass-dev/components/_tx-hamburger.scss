@@ -1,0 +1,79 @@
+/* Hamburger */
+
+$tx-ham-width: 25px;
+$tx-ham-height: 19px;
+$tx-ham-lineWidth: 3px;
+$tx-ham-lineColor: $red;
+
+%tx-hamburgerStyle {
+  width: $tx-ham-width;
+  height: $tx-ham-height;
+  color: $tx-ham-lineColor;
+  line-height: $tx-ham-height;
+
+  &:visited,
+  &:hover,
+  &:active {
+    color: $tx-ham-lineColor;
+  }
+
+  &:before,
+  &:after {
+    @extend %tx-hamburgerLineStyle;
+    left: 0;
+  }
+
+  &:before {
+    top: 0;
+  }
+
+  &:after {
+    bottom: 0;
+  }
+
+}
+
+%tx-hamburgerActiveStyle {
+
+  &:before {
+    transform: translateY($tx-ham-height / 2 - $tx-ham-lineWidth / 2) rotate(-45deg);
+  }
+
+  &:after {
+    transform: translateY($tx-ham-height / -2 + $tx-ham-lineWidth / 2) rotate(-135deg);
+  }
+
+}
+
+%tx-hamburgerLineStyle {
+  @include tx-pseudo;
+  width: $tx-ham-width;
+  height: $tx-ham-lineWidth;
+  background: $tx-ham-lineColor;
+  transform-origin: 50% 50%;
+  transition: $UITransition * 2;
+}
+
+%tx-hamburgerleLabelStyle {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  padding: 0 0 0 10px;
+
+  &:before {
+    @extend %tx-hamburgerLineStyle;
+    top: 50%;
+    right: 100%;
+    margin: ($tx-ham-lineWidth / -2) 0 0;
+  }
+
+}
+
+%tx-hamburgerleLabelActiveStyle {
+
+  &:before {
+    opacity: 0;
+    transform: rotate(-45deg);
+  }
+
+}

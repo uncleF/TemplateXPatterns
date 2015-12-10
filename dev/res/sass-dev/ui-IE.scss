@@ -1,0 +1,49 @@
+@import 'project/project';
+
+$tx-IE: true;
+
+
+
+// UI (Internet Explorer < 8)
+
+
+
+/* Forms */
+
+%formRadioCheckboxStyleIE {
+  width: 13px;
+  height: 13px;
+}
+
+[type='checkbox'] {
+  @extend %formRadioCheckboxStyleIE;
+}
+
+[type='radio'] {
+  @extend %formRadioCheckboxStyleIE;
+}
+
+
+
+/* Internet Explorer 6 */
+
+%buttonStyleIE {
+  @include tx-grid-height(1, $lh: false);
+  cursor: hand;
+}
+
+.ie6 {
+
+  input {
+    vertical-align: text-bottom;
+  }
+
+  button {
+    @extend %buttonStyleIE;
+  }
+
+  .button {
+    @extend %buttonStyleIE;
+  }
+
+}

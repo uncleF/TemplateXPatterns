@@ -1,0 +1,16 @@
+.sass-cache
+.tmp
+node_modules
+bower_components
+
+build
+design
+tests
+
+*.zip
+*.sublime-workspace
+
+.DS_Store
+._*.*
+Desktop.ini
+Thumbs.db

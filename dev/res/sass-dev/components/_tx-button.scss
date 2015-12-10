@@ -1,0 +1,47 @@
+/* Button */
+
+$tx-button-height: 48px;
+$tx-button-padding: $gap;
+$tx-button-color: $white;
+$tx-button-hover: $blue;
+$tx-button-background: $blue;
+$tx-button-backgroundHover: $white;
+$tx-button-borderWidth: 2px;
+$tx-button-borderColor: $blue;
+
+%tx-buttonStyle {
+  @extend %tx-buttonHoverStyle;
+  height: ($tx-button-height - $tx-button-borderWidth * 2);
+  padding: 0 ($tx-button-padding - $tx-button-borderWidth);
+  border: $tx-button-borderWidth solid $tx-button-borderColor;
+  color: $tx-button-color;
+  background: $tx-button-background;
+  transition: $UITransition;
+}
+
+%tx-buttonLinkStyle {
+  @extend %tx-buttonStyle;
+  text-decoration: none;
+  line-height: ($tx-button-height - $tx-button-borderWidth * 2);
+
+  &:visited {
+    color: $tx-button-color;
+    background: $tx-button-background;
+  }
+
+}
+
+%tx-buttonInputStyle {
+  @extend %tx-buttonStyle;
+  cursor: pointer;
+}
+
+%tx-buttonHoverStyle {
+
+  &:hover,
+  &:active {
+    color: $tx-button-hover;
+    background: $tx-button-backgroundHover;
+  }
+
+}

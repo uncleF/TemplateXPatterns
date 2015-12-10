@@ -1,0 +1,84 @@
+@import 'project/project';
+
+$tx-IE: true;
+
+
+
+// Basic Typography & Rhythm (Internet Explorer < 8)
+
+
+
+/* Typography & Rhythm (Internet Explorer < 8) */
+
+dfn {
+  font-style: normal;
+}
+
+img {
+  -ms-interpolation-mode: bicubic;
+}
+
+%unorderedListStyleIE {
+  list-style: disc outside;
+}
+
+%orderedListStyleIE {
+  list-style: decimal outside;
+}
+
+.ie6 {
+
+  label {
+    cursor: hand;
+  }
+
+  pre {
+    zoom: 1;
+  }
+
+  ul {
+    @extend %unorderedListStyleIE;
+  }
+
+  ol {
+    @extend %orderedListStyleIE;
+  }
+
+  .u-listReset {
+
+    ul {
+      @extend %unorderedListStyleIE;
+    }
+
+    ol {
+      @extend %orderedListStyleIE;
+    }
+
+    li {
+
+      li {
+        @include tx-rhythm(1, 1);
+      }
+
+    }
+
+  }
+
+  .u-descriptionListReset {
+
+    dl {
+
+      dt {
+        @include tx-rhythm(1);
+      }
+
+      dd {
+        @include tx-rhythm(0, 1, $mlft: 1.5em);
+        font-style: italic;
+      }
+
+    }
+
+  }
+
+}

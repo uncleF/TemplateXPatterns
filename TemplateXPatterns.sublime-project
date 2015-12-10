@@ -1,0 +1,47 @@
+{
+  "folders":
+  [
+    {
+      "folder_exclude_patterns":
+      [
+        "*"
+      ],
+      "file_exclude_patterns":
+      [
+        "*.zip",
+        "*.sublime-project"
+      ],
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: Project",
+      "path": "."
+    }, {
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: HTML",
+      "path": "dev/templates"
+    }, {
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: Sass",
+      "path": "dev/res/sass-dev"
+    }, {
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: JavaScript",
+      "path": "dev/res/js-dev"
+    }, {
+      "file_exclude_patterns":
+      [
+        "*.jpg",
+        "*.gif",
+        "*.png",
+        "*.ico",
+        "*.svg"
+      ],
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: Meta",
+      "path": "meta"
+    }, {
+      "follow_symlinks": true,
+      "name": "TemplateXPatterns: Docs",
+      "path": "docs"
+    }
+  ]
+}
