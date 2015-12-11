@@ -6,7 +6,9 @@ var COMPONENTS_DIR   = 'components'; // Components
 var TEMPLATES_DIR    = 'templates';  // Templates
 var SASS_DIR         = 'sass-dev';   // Sass
 var CSS_DEV_DIR      = 'css-dev';    // Generated CSS
+var JS_DIR           = 'js';         // Production JavaScript
 var JS_DEV_DIR       = 'js-dev';     // JavaScript
+var JS_FILENAME      = 'scripts';    // Production JavaScript Filename
 
 function fillAnArray(array, path) {
   var result = [];
@@ -34,8 +36,10 @@ module.exports = function(grunt) {
           comp: resourcesDirCompiled + SASS_DIR + '/' + COMPONENTS_DIR + '/'
         },
         js: {
+          dir: resourcesDirCompiled + JS_DIR + '/',
           devDir: resourcesDirCompiled + JS_DEV_DIR + '/',
-          comp: resourcesDirCompiled + JS_DEV_DIR + '/' + COMPONENTS_DIR + '/'
+          comp: resourcesDirCompiled + JS_DEV_DIR + '/' + COMPONENTS_DIR + '/',
+          filename: JS_FILENAME
         }
       };
       return this;
@@ -133,6 +137,18 @@ module.exports = function(grunt) {
       }
     },
 
+    browserify: {
+      bundle: {
+        files: {
+          bundleFiles: function() {
+            var bundleFilesObject = {};
+            bundleFilesObject[project.res.js.dir + project.res.js.filename + '.js'] = [project.res.js.devDir + project.res.js.filename + '.js'];
+            return bundleFilesObject;
+          }
+        }.bundleFiles()
+      }
+    },
+
     sass: {
       options: {
         sourceMap: true,
@@ -191,15 +207,19 @@ module.exports = function(grunt) {
       options: {
         spawn: false
       },
-      htmlTemplates: {
-        files: [project.templates.dir + '**/*.html'],
-        tasks: ['processhtml']
+      javascript: {
+        files: [project.res.js.devDir + '**/*.js'],
+        tasks: ['browserify']
       },
       sass: {
         files: [project.res.css.sass + '**/*.scss', project.res.css.sass + '**/*.sass'],
         tasks: ['sass', 'autoprefixer']
       },
-      livereloadWatch: {
+      html: {
+        files: [project.templates.dir + '**/*.html'],
+        tasks: ['processhtml']
+      },
+      livereload: {
         options: {
           livereload: true
         },
@@ -209,9 +229,9 @@ module.exports = function(grunt) {
     concurrent: {
       options: {
         logConcurrentOutput: true,
-        limit: 3
+        limit: 4
       },
-      projectWatch: ['watch:htmlTemplates', 'watch:sass', 'watch:livereloadWatch']
+      projectWatch: ['watch:javascript', 'watch:sass', 'watch:html', 'watch:livereload']
     }
 
   });
@@ -224,7 +244,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('watch-project', ['concurrent']);
 
-  grunt.registerTask('compile', ['processhtml', 'generate-css']);
+  grunt.registerTask('compile', ['browserify', 'generate-css', 'processhtml']);
 
   grunt.registerTask('build', ['compile']);
 

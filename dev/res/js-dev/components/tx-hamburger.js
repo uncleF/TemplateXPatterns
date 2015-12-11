@@ -1,9 +1,9 @@
 /* jshint browser:true */
-/* exported initHamburger */
 
-function initHamburger(object) {
+var HAMBURGER = (function() {
 
-  var activeClassName = ' ' + object.className + '-is-active';
+  var object;
+  var activeClassName;
 
   function toggle(event) {
     var currentClassName = object.className;
@@ -11,6 +11,16 @@ function initHamburger(object) {
     object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
   }
 
-  object.addEventListener('click', toggle);
+  function init(node) {
+    object = node;
+    activeClassName = ' ' + object.className + '-is-active';
+    object.addEventListener('click', toggle);
+  }
 
-}
+  return {
+    init: init
+  };
+
+})();
+
+module.exports = HAMBURGER;
