@@ -1,14 +1,21 @@
 /* jshint browser:true */
 
-var TX_HAMBURGER = (function() {
+var TX_OVERLAY = (function() {
 
   var object;
   var activeClassName;
 
-  function toggle(event) {
+  function toggle() {
     var currentClassName = object.className;
     event.preventDefault();
     object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
+  }
+
+  function clickHandler() {
+    var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+    if (target.className.indexOf(activeClassName) > -1) {
+      toggle();
+    }
   }
 
   function init(node) {
@@ -16,17 +23,18 @@ var TX_HAMBURGER = (function() {
       object = node;
       activeClassName = ' ' + object.className + '-is-active';
       if (document.addEventListener) {
-        object.addEventListener('click', toggle);
+        object.addEventListener('click', clickHandler);
       } else {
-        object.attachEvent('onclick', toggle);
+        object.attachEvent('onclick', clickHandler);
       }
     }
   }
 
   return {
-    init: init
+    init: init,
+    toggle: toggle
   };
 
 })();
 
-module.exports = TX_HAMBURGER;
+module.exports = TX_OVERLAY;

@@ -182,4 +182,15 @@
   border: 0; }
 
 /* Overlay */
-/*# sourceMappingURL=demo.css.map */
+/* Translate */
+.transformThis {
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
+  width: 100px;
+  color: #fff;
+  background: #d9534f;
+  text-align: center;
+  line-height: 100px; }
+/*# sourceMappingURL=styles.css.map */
