@@ -1,6 +1,7 @@
 @import 'project/project';
 
 @import 'components/tx-button';
+@import 'components/tx-field';
 @import 'components/tx-hamburger';
 @import 'components/tx-highlight';
 @import 'components/tx-checkRadio';
@@ -111,4 +112,15 @@
   background: $transformThis-background;
   text-align: center;
   line-height: $transformThis-size;
+}
+
+
+
+/* Field */
+
+.field {
+  $field-width: 300px;
+
+  @extend %tx-field;
+  width: ($field-width - $tx-field-padding * 2);
 }

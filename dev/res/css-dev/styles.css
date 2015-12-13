@@ -19,6 +19,12 @@
     color: #337ab7;
     background: #fff; }
 
+/* Button */
+.field {
+  height: 44px;
+  padding: 0 15px;
+  border: 2px solid #ccc; }
+
 /* Hamburger */
 .navToggle {
   height: 19px;
@@ -193,4 +199,8 @@
   background: #d9534f;
   text-align: center;
   line-height: 100px; }
+
+/* Field */
+.field {
+  width: 270px; }
 /*# sourceMappingURL=styles.css.map */
