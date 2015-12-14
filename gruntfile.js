@@ -196,7 +196,7 @@ module.exports = function(grunt) {
       },
       templates: {
         cwd: project.templates.dir,
-        src: ['*.html'],
+        src: ['*.html', '!* copy.html'],
         dest: project.dir,
         ext: '.html',
         expand: true
@@ -212,7 +212,7 @@ module.exports = function(grunt) {
         tasks: ['browserify']
       },
       sass: {
-        files: [project.res.css.sass + '**/*.scss', project.res.css.sass + '**/*.sass'],
+        files: [project.res.css.sass + '**/*.{scss,sass}'],
         tasks: ['sass', 'autoprefixer']
       },
       html: {
@@ -223,7 +223,7 @@ module.exports = function(grunt) {
         options: {
           livereload: true
         },
-        files: [project.dir + '*.html', project.res.css.devDir + '**/*.css', project.res.js.devDir + '**/*.js']
+        files: [project.dir + '*.html', project.res.css.devDir + '**/*.css', project.res.js.dir + '**/*.js']
       }
     },
     concurrent: {
