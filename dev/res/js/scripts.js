@@ -1,7 +1,30 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* jshint browser:true */
 
+var TX_EVENT = (function() {
+
+  function bind(object, type, callback) {
+    if (document.addEventListener) {
+      object.addEventListener(type, callback);
+    } else {
+      object.attachEvent(type, callback);
+    }
+  }
+
+  return {
+    bind: bind
+  };
+
+})();
+
+module.exports = TX_EVENT;
+
+},{}],2:[function(require,module,exports){
+/* jshint browser:true */
+
 var TX_HAMBURGER = (function() {
+
+  var event = require('./tx-event');
 
   var object;
   var activeClassName;
@@ -16,11 +39,7 @@ var TX_HAMBURGER = (function() {
     if (node) {
       object = node;
       activeClassName = ' ' + object.className + '-is-active';
-      if (document.addEventListener) {
-        object.addEventListener('click', toggle);
-      } else {
-        object.attachEvent('onclick', toggle);
-      }
+      event(object, 'click', toggle);
     }
   }
 
@@ -32,10 +51,12 @@ var TX_HAMBURGER = (function() {
 
 module.exports = TX_HAMBURGER;
 
-},{}],2:[function(require,module,exports){
+},{"./tx-event":1}],3:[function(require,module,exports){
 /* jshint browser:true */
 
 var TX_OVERLAY = (function() {
+
+  var event = require('./tx-event');
 
   var object;
   var activeClassName;
@@ -46,7 +67,7 @@ var TX_OVERLAY = (function() {
     object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
   }
 
-  function clickHandler() {
+  function clicked() {
     var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
     if (target.className.indexOf(activeClassName) > -1) {
       toggle();
@@ -57,11 +78,7 @@ var TX_OVERLAY = (function() {
     if (node) {
       object = node;
       activeClassName = ' ' + object.className + '-is-active';
-      if (document.addEventListener) {
-        object.addEventListener('click', clickHandler);
-      } else {
-        object.attachEvent('onclick', clickHandler);
-      }
+      event(object, 'click', clicked);
     }
   }
 
@@ -74,7 +91,7 @@ var TX_OVERLAY = (function() {
 
 module.exports = TX_OVERLAY;
 
-},{}],3:[function(require,module,exports){
+},{"./tx-event":1}],4:[function(require,module,exports){
 /* jshint browser:true */
 /* global Modernizr */
 
@@ -156,7 +173,7 @@ var TX_PLACEHOLDERS = (function() {
 
 module.exports = TX_PLACEHOLDERS;
 
-},{"./tx-selector.js":5}],4:[function(require,module,exports){
+},{"./tx-selector.js":6}],5:[function(require,module,exports){
 /* jshint browser:true */
 
 var TX_REQUEST_ANIMATION_FRAME = (function() {
@@ -192,7 +209,7 @@ var TX_REQUEST_ANIMATION_FRAME = (function() {
 
 module.exports = TX_REQUEST_ANIMATION_FRAME;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /* jshint browser:true */
 
 var TX_QUERY_SELECTOR_ALL = (function() {
@@ -201,7 +218,6 @@ var TX_QUERY_SELECTOR_ALL = (function() {
     document.querySelectorAll = document.body.querySelectorAll = Object.querySelectorAll = function querySelectorAllPolyfill(r, c, i, j, a) {
       var d = document;
       var s = d.createStyleSheet();
-      var l;
       a = d.all;
       c = [];
       r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
@@ -224,7 +240,7 @@ var TX_QUERY_SELECTOR_ALL = (function() {
 
 module.exports = TX_QUERY_SELECTOR_ALL;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /* jshint browser:true */
 
 var TX_TRANSITION = (function() {
@@ -254,7 +270,7 @@ var TX_TRANSITION = (function() {
 
 module.exports = TX_TRANSITION;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /* jshint browser:true */
 
 var TX_TRANSLATE = (function() {
@@ -296,7 +312,7 @@ var TX_TRANSLATE = (function() {
 
 module.exports = TX_TRANSLATE;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /* jshint browser:true */
 
 var hamburger = require('./components/tx-hamburger.js');
@@ -323,4 +339,4 @@ console.log(transition.which());
 
 document.getElementById('transformThis').setAttribute('style', translate.string('X', '100px'));
 
-},{"./components/tx-hamburger.js":1,"./components/tx-overlay.js":2,"./components/tx-placeholders.js":3,"./components/tx-rAF.js":4,"./components/tx-transition.js":6,"./components/tx-translate.js":7}]},{},[8]);
+},{"./components/tx-hamburger.js":2,"./components/tx-overlay.js":3,"./components/tx-placeholders.js":4,"./components/tx-rAF.js":5,"./components/tx-transition.js":7,"./components/tx-translate.js":8}]},{},[9]);
