@@ -1,11 +1,11 @@
-@import 'project/project';
+@import 'project/_project';
 
-@import 'components/tx-button';
-@import 'components/tx-field';
-@import 'components/tx-hamburger';
-@import 'components/tx-highlight';
-@import 'components/tx-checkRadio';
-@import 'components/tx-overlay';
+@import 'components/_tx-button';
+@import 'components/_tx-checkRadio';
+@import 'components/_tx-field';
+@import 'components/_tx-hamburger';
+@import 'components/_tx-highlight';
+@import 'components/_tx-overlay';
 
 
 
@@ -123,4 +123,12 @@
 
   @extend %tx-field;
   width: ($field-width - $tx-field-padding * 2);
+}
+
+
+
+/* Select */
+
+.select {
+  @extend %tx-select;
 }

@@ -19,6 +19,59 @@
     color: #337ab7;
     background: #fff; }
 
+/* Checkbox & Radio Button */
+.checkbox, .radio {
+  position: absolute;
+  z-index: -1;
+  left: -10000px; }
+
+.checkboxLabel, .radioLabel {
+  position: relative;
+  padding: 0 0 0 30px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.checkboxLabel:before, .radioLabel:before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  margin: -10px 0 0; }
+
+.checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px; }
+
+.checkbox:focus + .checkboxLabel:before, .radio:focus + .radioLabel:before {
+  outline: 1px dotted #ccc; }
+
+/* Checkbox */
+.checkbox:checked + .checkboxLabel:after {
+  width: 10px;
+  height: 8px;
+  margin: -4px 0 0 -5px;
+  background: #337ab7; }
+
+/* Radio Button */
+.radioLabel:before {
+  border-radius: 50%; }
+
+.radio:checked + .radioLabel:after {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: -4px 0 0 -4px;
+  background: #337ab7; }
+
 /* Button */
 .field {
   height: 44px;
@@ -83,59 +136,6 @@
   border: 5px solid #d9534f;
   color: #fff;
   background: #d9534f; }
-
-/* Checkbox & Radio Button */
-.checkbox, .radio {
-  position: absolute;
-  z-index: -1;
-  left: -10000px; }
-
-.checkboxLabel, .radioLabel {
-  position: relative;
-  padding: 0 0 0 30px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
-.checkboxLabel:before, .radioLabel:before {
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #ccc;
-  margin: -10px 0 0; }
-
-.checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after {
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 10px; }
-
-.checkbox:focus + .checkboxLabel:before, .radio:focus + .radioLabel:before {
-  outline: 1px dotted #ccc; }
-
-/* Checkbox */
-.checkbox:checked + .checkboxLabel:after {
-  width: 10px;
-  height: 8px;
-  margin: -4px 0 0 -5px;
-  background: #337ab7; }
-
-/* Radio Button */
-.radioLabel:before {
-  border-radius: 50%; }
-
-.radio:checked + .radioLabel:after {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin: -4px 0 0 -4px;
-  background: #337ab7; }
 
 /* Overlay */
 .overlay {
@@ -203,4 +203,6 @@
 /* Field */
 .field {
   width: 270px; }
+
+/* Select */
 /*# sourceMappingURL=styles.css.map */
