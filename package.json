@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "TemplateXPatterns",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "fontfaceobserver": "^1.6.3"
+  },
   "devDependencies": {
     "backstopjs": "git://github.com/garris/backstopjs.git#master",
     "grunt": "^0.4.5",

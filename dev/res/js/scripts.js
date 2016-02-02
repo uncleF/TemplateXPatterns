@@ -37,6 +37,30 @@ exports.init = init;
 
 },{"./tx-event":1}],3:[function(require,module,exports){
 /* jshint browser:true */
+/* global Promise */
+
+var FontFaceObserver = require('fontfaceobserver');
+
+function load(fontCritical, fontClass, fonts, object) {
+  var critical = new FontFaceObserver(fontCritical);
+  critical.check().then(function () {
+    var index = 0;
+    var length = fonts.length;
+    var restChecks = [];
+    object.className += ' ' + fontClass + 'Critical-is-loaded';
+    for (index; index < length; index += 1) {
+      restChecks.push((new FontFaceObserver(fonts[index])).check());
+    }
+    Promise.all(restChecks).then(function () {
+      object.className += ' ' + fontClass + 'Rest-is-loaded';
+    });
+  });
+}
+
+exports.bind = load;
+
+},{"fontfaceobserver":11}],4:[function(require,module,exports){
+/* jshint browser:true */
 
 var addEvent = require('./tx-event');
 
@@ -67,7 +91,7 @@ function init(node) {
 exports.init = init;
 exports.toggle = toggle;
 
-},{"./tx-event":1}],4:[function(require,module,exports){
+},{"./tx-event":1}],5:[function(require,module,exports){
 /* jshint browser:true */
 /* global Modernizr */
 
@@ -141,7 +165,7 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{"./tx-selector.js":6}],5:[function(require,module,exports){
+},{"./tx-selector.js":7}],6:[function(require,module,exports){
 /* jshint browser:true */
 
 function polyfill() {
@@ -169,7 +193,7 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /* jshint browser:true */
 
 function polyfill() {
@@ -192,7 +216,7 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /* jshint browser:true */
 
 function which() {
@@ -214,7 +238,7 @@ function which() {
 
 exports.which = which;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /* jshint browser:true */
 
 function properties(axis, distance) {
@@ -248,13 +272,14 @@ function translateString(axis, distance) {
 exports.css = translateCSS;
 exports.string = translateString;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /* jshint browser:true */
 
 (function() {
 
   var addEvent = require('./components/tx-event');
   var hamburger = require('./components/tx-hamburger.js');
+  var loadFonts = require('./components/tx-loadFonts.js');
   var overlay = require('./components/tx-overlay.js');
   var placeholders = require('./components/tx-placeholders.js');
   var rAF = require('./components/tx-rAF.js');
@@ -274,6 +299,16 @@ exports.string = translateString;
 
   document.getElementById('transformThis').setAttribute('style', translate.string('X', '100px'));
 
+  loadFonts.load('RobotoCritical', 'roboto', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], document.documentElement);
+
 })();
 
-},{"./components/tx-event":1,"./components/tx-hamburger.js":2,"./components/tx-overlay.js":3,"./components/tx-placeholders.js":4,"./components/tx-rAF.js":5,"./components/tx-transition.js":7,"./components/tx-translate.js":8}]},{},[9]);
+},{"./components/tx-event":1,"./components/tx-hamburger.js":2,"./components/tx-loadFonts.js":3,"./components/tx-overlay.js":4,"./components/tx-placeholders.js":5,"./components/tx-rAF.js":6,"./components/tx-transition.js":8,"./components/tx-translate.js":9}],11:[function(require,module,exports){
+(function(){'use strict';var h=!!document.addEventListener;function k(a,b){h?a.addEventListener("scroll",b,!1):a.attachEvent("scroll",b)}function w(a){document.body?a():h?document.addEventListener("DOMContentLoaded",a):document.onreadystatechange=function(){"interactive"==document.readyState&&a()}};function x(a){this.a=document.createElement("div");this.a.setAttribute("aria-hidden","true");this.a.appendChild(document.createTextNode(a));this.b=document.createElement("span");this.c=document.createElement("span");this.h=document.createElement("span");this.f=document.createElement("span");this.g=-1;this.b.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.c.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
+this.f.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.h.style.cssText="display:inline-block;width:200%;height:200%;font-size:16px;";this.b.appendChild(this.h);this.c.appendChild(this.f);this.a.appendChild(this.b);this.a.appendChild(this.c)}
+function y(a,b){a.a.style.cssText="min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;left:-999px;white-space:nowrap;font:"+b+";"}function z(a){var b=a.a.offsetWidth,c=b+100;a.f.style.width=c+"px";a.c.scrollLeft=c;a.b.scrollLeft=a.b.scrollWidth+100;return a.g!==b?(a.g=b,!0):!1}function A(a,b){function c(){var a=l;z(a)&&null!==a.a.parentNode&&b(a.g)}var l=a;k(a.b,c);k(a.c,c);z(a)};function B(a,b){var c=b||{};this.family=a;this.style=c.style||"normal";this.weight=c.weight||"normal";this.stretch=c.stretch||"normal"}var C=null,D=null,H=!!window.FontFace;function I(){if(null===D){var a=document.createElement("div");try{a.style.font="condensed 100px sans-serif"}catch(b){}D=""!==a.style.font}return D}function J(a,b){return[a.style,a.weight,I()?a.stretch:"","100px",b].join(" ")}
+B.prototype.a=function(a,b){var c=this,l=a||"BESbswy",E=b||3E3,F=(new Date).getTime();return new Promise(function(a,b){if(H){var q=function(){(new Date).getTime()-F>=E?b(c):document.fonts.load(J(c,c.family),l).then(function(b){1<=b.length?a(c):setTimeout(q,25)},function(){b(c)})};q()}else w(function(){function r(){var b;if(b=-1!=e&&-1!=f||-1!=e&&-1!=g||-1!=f&&-1!=g)(b=e!=f&&e!=g&&f!=g)||(null===C&&(b=/AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent),C=!!b&&(536>parseInt(b[1],
+10)||536===parseInt(b[1],10)&&11>=parseInt(b[2],10))),b=C&&(e==t&&f==t&&g==t||e==u&&f==u&&g==u||e==v&&f==v&&g==v)),b=!b;b&&(null!==d.parentNode&&d.parentNode.removeChild(d),clearTimeout(G),a(c))}function q(){if((new Date).getTime()-F>=E)null!==d.parentNode&&d.parentNode.removeChild(d),b(c);else{var a=document.hidden;if(!0===a||void 0===a)e=m.a.offsetWidth,f=n.a.offsetWidth,g=p.a.offsetWidth,r();G=setTimeout(q,50)}}var m=new x(l),n=new x(l),p=new x(l),e=-1,f=-1,g=-1,t=-1,u=-1,v=-1,d=document.createElement("div"),
+G=0;d.dir="ltr";y(m,J(c,"sans-serif"));y(n,J(c,"serif"));y(p,J(c,"monospace"));d.appendChild(m.a);d.appendChild(n.a);d.appendChild(p.a);document.body.appendChild(d);t=m.a.offsetWidth;u=n.a.offsetWidth;v=p.a.offsetWidth;q();A(m,function(a){e=a;r()});y(m,J(c,'"'+c.family+'",sans-serif'));A(n,function(a){f=a;r()});y(n,J(c,'"'+c.family+'",serif'));A(p,function(a){g=a;r()});y(p,J(c,'"'+c.family+'",monospace'))})})};window.FontFaceObserver=B;window.FontFaceObserver.prototype.check=B.prototype.a;"undefined"!==typeof module&&(module.exports=window.FontFaceObserver);}());
+
+},{}]},{},[10]);
