@@ -14,10 +14,3 @@ tests
 ._*.*
 Desktop.ini
 Thumbs.db
-
-dev/*.*
-dev/res/js-dev/*.*
-dev/res/css-dev/
-dev/res/sass-dev/*.*
-dev/res/sass-dev/project
-dev/templates/*.*
