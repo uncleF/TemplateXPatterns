@@ -4,7 +4,8 @@
   "description": "TemplateXPatterns",
   "private": true,
   "dependencies": {
-    "fontfaceobserver": "^1.6.3"
+    "fontfaceobserver": "^1.6.3",
+    "jquery": "^2.2.0"
   },
   "devDependencies": {
     "backstopjs": "git://github.com/garris/backstopjs.git#master",

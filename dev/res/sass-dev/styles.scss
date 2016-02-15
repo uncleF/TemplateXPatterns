@@ -132,3 +132,122 @@
 .select {
   @extend %tx-select;
 }
+
+
+
+/* Swipe */
+
+.swipeDemo {
+  height: 100%;
+  text-align: center;
+}
+
+.swipeDemoBody {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+
+  &:before {
+    @include tx-pseudo-va;
+    width: 0;
+    height: 100%;
+    margin: 0 -5px 0 0;
+    vertical-align: middle;
+  }
+
+}
+
+.sliderHolder {
+  $sliderHolder-color: $white;
+
+  @include tx-inline-block;
+  width: 100%;
+  color: $sliderHolder-color;
+  font-size: 4em;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.slides {
+  position: relative;
+  transform: translateZ(0);
+
+  &:before {
+    @include tx-pseudo;
+    width: 10000px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+}
+
+.slide {
+  @include tx-inline-block;
+  position: relative;
+  width: 100%;
+  line-height: 300px;
+  vertical-align: top;
+  transform: translateZ(0);
+
+  &1 {
+    background: red;
+  }
+
+  &2 {
+    background: orange;
+  }
+
+  &3 {
+    background: yellow;
+  }
+
+  &4 {
+    background: green;
+  }
+
+  &5 {
+    background: blue;
+  }
+
+}
+
+.js-slidesNavigation {
+  height: 6px;
+  margin: 20px 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+.js-slidesNavigationPage {
+  $slidesNavigationPage-background: $gray;
+  $slidesNavigationPage-backgroundActive: $black;
+
+  @include tx-inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 5px;
+  background: $slidesNavigationPage-background;
+  font-size: 0;
+  vertical-align: top;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &-is-active {
+    background: $slidesNavigationPage-backgroundActive;
+  }
+
+}
+
+.slides-are-fixing {
+  transition: .25s;
+}
+
+.slides-are-swiping {
+  user-select: none;
+  pointer-events: none;
+}
