@@ -5,7 +5,7 @@ function bind(object, type, callback) {
   if (document.addEventListener) {
     object.addEventListener(type, callback);
   } else {
-    object.attachEvent(type, callback);
+    object.attachEvent('on' + type, callback);
   }
 }
 
@@ -13,12 +13,25 @@ function unbind(object, type, callback) {
   if (document.removeEventListener) {
     object.removeEventListener(type, callback);
   } else {
-    object.detachEvent(type, callback);
+    object.detachEvent('on' + type, callback);
+  }
+}
+
+function trigger(object, event) {
+  var eventObj;
+  if (document.createEvent) {
+    eventObj = document.createEvent('MouseEvents');
+    eventObj.initEvent(event, true, false);
+    object.dispatchEvent(eventObj);
+  } else {
+    eventObj = document.createEventObject();
+    object.fireEvent('on' + event, eventObj);
   }
 }
 
 exports.bind = bind;
 exports.unbind = unbind;
+exports.trigger = trigger;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
@@ -83,7 +96,7 @@ function toggle(event) {
 }
 
 function clicked(event) {
-  var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+  var target = (event.target) ? event.target : event.srcElement;
   if (target.className.indexOf(activeClassName) > -1) {
     toggle(event);
   }
@@ -282,21 +295,41 @@ function fixSlide() {
   }
 }
 
+function getData(event) {
+  pointStartX = event ? event.originalEvent.touches[0].pageX : 0;
+  pointShift = 1;
+  positionStart = object.offset().left;
+  linkActive = links.filter(`.${linkClassName}-is-active`);
+  index = links.index(linkActive);
+  if (index === 0) {
+    galleryStatus = 'start';
+  } else if (index === (links.size() - 1)) {
+    galleryStatus = 'end';
+  } else {
+    galleryStatus = 'middle';
+  }
+}
+
+function prev() {
+  getData();
+  if (galleryStatus !== 'start') {
+    pointDiffX = (NEXT_SHIFT + 1);
+    fixSlide();
+  }
+}
+
+function next() {
+  getData();
+  if (galleryStatus !== 'end') {
+    pointDiffX = (-NEXT_SHIFT - 1);
+    fixSlide();
+  }
+}
+
 function touchStart(event) {
   if (!object.is('.slides-are-fixing')) {
-    pointStartX = event.originalEvent.touches[0].pageX;
-    pointShift = 1;
     pointDiffX = 0;
-    positionStart = object.offset().left;
-    linkActive = links.filter(`.${linkClassName}-is-active`);
-    index = links.index(linkActive);
-    if (index === 0) {
-      galleryStatus = 'start';
-    } else if (index === (links.size() - 1)) {
-      galleryStatus = 'end';
-    } else {
-      galleryStatus = 'middle';
-    }
+    getData(event);
     doc
       .on('touchmove', touchMove)
       .on('touchend', touchEnd);
@@ -337,6 +370,8 @@ function dots(size, listClass, pageClass) {
 
 exports.init = init;
 exports.dots = dots;
+exports.prev = prev;
+exports.next = next;
 
 },{"./tx-transition":9,"./tx-translate":10}],9:[function(require,module,exports){
 /* jshint browser:true */
@@ -432,7 +467,7 @@ var $ = require('jquery');
   slides.after(swipe.dots(dotsSize, 'js-slidesNavigation', 'js-slidesNavigationPage'));
   swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
 
-})($);
+})();
 
 },{"./components/tx-event":1,"./components/tx-hamburger":2,"./components/tx-loadFonts":3,"./components/tx-overlay":4,"./components/tx-placeholders":5,"./components/tx-rAF":6,"./components/tx-swipeGallery":8,"./components/tx-transition":9,"./components/tx-translate":10,"jquery":13}],12:[function(require,module,exports){
 (function(){'use strict';var h=!!document.addEventListener;function k(a,b){h?a.addEventListener("scroll",b,!1):a.attachEvent("scroll",b)}function w(a){document.body?a():h?document.addEventListener("DOMContentLoaded",a):document.onreadystatechange=function(){"interactive"==document.readyState&&a()}};function x(a){this.a=document.createElement("div");this.a.setAttribute("aria-hidden","true");this.a.appendChild(document.createTextNode(a));this.b=document.createElement("span");this.c=document.createElement("span");this.h=document.createElement("span");this.f=document.createElement("span");this.g=-1;this.b.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.c.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";

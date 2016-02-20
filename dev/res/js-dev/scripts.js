@@ -35,4 +35,4 @@ var $ = require('jquery');
   slides.after(swipe.dots(dotsSize, 'js-slidesNavigation', 'js-slidesNavigationPage'));
   swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
 
-})($);
+})();
