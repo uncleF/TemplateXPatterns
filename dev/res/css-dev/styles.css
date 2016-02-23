@@ -1,5 +1,5 @@
 /* Button */
-.buttonLink, .buttonInput {
+.file-button, .buttonLink, .buttonInput {
   height: 44px;
   padding: 0 28px;
   border: 2px solid #337ab7;
@@ -7,15 +7,15 @@
   background: #337ab7;
   -webkit-transition: 0.15s;
   transition: 0.15s; }
-  .buttonLink {
+  .file-button, .buttonLink {
     text-decoration: none;
     line-height: 44px; }
-    .buttonLink:visited {
+    .file-button:visited, .buttonLink:visited {
       color: #fff;
       background: #337ab7; }
   .buttonInput {
     cursor: pointer; }
-  .buttonLink:hover, .buttonInput:hover, .buttonLink:active, .buttonInput:active {
+  .file-button:hover, .buttonLink:hover, .buttonInput:hover, .file-button:active, .buttonLink:active, .buttonInput:active {
     color: #337ab7;
     background: #fff; }
 
@@ -77,6 +77,24 @@
   height: 44px;
   padding: 0 15px;
   border: 2px solid #ccc; }
+
+/* Button */
+.file-wrap {
+  position: relative;
+  height: 44px;
+  padding: 0 15px;
+  border: 2px solid #ccc; }
+  .file-is-wrapped {
+    position: absolute;
+    left: -10000px;
+    visibility: hidden; }
+  .file-value {
+    line-height: 44px; }
+  .file-button {
+    display: inline-block;
+    position: absolute;
+    right: -2px;
+    top: -2px; }
 
 /* Hamburger */
 .navToggle {
@@ -299,4 +317,6 @@
   -ms-user-select: none;
   user-select: none;
   pointer-events: none; }
+
+/* File Input */
 /*# sourceMappingURL=styles.css.map */

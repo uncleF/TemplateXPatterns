@@ -3,6 +3,7 @@
 @import 'components/_tx-button';
 @import 'components/_tx-checkRadio';
 @import 'components/_tx-field';
+@import 'components/_tx-fileInput';
 @import 'components/_tx-hamburger';
 @import 'components/_tx-highlight';
 @import 'components/_tx-overlay';
@@ -250,4 +251,28 @@
 .slides-are-swiping {
   user-select: none;
   pointer-events: none;
+}
+
+
+
+/* File Input */
+
+.file {
+
+  &-is-wrapped {
+    @extend %tx-file-input;
+  }
+
+  &-wrap {
+    @extend %tx-file;
+  }
+
+  &-value {
+    @extend %tx-file-value;
+  }
+
+  &-button {
+    @extend %tx-file-button;
+  }
+
 }

@@ -1,6 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* jshint browser:true */
 
+'use strict';
+
 function bind(object, type, callback) {
   if (document.addEventListener) {
     object.addEventListener(type, callback);
@@ -17,11 +19,12 @@ function unbind(object, type, callback) {
   }
 }
 
-function trigger(object, event) {
+function trigger(object, event, propagate) {
+  propagate = propagate || false;
   var eventObj;
   if (document.createEvent) {
     eventObj = document.createEvent('MouseEvents');
-    eventObj.initEvent(event, true, false);
+    eventObj.initEvent(event, propagate, false);
     object.dispatchEvent(eventObj);
   } else {
     eventObj = document.createEventObject();
@@ -36,30 +39,125 @@ exports.trigger = trigger;
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
+'use strict';
+
+var selector = require('./tx-selector.js');
+var textContent = require('./tx-textContent.js');
 var addEvent = require('./tx-event');
 
-var object;
-var activeClassName;
+function FileInput(field, text) {
 
-function toggle(event) {
-  var currentClassName = object.className;
-  event.preventDefault();
-  object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
+  var input;
+  var className;
+  var activeClassName;
+  var wrapElement;
+  var valueElement;
+  var buttonElement;
+  var buttonText;
+
+  function fieldChange(event) {
+    valueElement.textContent = input.value.split('\\')[2];
+  }
+
+  function fieldClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    addEvent.trigger(input, 'click', false);
+  }
+
+  function wrap() {
+    var parent = input.parentNode;
+    wrapElement = document.createElement('div');
+    wrapElement.className = className + '-wrap';
+    valueElement = document.createElement('div');
+    valueElement.className = className + '-value';
+    buttonElement = document.createElement('a');
+    buttonElement.href = '#';
+    buttonElement.textContent = buttonText;
+    buttonElement.className = className + '-button';
+    wrapElement.appendChild(valueElement);
+    wrapElement.appendChild(buttonElement);
+    parent.insertBefore(wrapElement, input);
+    wrapElement.appendChild(input);
+    input.className += ' ' + className + '-is-wrapped';
+  }
+
+  function setup() {
+    input = field;
+    buttonText = text || 'Browse';
+    className = input.className.split(' ')[0];
+    activeClassName = className + '-is-active';
+    wrap(input);
+    addEvent.bind(input, 'change', fieldChange);
+    addEvent.bind(wrapElement, 'click', fieldClick);
+    addEvent.bind(buttonElement, 'click', fieldClick);
+  }
+
+  setup();
 }
 
-function init(node) {
-  if (node) {
-    object = node;
-    activeClassName = ' ' + object.className + '-is-active';
-    addEvent.bind(object, 'click', toggle);
+function selectFields(selectors) {
+  if (!document.querySelectorAll) {
+    selector.polyfill();
+  }
+  return document.querySelectorAll(selectors);
+}
+
+function init(selectors, text) {
+  var fields = selectFields(selectors);
+  textContent.polyfill();
+  for (var index = 0, length = fields.length; index < length; index += 1) {
+    var field = fields[index];
+    new FileInput(field, text);
   }
 }
 
 exports.init = init;
 
-},{"./tx-event":1}],3:[function(require,module,exports){
+},{"./tx-event":1,"./tx-selector.js":8,"./tx-textContent.js":10}],3:[function(require,module,exports){
+/* jshint browser:true */
+
+'use strict';
+
+var addEvent = require('./tx-event');
+
+function Hamburger(element) {
+
+  var object;
+  var activeClassName;
+
+  function toggle(event) {
+    var currentClassName = object.className;
+    event.preventDefault();
+    object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + ' ' + activeClassName;
+  }
+
+  function setup() {
+    if (element) {
+      object = element;
+      activeClassName = object.className.split(' ')[0] + '-is-active';
+      addEvent.bind(object, 'click', toggle);
+    }
+  }
+
+  setup();
+
+  return {
+    toggle: toggle
+  };
+}
+
+function init(element) {
+  return new Hamburger(element);
+}
+
+exports.init = init;
+
+},{"./tx-event":1}],4:[function(require,module,exports){
 /* jshint browser:true */
 /* global Promise */
+
+'use strict';
 
 var FontFaceObserver = require('fontfaceobserver');
 
@@ -71,7 +169,7 @@ function load(fontCritical, fontClass, fonts, object) {
     var restChecks = [];
     object.className += ' ' + fontClass + 'Critical-is-loaded';
     for (index; index < length; index += 1) {
-      restChecks.push((new FontFaceObserver(fonts[index])).check());
+      restChecks.push(new FontFaceObserver(fonts[index]).check());
     }
     Promise.all(restChecks).then(function () {
       object.className += ' ' + fontClass + 'Rest-is-loaded';
@@ -81,55 +179,68 @@ function load(fontCritical, fontClass, fonts, object) {
 
 exports.bind = load;
 
-},{"fontfaceobserver":12}],4:[function(require,module,exports){
+},{"fontfaceobserver":14}],5:[function(require,module,exports){
 /* jshint browser:true */
+
+'use strict';
 
 var addEvent = require('./tx-event');
 
-var object;
-var activeClassName;
+function Overlay(element) {
 
-function toggle(event) {
-  var currentClassName = object.className;
-  event.preventDefault();
-  object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + activeClassName;
+  var object;
+  var activeClassName;
+
+  function toggle(event) {
+    var currentClassName = object.className;
+    event.preventDefault();
+    object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + ' ' + activeClassName;
+  }
+
+  function clicked(event) {
+    var target = event.target ? event.target : event.srcElement;
+    if (target.className.indexOf(activeClassName) > -1) {
+      toggle(event);
+    }
+  }
+
+  function setup() {
+    if (element) {
+      object = element;
+      activeClassName = object.className.split(' ')[0] + '-is-active';
+      addEvent.bind(object, 'click', clicked);
+    }
+  }
+
+  setup();
+
+  return {
+    toggle: toggle
+  };
 }
 
-function clicked(event) {
-  var target = (event.target) ? event.target : event.srcElement;
-  if (target.className.indexOf(activeClassName) > -1) {
-    toggle(event);
-  }
-}
-
-function init(node) {
-  if (node) {
-    object = node;
-    activeClassName = ' ' + object.className + '-is-active';
-    addEvent.bind(object, 'click', clicked);
-  }
+function init(element) {
+  return new Overlay(element);
 }
 
 exports.init = init;
-exports.toggle = toggle;
 
-},{"./tx-event":1}],5:[function(require,module,exports){
+},{"./tx-event":1}],6:[function(require,module,exports){
 /* jshint browser:true */
-/* global Modernizr */
+
+'use strict';
 
 var querySelectorPolyfill = require('./tx-selector.js');
+var addEvent = require('./tx-event');
 
 function selectFields() {
   var fields;
   var fieldsPlaceholders = [];
-  var index = 0;
-  var length;
   if (!document.querySelectorAll) {
     querySelectorPolyfill.polyfill();
   }
   fields = document.querySelectorAll('input, textarea');
-  length = fields.length;
-  for (index; index < length; index += 1) {
+  for (var index = 0, length = fields.length; index < length; index += 1) {
     if (fields[index].getAttribute('placeholder') !== null) {
       fieldsPlaceholders.push(fields[index]);
     }
@@ -137,57 +248,47 @@ function selectFields() {
   return fieldsPlaceholders;
 }
 
-function appPlaceholder(field) {
-  var value = field.value;
-  var placeholder = field.getAttribute('placeholder');
-  if (value === '') {
+function getTarget(event) {
+  return event.currentTarget ? event.currentTarget : event.srcElement;
+}
+
+function addPlaceholder(field) {
+  if (field.value === '') {
     field.className = field.className + ' js-input-is-showingPlaceholder';
-    field.value = placeholder;
+    field.value = field.getAttribute('placeholder');
   }
 }
 
 function removePlaceholder(field) {
-  var value = field.value;
-  var placeholder = field.getAttribute('placeholder');
-  if (value === placeholder) {
+  if (field.value === field.getAttribute('placeholder')) {
     field.className = field.className.replace(' js-input-is-showingPlaceholder', '');
     field.value = '';
   }
 }
 
-function focusHandler() {
-  var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
-  removePlaceholder(target);
+function fieldFocus(event) {
+  removePlaceholder(getTarget(event));
 }
 
-function blurHandler() {
-  var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
-  appPlaceholder(target);
+function fieldBlur(event) {
+  addPlaceholder(getTarget(event));
 }
 
 function polyfill() {
-  if (!Modernizr.input.placeholder) {
-    var fields = selectFields();
-    var field;
-    var index = 0;
-    var length = fields.length;
-    for (index; index < length; index += 1) {
-      field = fields[index];
-      appPlaceholder(field);
-      if (document.addEventListener) {
-        field.addEventListener('focus', focusHandler);
-        field.addEventListener('blur', blurHandler);
-      } else {
-        field.attachEvent('onfocusin', focusHandler);
-        field.attachEvent('onfocusout', blurHandler);
-      }
-    }
+  var fields = selectFields();
+  for (var index = 0, length = fields.length; index < length; index += 1) {
+    var field = fields[index];
+    addPlaceholder(field);
+    addEvent.bind(field, 'focus', fieldFocus);
+    addEvent.bind(field, 'blur', fieldBlur);
   }
 }
 
 exports.polyfill = polyfill;
 
-},{"./tx-selector.js":7}],6:[function(require,module,exports){
+},{"./tx-event":1,"./tx-selector.js":8}],7:[function(require,module,exports){
+'use strict';
+
 /* jshint browser:true */
 
 function polyfill() {
@@ -198,16 +299,18 @@ function polyfill() {
     window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
   }
   if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function(callback, element) {
+    window.requestAnimationFrame = function (callback, element) {
       var currTime = new Date().getTime();
       var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+      var id = window.setTimeout(function () {
+        callback(currTime + timeToCall);
+      }, timeToCall);
       lastTime = currTime + timeToCall;
       return id;
     };
   }
   if (!window.cancelAnimationFrame) {
-    window.cancelAnimationFrame = function(id) {
+    window.cancelAnimationFrame = function (id) {
       clearTimeout(id);
     };
   }
@@ -215,7 +318,9 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+'use strict';
+
 /* jshint browser:true */
 
 function polyfill() {
@@ -238,131 +343,148 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /* jshint browser:true */
 
-var doc;
-var object;
-var links;
-var linkClassName;
+'use strict';
+
 var transition = require('./tx-transition').which();
 var translateGallery = require('./tx-translate').css;
 
-var pointStartX;
-var pointShift;
-var pointDiffX;
-var pointDiffXMargin;
-var positionStart;
-var linkActive;
-var index;
-var galleryStatus;
-var animationFrame;
+var SLIDE_THRESHOLD = 15;
+var NEXT_SHIFT = 50;
 
-const SLIDE_THRESHOLD = 15;
-const NEXT_SHIFT = 50;
+function Swipe(gallery, navigation, navigationItemClassName, jQDocument) {
 
-function shiftSlide() {
-  var slideDistance;
-  pointDiffXMargin = pointDiffX < 0 ? SLIDE_THRESHOLD : -SLIDE_THRESHOLD;
-  if (galleryStatus === 'start' && pointDiffX > 0) {
-    pointShift = 4;
-    pointDiffXMargin = -pointShift;
-  } else if (galleryStatus === 'end' && pointDiffX < 0) {
-    pointShift = 4;
-    pointDiffXMargin = pointShift;
-  }
-  slideDistance = positionStart + pointDiffX / pointShift + pointDiffXMargin;
-  object.css(translateGallery('x', `${slideDistance}px`));
-}
+  var doc;
+  var object;
+  var links;
+  var linkClassName;
 
-function finalizeSlide() {
-  object.removeClass('slides-are-fixing');
-  object.off(transition);
-}
+  var pointStartX;
+  var pointShift;
+  var pointDiffX;
+  var pointDiffXMargin;
+  var positionStart;
+  var linkActive;
+  var index;
+  var galleryStatus;
+  var animationFrame;
 
-function fixSlide() {
-  if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
-    if (pointDiffX > NEXT_SHIFT && galleryStatus !== 'start') {
-      index -= 1;
-    } else if (pointDiffX < -NEXT_SHIFT && galleryStatus !== 'end') {
-      index += 1;
+  function shiftSlide() {
+    var slideDistance;
+    pointDiffXMargin = pointDiffX < 0 ? SLIDE_THRESHOLD : -SLIDE_THRESHOLD;
+    if (galleryStatus === 'start' && pointDiffX > 0) {
+      pointShift = 4;
+      pointDiffXMargin = -pointShift;
+    } else if (galleryStatus === 'end' && pointDiffX < 0) {
+      pointShift = 4;
+      pointDiffXMargin = pointShift;
     }
-    linkActive.removeClass(`${linkClassName}-is-active js-dotsPage-is-active`);
-    links.filter(`.${linkClassName}:eq(${index})`).addClass(`${linkClassName}-is-active js-dotsPage-is-active`);
-    object.addClass('slides-are-fixing').trigger('swipe');
-    object.on(transition, finalizeSlide);
-    object.css(translateGallery('x', `${-100 * index}%`));
+    slideDistance = positionStart + pointDiffX / pointShift + pointDiffXMargin;
+    object.css(translateGallery('x', slideDistance + 'px'));
   }
-}
 
-function getData(event) {
-  pointStartX = event ? event.originalEvent.touches[0].pageX : 0;
-  pointShift = 1;
-  positionStart = object.offset().left;
-  linkActive = links.filter(`.${linkClassName}-is-active`);
-  index = links.index(linkActive);
-  if (index === 0) {
-    galleryStatus = 'start';
-  } else if (index === (links.size() - 1)) {
-    galleryStatus = 'end';
-  } else {
-    galleryStatus = 'middle';
+  function finalizeSlide() {
+    object.removeClass('slides-are-fixing');
+    object.off(transition);
   }
-}
 
-function prev() {
-  getData();
-  if (galleryStatus !== 'start') {
-    pointDiffX = (NEXT_SHIFT + 1);
+  function fixSlide() {
+    if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
+      if (pointDiffX > NEXT_SHIFT && galleryStatus !== 'start') {
+        index -= 1;
+      } else if (pointDiffX < -NEXT_SHIFT && galleryStatus !== 'end') {
+        index += 1;
+      }
+      linkActive.removeClass(linkClassName + '-is-active js-dotsPage-is-active');
+      links.filter('.' + linkClassName + ':eq(' + index + ')').addClass(linkClassName + '-is-active js-dotsPage-is-active');
+      object.addClass('slides-are-fixing').trigger('swipe');
+      object.on(transition, finalizeSlide);
+      object.css(translateGallery('x', -100 * index + '%'));
+    }
+  }
+
+  function getData(event) {
+    pointStartX = event ? event.originalEvent.touches[0].pageX : 0;
+    pointShift = 1;
+    positionStart = object.offset().left;
+    linkActive = links.filter('.' + linkClassName + '-is-active');
+    index = links.index(linkActive);
+    if (index === 0) {
+      galleryStatus = 'start';
+    } else if (index === links.size() - 1) {
+      galleryStatus = 'end';
+    } else {
+      galleryStatus = 'middle';
+    }
+  }
+
+  function fakeSwipe(shift) {
+    pointDiffX = shift;
     fixSlide();
   }
-}
 
-function next() {
-  getData();
-  if (galleryStatus !== 'end') {
-    pointDiffX = (-NEXT_SHIFT - 1);
-    fixSlide();
+  function prev() {
+    getData();
+    if (galleryStatus !== 'start') {
+      fakeSwipe(NEXT_SHIFT + 1);
+    }
   }
-}
 
-function touchStart(event) {
-  if (!object.is('.slides-are-fixing')) {
-    pointDiffX = 0;
-    getData(event);
-    doc
-      .on('touchmove', touchMove)
-      .on('touchend', touchEnd);
+  function next() {
+    getData();
+    if (galleryStatus !== 'end') {
+      fakeSwipe(-NEXT_SHIFT - 1);
+    }
   }
-}
 
-function touchMove(event) {
-  pointDiffX = event.originalEvent.touches[0].pageX - pointStartX;
-  if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
-    event.preventDefault();
-    animationFrame = requestAnimationFrame(shiftSlide);
+  function touchStart(event) {
+    if (!object.is('.slides-are-fixing')) {
+      pointDiffX = 0;
+      getData(event);
+      doc.on('touchmove', touchMove).on('touchend', touchEnd);
+    }
   }
-}
 
-function touchEnd() {
-  doc.off('touchmove touchend');
-  cancelAnimationFrame(animationFrame);
-  requestAnimationFrame(fixSlide);
+  function touchMove(event) {
+    pointDiffX = event.originalEvent.touches[0].pageX - pointStartX;
+    if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
+      event.preventDefault();
+      animationFrame = requestAnimationFrame(shiftSlide);
+    }
+  }
+
+  function touchEnd() {
+    doc.off('touchmove touchend');
+    cancelAnimationFrame(animationFrame);
+    requestAnimationFrame(fixSlide);
+  }
+
+  function setup() {
+    doc = jQDocument;
+    object = gallery;
+    links = navigation;
+    linkClassName = navigationItemClassName;
+    object.on('touchstart', touchStart);
+  }
+
+  setup();
+
+  return {
+    prev: prev,
+    next: next
+  };
 }
 
 function init(gallery, navigation, navigationItemClassName, jQDocument) {
-  doc = jQDocument;
-  object = gallery;
-  links = navigation;
-  linkClassName = navigationItemClassName;
-  object.on('touchstart', touchStart);
+  return new Swipe(gallery, navigation, navigationItemClassName, jQDocument);
 }
 
 function dots(size, listClass, pageClass) {
-  var navigation = `<ul class="${listClass} js-dotsNavigation u-listReset">`;
-  var index;
-  for (index = 0; index < size; index++) {
-    navigation = index === 0 ? navigation + `<li class="${pageClass} ${pageClass}-is-active js-dotsPage-is-active js-dotsPage"></li>` : navigation + `<li class="${pageClass} js-dotsPage"></li>`;
+  var navigation = '<ul class="' + listClass + ' js-dotsNavigation u-listReset">';
+  for (var index = 0; index < size; index += 1) {
+    navigation = index === 0 ? navigation + ('<li class="' + pageClass + ' ' + pageClass + '-is-active js-dotsPage-is-active js-dotsPage"></li>') : navigation + ('<li class="' + pageClass + ' js-dotsPage"></li>');
   }
   navigation += '</ul>';
   return navigation;
@@ -370,11 +492,34 @@ function dots(size, listClass, pageClass) {
 
 exports.init = init;
 exports.dots = dots;
-exports.prev = prev;
-exports.next = next;
 
-},{"./tx-transition":9,"./tx-translate":10}],9:[function(require,module,exports){
+},{"./tx-transition":11,"./tx-translate":12}],10:[function(require,module,exports){
 /* jshint browser:true */
+
+'use strict';
+
+function polyfill() {
+  if (Object.defineProperty && Object.getOwnPropertyDescriptor && Object.getOwnPropertyDescriptor(Element.prototype, 'textContent') && !Object.getOwnPropertyDescriptor(Element.prototype, 'textContent').get) {
+    (function () {
+      var innerText = Object.getOwnPropertyDescriptor(Element.prototype, 'innerText');
+      Object.defineProperty(Element.prototype, 'textContent', {
+        get: function get() {
+          return innerText.get.call(this);
+        },
+        set: function set(s) {
+          return innerText.set.call(this, s);
+        }
+      });
+    })();
+  }
+}
+
+exports.polyfill = polyfill;
+
+},{}],11:[function(require,module,exports){
+/* jshint browser:true */
+
+'use strict';
 
 function which() {
   var transition;
@@ -395,18 +540,16 @@ function which() {
 
 exports.which = which;
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /* jshint browser:true */
 
+'use strict';
+
 function properties(axis, distance) {
-  var property;
-  var propertyLayer;
-  axis = axis.toUpperCase();
-  property = 'translate' + axis + '(' + distance + ')';
-  propertyLayer = property + ' translateZ(0)';
+  var property = 'translate' + axis.toUpperCase() + '(' + distance + ')';
   return {
     property: property,
-    propertyLayer: propertyLayer
+    propertyLayer: property + ' translateZ(0)'
   };
 }
 
@@ -423,20 +566,24 @@ function translateCSS(axis, distance) {
 
 function translateString(axis, distance) {
   var css = properties(axis, distance);
-  return '-webkit-transform:' + css.propertyLayer + '; -moz-transform:' + css.propertyLayer + '; -ms-transform:' + css.property + '; -o-transform' + css.property + '; transform:' + css.propertyLayer + ';';
+  return '-webkit-transform:' + css.propertyLayer + ';-moz-transform:' + css.propertyLayer + ';-ms-transform:' + css.property + ';-o-transform:' + css.property + ';transform:' + css.propertyLayer + ';';
 }
 
 exports.css = translateCSS;
 exports.string = translateString;
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+'use strict';
+
 /* jshint browser:true */
+/* global Modernizr */
 
 var $ = require('jquery');
 
-(function() {
+(function () {
 
   var addEvent = require('./components/tx-event');
+  var file = require('./components/tx-fileInput');
   var hamburger = require('./components/tx-hamburger');
   var loadFonts = require('./components/tx-loadFonts');
   var overlay = require('./components/tx-overlay');
@@ -449,12 +596,18 @@ var $ = require('jquery');
   var slides = $('.slides');
   var dotsSize = $('.slide').size();
 
+  file.init('#file');
+
   hamburger.init(document.getElementById('navToggle'));
 
-  overlay.init(document.getElementById('overlay'));
-  addEvent.bind(document.getElementById('overlayTrigger'), 'click', overlay.toggle);
+  loadFonts.load('RobotoCritical', 'roboto', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], document.documentElement);
 
-  placeholders.polyfill();
+  var popupOverlay = overlay.init(document.getElementById('overlay'));
+  addEvent.bind(document.getElementById('overlayTrigger'), 'click', popupOverlay.toggle);
+
+  if (!Modernizr.input.placeholder) {
+    placeholders.polyfill();
+  }
 
   rAF.polyfill();
 
@@ -462,14 +615,11 @@ var $ = require('jquery');
 
   document.getElementById('transformThis').setAttribute('style', translate.string('X', '100px'));
 
-  loadFonts.load('RobotoCritical', 'roboto', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], document.documentElement);
-
   slides.after(swipe.dots(dotsSize, 'js-slidesNavigation', 'js-slidesNavigationPage'));
   swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
-
 })();
 
-},{"./components/tx-event":1,"./components/tx-hamburger":2,"./components/tx-loadFonts":3,"./components/tx-overlay":4,"./components/tx-placeholders":5,"./components/tx-rAF":6,"./components/tx-swipeGallery":8,"./components/tx-transition":9,"./components/tx-translate":10,"jquery":13}],12:[function(require,module,exports){
+},{"./components/tx-event":1,"./components/tx-fileInput":2,"./components/tx-hamburger":3,"./components/tx-loadFonts":4,"./components/tx-overlay":5,"./components/tx-placeholders":6,"./components/tx-rAF":7,"./components/tx-swipeGallery":9,"./components/tx-transition":11,"./components/tx-translate":12,"jquery":15}],14:[function(require,module,exports){
 (function(){'use strict';var h=!!document.addEventListener;function k(a,b){h?a.addEventListener("scroll",b,!1):a.attachEvent("scroll",b)}function w(a){document.body?a():h?document.addEventListener("DOMContentLoaded",a):document.onreadystatechange=function(){"interactive"==document.readyState&&a()}};function x(a){this.a=document.createElement("div");this.a.setAttribute("aria-hidden","true");this.a.appendChild(document.createTextNode(a));this.b=document.createElement("span");this.c=document.createElement("span");this.h=document.createElement("span");this.f=document.createElement("span");this.g=-1;this.b.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.c.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
 this.f.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.h.style.cssText="display:inline-block;width:200%;height:200%;font-size:16px;";this.b.appendChild(this.h);this.c.appendChild(this.f);this.a.appendChild(this.b);this.a.appendChild(this.c)}
 function y(a,b){a.a.style.cssText="min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;left:-999px;white-space:nowrap;font:"+b+";"}function z(a){var b=a.a.offsetWidth,c=b+100;a.f.style.width=c+"px";a.c.scrollLeft=c;a.b.scrollLeft=a.b.scrollWidth+100;return a.g!==b?(a.g=b,!0):!1}function A(a,b){function c(){var a=l;z(a)&&null!==a.a.parentNode&&b(a.g)}var l=a;k(a.b,c);k(a.c,c);z(a)};function B(a,b){var c=b||{};this.family=a;this.style=c.style||"normal";this.weight=c.weight||"normal";this.stretch=c.stretch||"normal"}var C=null,D=null,H=!!window.FontFace;function I(){if(null===D){var a=document.createElement("div");try{a.style.font="condensed 100px sans-serif"}catch(b){}D=""!==a.style.font}return D}function J(a,b){return[a.style,a.weight,I()?a.stretch:"","100px",b].join(" ")}
@@ -477,7 +627,7 @@ B.prototype.a=function(a,b){var c=this,l=a||"BESbswy",E=b||3E3,F=(new Date).getT
 10)||536===parseInt(b[1],10)&&11>=parseInt(b[2],10))),b=C&&(e==t&&f==t&&g==t||e==u&&f==u&&g==u||e==v&&f==v&&g==v)),b=!b;b&&(null!==d.parentNode&&d.parentNode.removeChild(d),clearTimeout(G),a(c))}function q(){if((new Date).getTime()-F>=E)null!==d.parentNode&&d.parentNode.removeChild(d),b(c);else{var a=document.hidden;if(!0===a||void 0===a)e=m.a.offsetWidth,f=n.a.offsetWidth,g=p.a.offsetWidth,r();G=setTimeout(q,50)}}var m=new x(l),n=new x(l),p=new x(l),e=-1,f=-1,g=-1,t=-1,u=-1,v=-1,d=document.createElement("div"),
 G=0;d.dir="ltr";y(m,J(c,"sans-serif"));y(n,J(c,"serif"));y(p,J(c,"monospace"));d.appendChild(m.a);d.appendChild(n.a);d.appendChild(p.a);document.body.appendChild(d);t=m.a.offsetWidth;u=n.a.offsetWidth;v=p.a.offsetWidth;q();A(m,function(a){e=a;r()});y(m,J(c,'"'+c.family+'",sans-serif'));A(n,function(a){f=a;r()});y(n,J(c,'"'+c.family+'",serif'));A(p,function(a){g=a;r()});y(p,J(c,'"'+c.family+'",monospace'))})})};window.FontFaceObserver=B;window.FontFaceObserver.prototype.check=B.prototype.a;"undefined"!==typeof module&&(module.exports=window.FontFaceObserver);}());
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.0
  * http://jquery.com/
@@ -10310,4 +10460,4 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}]},{},[11]);
+},{}]},{},[13]);
