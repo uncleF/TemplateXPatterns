@@ -9,7 +9,7 @@ function selectFields() {
   var fields;
   var fieldsPlaceholders = [];
   if (!document.querySelectorAll) {
-    querySelectorPolyfill.polyfill();
+    querySelectorPolyfill();
   }
   fields = document.querySelectorAll('input, textarea');
   for (let index = 0, length = fields.length; index < length; index += 1) {
@@ -21,7 +21,7 @@ function selectFields() {
 }
 
 function getTarget(event) {
-  return (event.currentTarget) ? event.currentTarget : event.srcElement;
+  return event.currentTarget || event.srcElement;
 }
 
 function addPlaceholder(field) {

@@ -21,14 +21,13 @@ function unbind(object, type, callback) {
 
 function trigger(object, event, propagate) {
   propagate = propagate || false;
-  var eventObj;
   if (document.createEvent) {
-    eventObj = document.createEvent('MouseEvents');
+    var eventObj = document.createEvent('MouseEvents');
     eventObj.initEvent(event, propagate, false);
     object.dispatchEvent(eventObj);
   } else {
-    eventObj = document.createEventObject();
-    object.fireEvent('on' + event, eventObj);
+    var _eventObj = document.createEventObject();
+    object.fireEvent('on' + event, _eventObj);
   }
 }
 
@@ -41,48 +40,49 @@ exports.trigger = trigger;
 
 'use strict';
 
-var selector = require('./tx-selector.js');
-var textContent = require('./tx-textContent.js');
+var querySelectorPolyfill = require('./tx-selector.js');
+var textContentPolyfill = require('./tx-textContent.js');
 var addEvent = require('./tx-event');
 
-function FileInput(field, text) {
+module.exports = function (selectors, text) {
 
-  var input;
-  var className;
-  var activeClassName;
-  var wrapElement;
-  var valueElement;
-  var buttonElement;
-  var buttonText;
+  function fileInput(field, text) {
 
-  function fieldChange(event) {
-    valueElement.textContent = input.value.split('\\')[2];
-  }
+    var input;
+    var className;
+    var activeClassName;
+    var wrapElement;
+    var valueElement;
+    var buttonElement;
+    var buttonText;
 
-  function fieldClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    addEvent.trigger(input, 'click', false);
-  }
+    function fieldChange(event) {
+      valueElement.textContent = input.value.split('\\')[2];
+    }
 
-  function wrap() {
-    var parent = input.parentNode;
-    wrapElement = document.createElement('div');
-    wrapElement.className = className + '-wrap';
-    valueElement = document.createElement('div');
-    valueElement.className = className + '-value';
-    buttonElement = document.createElement('a');
-    buttonElement.href = '#';
-    buttonElement.textContent = buttonText;
-    buttonElement.className = className + '-button';
-    wrapElement.appendChild(valueElement);
-    wrapElement.appendChild(buttonElement);
-    parent.insertBefore(wrapElement, input);
-    wrapElement.appendChild(input);
-    input.className += ' ' + className + '-is-wrapped';
-  }
+    function fieldClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      addEvent.trigger(input, 'click', false);
+    }
 
-  function setup() {
+    function wrap() {
+      var parent = input.parentNode;
+      wrapElement = document.createElement('div');
+      wrapElement.className = className + '-wrap';
+      valueElement = document.createElement('div');
+      valueElement.className = className + '-value';
+      buttonElement = document.createElement('a');
+      buttonElement.href = '#';
+      buttonElement.textContent = buttonText;
+      buttonElement.className = className + '-button';
+      wrapElement.appendChild(valueElement);
+      wrapElement.appendChild(buttonElement);
+      parent.insertBefore(wrapElement, input);
+      wrapElement.appendChild(input);
+      input.className += ' ' + className + '-is-wrapped';
+    }
+
     input = field;
     buttonText = text || 'Browse';
     className = input.className.split(' ')[0];
@@ -93,67 +93,22 @@ function FileInput(field, text) {
     addEvent.bind(buttonElement, 'click', fieldClick);
   }
 
-  setup();
-}
-
-function selectFields(selectors) {
-  if (!document.querySelectorAll) {
-    selector.polyfill();
+  function selectFields(selectors) {
+    if (!document.querySelectorAll) {
+      querySelectorPolyfill();
+    }
+    return document.querySelectorAll(selectors);
   }
-  return document.querySelectorAll(selectors);
-}
 
-function init(selectors, text) {
   var fields = selectFields(selectors);
-  textContent.polyfill();
+  textContentPolyfill();
   for (var index = 0, length = fields.length; index < length; index += 1) {
     var field = fields[index];
-    new FileInput(field, text);
+    fileInput(field, text);
   }
-}
+};
 
-exports.init = init;
-
-},{"./tx-event":1,"./tx-selector.js":8,"./tx-textContent.js":10}],3:[function(require,module,exports){
-/* jshint browser:true */
-
-'use strict';
-
-var addEvent = require('./tx-event');
-
-function Hamburger(element) {
-
-  var object;
-  var activeClassName;
-
-  function toggle(event) {
-    var currentClassName = object.className;
-    event.preventDefault();
-    object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + ' ' + activeClassName;
-  }
-
-  function setup() {
-    if (element) {
-      object = element;
-      activeClassName = object.className.split(' ')[0] + '-is-active';
-      addEvent.bind(object, 'click', toggle);
-    }
-  }
-
-  setup();
-
-  return {
-    toggle: toggle
-  };
-}
-
-function init(element) {
-  return new Hamburger(element);
-}
-
-exports.init = init;
-
-},{"./tx-event":1}],4:[function(require,module,exports){
+},{"./tx-event":1,"./tx-selector.js":6,"./tx-textContent.js":8}],3:[function(require,module,exports){
 /* jshint browser:true */
 /* global Promise */
 
@@ -161,71 +116,21 @@ exports.init = init;
 
 var FontFaceObserver = require('fontfaceobserver');
 
-function load(fontCritical, fontClass, fonts, object) {
+module.exports = function (fontCritical, fontsRest, className, object) {
   var critical = new FontFaceObserver(fontCritical);
-  critical.check().then(function () {
-    var index = 0;
-    var length = fonts.length;
+  critical.check().then(function (_) {
     var restChecks = [];
-    object.className += ' ' + fontClass + 'Critical-is-loaded';
-    for (index; index < length; index += 1) {
-      restChecks.push(new FontFaceObserver(fonts[index]).check());
+    object.className += ' ' + className + 'Critical-is-loaded';
+    for (var index, length = fontsRest.length; index < length; index += 1) {
+      restChecks.push(new FontFaceObserver(fontsRest[index]).check());
     }
-    Promise.all(restChecks).then(function () {
-      object.className += ' ' + fontClass + 'Rest-is-loaded';
+    Promise.all(restChecks).then(function (_) {
+      object.className += ' ' + className + 'Rest-is-loaded';
     });
   });
-}
+};
 
-exports.bind = load;
-
-},{"fontfaceobserver":14}],5:[function(require,module,exports){
-/* jshint browser:true */
-
-'use strict';
-
-var addEvent = require('./tx-event');
-
-function Overlay(element) {
-
-  var object;
-  var activeClassName;
-
-  function toggle(event) {
-    var currentClassName = object.className;
-    event.preventDefault();
-    object.className = currentClassName.indexOf(activeClassName) > -1 ? currentClassName.replace(activeClassName, '') : currentClassName + ' ' + activeClassName;
-  }
-
-  function clicked(event) {
-    var target = event.target ? event.target : event.srcElement;
-    if (target.className.indexOf(activeClassName) > -1) {
-      toggle(event);
-    }
-  }
-
-  function setup() {
-    if (element) {
-      object = element;
-      activeClassName = object.className.split(' ')[0] + '-is-active';
-      addEvent.bind(object, 'click', clicked);
-    }
-  }
-
-  setup();
-
-  return {
-    toggle: toggle
-  };
-}
-
-function init(element) {
-  return new Overlay(element);
-}
-
-exports.init = init;
-
-},{"./tx-event":1}],6:[function(require,module,exports){
+},{"fontfaceobserver":13}],4:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
@@ -237,7 +142,7 @@ function selectFields() {
   var fields;
   var fieldsPlaceholders = [];
   if (!document.querySelectorAll) {
-    querySelectorPolyfill.polyfill();
+    querySelectorPolyfill();
   }
   fields = document.querySelectorAll('input, textarea');
   for (var index = 0, length = fields.length; index < length; index += 1) {
@@ -249,7 +154,7 @@ function selectFields() {
 }
 
 function getTarget(event) {
-  return event.currentTarget ? event.currentTarget : event.srcElement;
+  return event.currentTarget || event.srcElement;
 }
 
 function addPlaceholder(field) {
@@ -286,10 +191,10 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{"./tx-event":1,"./tx-selector.js":8}],7:[function(require,module,exports){
-'use strict';
-
+},{"./tx-event":1,"./tx-selector.js":6}],5:[function(require,module,exports){
 /* jshint browser:true */
+
+'use strict';
 
 function polyfill() {
   var lastTime = 0;
@@ -318,12 +223,12 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
 
-function polyfill() {
+module.exports = function (_) {
   document.querySelectorAll = document.body.querySelectorAll = Object.querySelectorAll = function querySelectorAllPolyfill(r, c, i, j, a) {
     var d = document;
     var s = d.createStyleSheet();
@@ -333,28 +238,28 @@ function polyfill() {
     for (i = r.length; i--;) {
       s.addRule(r[i], 'k:v');
       for (j = a.length; j--;) {
-        a[j].currentStyle.k && c.push(a[j]);
+        if (a[j].currentStyle.k) {
+          c.push(a[j]);
+        }
       }
       s.removeRule(0);
     }
     return c;
   };
-}
+};
 
-exports.polyfill = polyfill;
-
-},{}],9:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-var transition = require('./tx-transition').which();
+var transition = require('./tx-transition')();
 var translateGallery = require('./tx-translate').css;
 
 var SLIDE_THRESHOLD = 15;
 var NEXT_SHIFT = 50;
 
-function Swipe(gallery, navigation, navigationItemClassName, jQDocument) {
+function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
 
   var doc;
   var object;
@@ -478,7 +383,7 @@ function Swipe(gallery, navigation, navigationItemClassName, jQDocument) {
 }
 
 function init(gallery, navigation, navigationItemClassName, jQDocument) {
-  return new Swipe(gallery, navigation, navigationItemClassName, jQDocument);
+  return swipe(gallery, navigation, navigationItemClassName, jQDocument);
 }
 
 function dots(size, listClass, pageClass) {
@@ -493,12 +398,12 @@ function dots(size, listClass, pageClass) {
 exports.init = init;
 exports.dots = dots;
 
-},{"./tx-transition":11,"./tx-translate":12}],10:[function(require,module,exports){
+},{"./tx-transition":10,"./tx-translate":11}],8:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-function polyfill() {
+module.exports = function (_) {
   if (Object.defineProperty && Object.getOwnPropertyDescriptor && Object.getOwnPropertyDescriptor(Element.prototype, 'textContent') && !Object.getOwnPropertyDescriptor(Element.prototype, 'textContent').get) {
     (function () {
       var innerText = Object.getOwnPropertyDescriptor(Element.prototype, 'innerText');
@@ -512,16 +417,58 @@ function polyfill() {
       });
     })();
   }
-}
+};
 
-exports.polyfill = polyfill;
-
-},{}],11:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-function which() {
+var addEvent = require('./tx-event');
+
+module.exports = function (element, callback) {
+
+  var object;
+  var task;
+  var active;
+  var activeClassName;
+
+  function toggle(event) {
+    if (event) {
+      event.preventDefault();
+    }
+    if (active) {
+      object.className = object.className.replace(activeClassName, '');
+    } else {
+      object.className += ' ' + activeClassName;
+    }
+    if (task) {
+      task();
+    }
+    active = !active;
+  }
+
+  if (element) {
+    object = element;
+    task = callback;
+    active = false;
+    activeClassName = object.className.split(' ')[0] + '-is-active';
+    addEvent.bind(object, 'click', toggle);
+  } else {
+    return false;
+  }
+
+  return {
+    toggle: toggle
+  };
+};
+
+},{"./tx-event":1}],10:[function(require,module,exports){
+/* jshint browser:true */
+
+'use strict';
+
+module.exports = function (_) {
   var transition;
   var element = document.createElement('element');
   var transitions = {
@@ -536,11 +483,9 @@ function which() {
       return transitions[transition];
     }
   }
-}
+};
 
-exports.which = which;
-
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
@@ -572,7 +517,7 @@ function translateString(axis, distance) {
 exports.css = translateCSS;
 exports.string = translateString;
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
@@ -583,27 +528,21 @@ var $ = require('jquery');
 (function () {
 
   var addEvent = require('./components/tx-event');
-  var file = require('./components/tx-fileInput');
-  var hamburger = require('./components/tx-hamburger');
+  var customFileInputs = require('./components/tx-fileInput');
   var loadFonts = require('./components/tx-loadFonts');
-  var overlay = require('./components/tx-overlay');
   var placeholders = require('./components/tx-placeholders');
   var rAF = require('./components/tx-rAF');
-  var transition = require('./components/tx-transition');
+  var togglable = require('./components/tx-togglable');
   var translate = require('./components/tx-translate');
   var swipe = require('./components/tx-swipeGallery');
+  var whichTransition = require('./components/tx-transition');
 
   var slides = $('.slides');
   var dotsSize = $('.slide').size();
 
-  file.init('#file');
+  customFileInputs('#file');
 
-  hamburger.init(document.getElementById('navToggle'));
-
-  loadFonts.load('RobotoCritical', 'roboto', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], document.documentElement);
-
-  var popupOverlay = overlay.init(document.getElementById('overlay'));
-  addEvent.bind(document.getElementById('overlayTrigger'), 'click', popupOverlay.toggle);
+  loadFonts('RobotoCritical', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], 'roboto', document.documentElement);
 
   if (!Modernizr.input.placeholder) {
     placeholders.polyfill();
@@ -611,25 +550,30 @@ var $ = require('jquery');
 
   rAF.polyfill();
 
-  console.log(transition.which());
+  togglable(document.getElementById('navToggle'));
+
+  var overlay = togglable(document.getElementById('overlay'));
+  addEvent.bind(document.getElementById('overlayTrigger'), 'click', overlay.toggle);
 
   document.getElementById('transformThis').setAttribute('style', translate.string('X', '100px'));
 
   slides.after(swipe.dots(dotsSize, 'js-slidesNavigation', 'js-slidesNavigationPage'));
   swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
+
+  console.log(whichTransition());
 })();
 
-},{"./components/tx-event":1,"./components/tx-fileInput":2,"./components/tx-hamburger":3,"./components/tx-loadFonts":4,"./components/tx-overlay":5,"./components/tx-placeholders":6,"./components/tx-rAF":7,"./components/tx-swipeGallery":9,"./components/tx-transition":11,"./components/tx-translate":12,"jquery":15}],14:[function(require,module,exports){
-(function(){'use strict';var h=!!document.addEventListener;function k(a,b){h?a.addEventListener("scroll",b,!1):a.attachEvent("scroll",b)}function w(a){document.body?a():h?document.addEventListener("DOMContentLoaded",a):document.onreadystatechange=function(){"interactive"==document.readyState&&a()}};function x(a){this.a=document.createElement("div");this.a.setAttribute("aria-hidden","true");this.a.appendChild(document.createTextNode(a));this.b=document.createElement("span");this.c=document.createElement("span");this.h=document.createElement("span");this.f=document.createElement("span");this.g=-1;this.b.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.c.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
-this.f.style.cssText="display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.h.style.cssText="display:inline-block;width:200%;height:200%;font-size:16px;";this.b.appendChild(this.h);this.c.appendChild(this.f);this.a.appendChild(this.b);this.a.appendChild(this.c)}
-function y(a,b){a.a.style.cssText="min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;left:-999px;white-space:nowrap;font:"+b+";"}function z(a){var b=a.a.offsetWidth,c=b+100;a.f.style.width=c+"px";a.c.scrollLeft=c;a.b.scrollLeft=a.b.scrollWidth+100;return a.g!==b?(a.g=b,!0):!1}function A(a,b){function c(){var a=l;z(a)&&null!==a.a.parentNode&&b(a.g)}var l=a;k(a.b,c);k(a.c,c);z(a)};function B(a,b){var c=b||{};this.family=a;this.style=c.style||"normal";this.weight=c.weight||"normal";this.stretch=c.stretch||"normal"}var C=null,D=null,H=!!window.FontFace;function I(){if(null===D){var a=document.createElement("div");try{a.style.font="condensed 100px sans-serif"}catch(b){}D=""!==a.style.font}return D}function J(a,b){return[a.style,a.weight,I()?a.stretch:"","100px",b].join(" ")}
+},{"./components/tx-event":1,"./components/tx-fileInput":2,"./components/tx-loadFonts":3,"./components/tx-placeholders":4,"./components/tx-rAF":5,"./components/tx-swipeGallery":7,"./components/tx-togglable":9,"./components/tx-transition":10,"./components/tx-translate":11,"jquery":14}],13:[function(require,module,exports){
+(function(){var h=!!document.addEventListener;function k(a,b){h?a.addEventListener("scroll",b,!1):a.attachEvent("scroll",b)}function w(a){document.body?a():h?document.addEventListener("DOMContentLoaded",a):document.onreadystatechange=function(){"interactive"==document.readyState&&a()}};function x(a){this.a=document.createElement("div");this.a.setAttribute("aria-hidden","true");this.a.appendChild(document.createTextNode(a));this.b=document.createElement("span");this.c=document.createElement("span");this.h=document.createElement("span");this.f=document.createElement("span");this.g=-1;this.b.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.c.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
+this.f.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";this.h.style.cssText="display:inline-block;width:200%;height:200%;font-size:16px;max-width:none;";this.b.appendChild(this.h);this.c.appendChild(this.f);this.a.appendChild(this.b);this.a.appendChild(this.c)}
+function y(a,b){a.a.style.cssText="max-width:none;min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;left:-999px;white-space:nowrap;font:"+b+";"}function z(a){var b=a.a.offsetWidth,c=b+100;a.f.style.width=c+"px";a.c.scrollLeft=c;a.b.scrollLeft=a.b.scrollWidth+100;return a.g!==b?(a.g=b,!0):!1}function A(a,b){function c(){var a=l;z(a)&&null!==a.a.parentNode&&b(a.g)}var l=a;k(a.b,c);k(a.c,c);z(a)};function B(a,b){var c=b||{};this.family=a;this.style=c.style||"normal";this.weight=c.weight||"normal";this.stretch=c.stretch||"normal"}var C=null,D=null,H=!!window.FontFace;function I(){if(null===D){var a=document.createElement("div");try{a.style.font="condensed 100px sans-serif"}catch(b){}D=""!==a.style.font}return D}function J(a,b){return[a.style,a.weight,I()?a.stretch:"","100px",b].join(" ")}
 B.prototype.a=function(a,b){var c=this,l=a||"BESbswy",E=b||3E3,F=(new Date).getTime();return new Promise(function(a,b){if(H){var q=function(){(new Date).getTime()-F>=E?b(c):document.fonts.load(J(c,c.family),l).then(function(b){1<=b.length?a(c):setTimeout(q,25)},function(){b(c)})};q()}else w(function(){function r(){var b;if(b=-1!=e&&-1!=f||-1!=e&&-1!=g||-1!=f&&-1!=g)(b=e!=f&&e!=g&&f!=g)||(null===C&&(b=/AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent),C=!!b&&(536>parseInt(b[1],
 10)||536===parseInt(b[1],10)&&11>=parseInt(b[2],10))),b=C&&(e==t&&f==t&&g==t||e==u&&f==u&&g==u||e==v&&f==v&&g==v)),b=!b;b&&(null!==d.parentNode&&d.parentNode.removeChild(d),clearTimeout(G),a(c))}function q(){if((new Date).getTime()-F>=E)null!==d.parentNode&&d.parentNode.removeChild(d),b(c);else{var a=document.hidden;if(!0===a||void 0===a)e=m.a.offsetWidth,f=n.a.offsetWidth,g=p.a.offsetWidth,r();G=setTimeout(q,50)}}var m=new x(l),n=new x(l),p=new x(l),e=-1,f=-1,g=-1,t=-1,u=-1,v=-1,d=document.createElement("div"),
 G=0;d.dir="ltr";y(m,J(c,"sans-serif"));y(n,J(c,"serif"));y(p,J(c,"monospace"));d.appendChild(m.a);d.appendChild(n.a);d.appendChild(p.a);document.body.appendChild(d);t=m.a.offsetWidth;u=n.a.offsetWidth;v=p.a.offsetWidth;q();A(m,function(a){e=a;r()});y(m,J(c,'"'+c.family+'",sans-serif'));A(n,function(a){f=a;r()});y(n,J(c,'"'+c.family+'",serif'));A(p,function(a){g=a;r()});y(p,J(c,'"'+c.family+'",monospace'))})})};window.FontFaceObserver=B;window.FontFaceObserver.prototype.check=B.prototype.a;"undefined"!==typeof module&&(module.exports=window.FontFaceObserver);}());
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*!
- * jQuery JavaScript Library v2.2.0
+ * jQuery JavaScript Library v2.2.2
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -639,7 +583,7 @@ G=0;d.dir="ltr";y(m,J(c,"sans-serif"));y(n,J(c,"serif"));y(p,J(c,"monospace"));d
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2016-01-08T20:02Z
+ * Date: 2016-03-17T17:51Z
  */
 
 (function( global, factory ) {
@@ -695,7 +639,7 @@ var support = {};
 
 
 var
-	version = "2.2.0",
+	version = "2.2.2",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -906,6 +850,7 @@ jQuery.extend( {
 	},
 
 	isPlainObject: function( obj ) {
+		var key;
 
 		// Not plain objects:
 		// - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -915,14 +860,18 @@ jQuery.extend( {
 			return false;
 		}
 
+		// Not own constructor property must be Object
 		if ( obj.constructor &&
-				!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+				!hasOwn.call( obj, "constructor" ) &&
+				!hasOwn.call( obj.constructor.prototype || {}, "isPrototypeOf" ) ) {
 			return false;
 		}
 
-		// If the function hasn't returned already, we're confident that
-		// |obj| is a plain object, created by {} or constructed with new Object
-		return true;
+		// Own properties are enumerated firstly, so to speed up,
+		// if last one is own, then all properties are own
+		for ( key in obj ) {}
+
+		return key === undefined || hasOwn.call( obj, key );
 	},
 
 	isEmptyObject: function( obj ) {
@@ -5109,7 +5058,7 @@ function on( elem, types, selector, data, fn, one ) {
 	if ( fn === false ) {
 		fn = returnFalse;
 	} else if ( !fn ) {
-		return this;
+		return elem;
 	}
 
 	if ( one === 1 ) {
@@ -5758,14 +5707,14 @@ var
 	rscriptTypeMasked = /^true\/(.*)/,
 	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
+// Manipulating tables requires a tbody
 function manipulationTarget( elem, content ) {
-	if ( jQuery.nodeName( elem, "table" ) &&
-		jQuery.nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ) {
+	return jQuery.nodeName( elem, "table" ) &&
+		jQuery.nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ?
 
-		return elem.getElementsByTagName( "tbody" )[ 0 ] || elem;
-	}
-
-	return elem;
+		elem.getElementsByTagName( "tbody" )[ 0 ] ||
+			elem.appendChild( elem.ownerDocument.createElement( "tbody" ) ) :
+		elem;
 }
 
 // Replace/restore the type attribute of script elements for safe DOM manipulation
@@ -6272,7 +6221,7 @@ var getStyles = function( elem ) {
 		// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
 		var view = elem.ownerDocument.defaultView;
 
-		if ( !view.opener ) {
+		if ( !view || !view.opener ) {
 			view = window;
 		}
 
@@ -6421,15 +6370,18 @@ function curCSS( elem, name, computed ) {
 		style = elem.style;
 
 	computed = computed || getStyles( elem );
+	ret = computed ? computed.getPropertyValue( name ) || computed[ name ] : undefined;
+
+	// Support: Opera 12.1x only
+	// Fall back to style even without computed
+	// computed is undefined for elems on document fragments
+	if ( ( ret === "" || ret === undefined ) && !jQuery.contains( elem.ownerDocument, elem ) ) {
+		ret = jQuery.style( elem, name );
+	}
 
 	// Support: IE9
 	// getPropertyValue is only needed for .css('filter') (#12537)
 	if ( computed ) {
-		ret = computed.getPropertyValue( name ) || computed[ name ];
-
-		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
-			ret = jQuery.style( elem, name );
-		}
 
 		// A tribute to the "awesome hack by Dean Edwards"
 		// Android Browser returns percentage for some values,
@@ -7952,6 +7904,12 @@ jQuery.extend( {
 	}
 } );
 
+// Support: IE <=11 only
+// Accessing the selectedIndex property
+// forces the browser to respect setting selected
+// on the option
+// The getter ensures a default option is selected
+// when in an optgroup
 if ( !support.optSelected ) {
 	jQuery.propHooks.selected = {
 		get: function( elem ) {
@@ -7960,6 +7918,16 @@ if ( !support.optSelected ) {
 				parent.parentNode.selectedIndex;
 			}
 			return null;
+		},
+		set: function( elem ) {
+			var parent = elem.parentNode;
+			if ( parent ) {
+				parent.selectedIndex;
+
+				if ( parent.parentNode ) {
+					parent.parentNode.selectedIndex;
+				}
+			}
 		}
 	};
 }
@@ -8154,7 +8122,8 @@ jQuery.fn.extend( {
 
 
 
-var rreturn = /\r/g;
+var rreturn = /\r/g,
+	rspaces = /[\x20\t\r\n\f]+/g;
 
 jQuery.fn.extend( {
 	val: function( value ) {
@@ -8230,9 +8199,15 @@ jQuery.extend( {
 		option: {
 			get: function( elem ) {
 
-				// Support: IE<11
-				// option.value not trimmed (#14858)
-				return jQuery.trim( elem.value );
+				var val = jQuery.find.attr( elem, "value" );
+				return val != null ?
+					val :
+
+					// Support: IE10-11+
+					// option.text throws exceptions (#14686, #14858)
+					// Strip and collapse whitespace
+					// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+					jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 			}
 		},
 		select: {
@@ -8285,7 +8260,7 @@ jQuery.extend( {
 				while ( i-- ) {
 					option = options[ i ];
 					if ( option.selected =
-							jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
+						jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
 					) {
 						optionSet = true;
 					}
@@ -8479,7 +8454,7 @@ jQuery.extend( jQuery.event, {
 				// But now, this "simulate" function is used only for events
 				// for which stopPropagation() is noop, so there is no need for that anymore.
 				//
-				// For the compat branch though, guard for "click" and "submit"
+				// For the 1.x branch though, guard for "click" and "submit"
 				// events is still used, but was moved to jQuery.event.stopPropagation function
 				// because `originalEvent` should point to the original event for the constancy
 				// with other events and for more focused logic
@@ -9980,18 +9955,6 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 
 
 
-// Support: Safari 8+
-// In Safari 8 documents created via document.implementation.createHTMLDocument
-// collapse sibling forms: the second one becomes a child of the first one.
-// Because of that, this security measure has to be disabled in Safari 8.
-// https://bugs.webkit.org/show_bug.cgi?id=137337
-support.createHTMLDocument = ( function() {
-	var body = document.implementation.createHTMLDocument( "" ).body;
-	body.innerHTML = "<form></form><form></form>";
-	return body.childNodes.length === 2;
-} )();
-
-
 // Argument "data" should be string of html
 // context (optional): If specified, the fragment will be created in this context,
 // defaults to document
@@ -10004,12 +9967,7 @@ jQuery.parseHTML = function( data, context, keepScripts ) {
 		keepScripts = context;
 		context = false;
 	}
-
-	// Stop scripts or inline event handlers from being executed immediately
-	// by using document.implementation
-	context = context || ( support.createHTMLDocument ?
-		document.implementation.createHTMLDocument( "" ) :
-		document );
+	context = context || document;
 
 	var parsed = rsingleTag.exec( data ),
 		scripts = !keepScripts && [];
@@ -10249,11 +10207,8 @@ jQuery.fn.extend( {
 			}
 
 			// Add offsetParent borders
-			// Subtract offsetParent scroll positions
-			parentOffset.top += jQuery.css( offsetParent[ 0 ], "borderTopWidth", true ) -
-				offsetParent.scrollTop();
-			parentOffset.left += jQuery.css( offsetParent[ 0 ], "borderLeftWidth", true ) -
-				offsetParent.scrollLeft();
+			parentOffset.top += jQuery.css( offsetParent[ 0 ], "borderTopWidth", true );
+			parentOffset.left += jQuery.css( offsetParent[ 0 ], "borderLeftWidth", true );
 		}
 
 		// Subtract parent offsets and element margins
@@ -10460,4 +10415,4 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}]},{},[13]);
+},{}]},{},[12]);

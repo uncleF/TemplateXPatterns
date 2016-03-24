@@ -1,5 +1,7 @@
 /* jshint browser:true */
 
+'use strict';
+
 function polyfill() {
   var lastTime = 0;
   var vendors = ['ms', 'moz', 'webkit', 'o'];
