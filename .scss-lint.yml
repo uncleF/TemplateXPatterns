@@ -166,6 +166,7 @@ linters:
       - min-height
       - max-width
       - max-height
+      - size
       - resize
       - padding
       - padding-top
@@ -440,7 +441,7 @@ linters:
     enabled: true
 
   UrlQuotes:
-    enabled: true
+    enabled: false
 
   VariableForProperty:
     enabled: false
