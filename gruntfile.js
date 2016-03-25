@@ -1,50 +1,44 @@
 //Gruntfile for the TemplateXPatterns Project
 
-var DEVELOPMENT_DIR  = 'dev';        // Project Development
-var RESOURCES_DIR    = 'res';        // Resources (CSS, JavaScript)
-var COMPONENTS_DIR   = 'components'; // Components
-var TEMPLATES_DIR    = 'templates';  // Templates
-var SASS_DIR         = 'sass-dev';   // Sass
-var CSS_DEV_DIR      = 'css-dev';    // Generated CSS
-var JS_DIR           = 'js';         // Production JavaScript
-var JS_DEV_DIR       = 'js-dev';     // JavaScript
-var JS_FILENAME      = 'scripts';    // Production JavaScript Filename
+'use strict';
 
-function fillAnArray(array, path) {
-  var result = [];
-  for (var element in array) {
-    result.push(path + array[element]);
-  }
-  return result;
-}
+const DEVELOPMENT_DIR  = 'dev';        // Project Development
+
+const RESOURCES_DIR    = 'res';        // Resources (CSS, JavaScript)
+const COMPONENTS_DIR   = 'components'; // Components
+
+const TEMPLATES_DIR    = 'templates';  // Templates
+
+const SASS_DIR         = 'sass';       // Sass
+const CSS_DIR          = 'css';        // Generated CSS
+
+const JS_DEV_DIR       = 'js-dev';     // JavaScript
+const JS_DIR           = 'js';         // Production JavaScript
+const JS_BUNDLE        = 'scripts';    // Production JavaScript Filename
 
 module.exports = function(grunt) {
 
   var project = {
-    init: function() {
-      this.dir = DEVELOPMENT_DIR + '/';
-      var resourcesDirCompiled = this.dir + RESOURCES_DIR + '/';
-      this.templates = {
-        dir: this.dir + TEMPLATES_DIR + '/',
-        comp: this.dir + TEMPLATES_DIR + '/' + COMPONENTS_DIR + '/'
-      };
-      this.res = {
-        dir: resourcesDirCompiled,
-        css: {
-          devDir: resourcesDirCompiled + CSS_DEV_DIR + '/',
-          sass: resourcesDirCompiled + SASS_DIR + '/',
-          comp: resourcesDirCompiled + SASS_DIR + '/' + COMPONENTS_DIR + '/'
-        },
-        js: {
-          dir: resourcesDirCompiled + JS_DIR + '/',
-          devDir: resourcesDirCompiled + JS_DEV_DIR + '/',
-          comp: resourcesDirCompiled + JS_DEV_DIR + '/' + COMPONENTS_DIR + '/',
-          filename: JS_FILENAME
-        }
-      };
-      return this;
+    dir: `${DEVELOPMENT_DIR}/`,
+    res: {
+      dir: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}`,
+      templates: {
+        dir: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${TEMPLATES_DIR}/`,
+        comp: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${TEMPLATES_DIR}/${COMPONENTS_DIR}/`
+      },
+      css: {
+        dir: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${CSS_DIR}/`,
+        sass: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${SASS_DIR}/`,
+        comp: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${SASS_DIR}/${COMPONENTS_DIR}/`
+      },
+      js: {
+        dir: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${JS_DIR}/`,
+        devDir: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${JS_DEV_DIR}/`,
+        comp: `${DEVELOPMENT_DIR}/${RESOURCES_DIR}/${JS_DEV_DIR}/${COMPONENTS_DIR}/`,
+        bundle: JS_BUNDLE
+      }
     }
-  }.init();
+  };
 
   require('load-grunt-tasks')(grunt);
 
@@ -54,43 +48,16 @@ module.exports = function(grunt) {
       options: {
         'htmlhintrc': '.htmlhintrc'
       },
-      htmlHint: {
+      test: {
         cwd: project.dir,
         src: ['*.html'],
         expand: true
       }
     },
-    jscs: {
-      options: {
-        config: '.jscsrc'
-      },
-      jscs: {
-        cwd: project.res.js.devDir,
-        src: ['*.js', '!*.min.js'],
-        expand: true
-      }
-    },
-    jshint: {
-      options: {
-        'jshintrc': '.jshintrc'
-      },
-      jsHint: {
-        cwd: project.res.js.devDir,
-        src: ['*.js', '!*.min.js'],
-        expand: true
-      }
-    },
-    jsinspect: {
-      jsInspect: {
-        cwd: project.res.js.devDir,
-        src: ['*.js', '!*.min.js'],
-        expand: true
-      }
-    },
     scsslint: {
-      scssLint: {
+      test: {
         cwd: project.res.css.sass,
-        src: ['**/*.scss'],
+        src: ['**/*.{scss,sass}'],
         expand: true
       }
     },
@@ -98,9 +65,10 @@ module.exports = function(grunt) {
       options: {
         csslintrc: '.csslintrc'
       },
-      cssLint: {
-        cwd: project.res.css.devDir,
-        src: ['*.css', '!*-IE.css'],
+      test: {
+        cwd: project.res.css.dir,
+        src: ['*.css'],
+        dest: project.dir,
         expand: true
       }
     },
@@ -109,17 +77,36 @@ module.exports = function(grunt) {
         shorthand: false,
         verbose: true
       },
-      csscssTest: {
-        src: project.res.css.devDir + '*.css'
+      test: {
+        cwd: project.res.css.dir,
+        src: ['*.css'],
+        expand: true
       }
     },
-    arialinter: {
+    jscs: {
       options: {
-        level: 'A'
+        config: '.jscsrc'
       },
-      ariaLinter: {
-        cwd: project.dir,
-        src: ['*.html'],
+      test: {
+        cwd: project.res.js.devDir,
+        src: ['*.js', `${project.res.js.comp.replace(project.dir, '')}**\*.js`],
+        expand: true
+      }
+    },
+    jshint: {
+      options: {
+        'jshintrc': '.jshintrc'
+      },
+      test: {
+        cwd: project.res.js.devDir,
+        src: ['*.js', `${project.res.js.comp.replace(project.dir, '')}**\*.js`],
+        expand: true
+      }
+    },
+    jsinspect: {
+      test: {
+        cwd: project.res.js.devDir,
+        src: ['*.js', `${project.res.js.comp.replace(project.dir, '')}**\*.js`],
         expand: true
       }
     },
@@ -131,8 +118,8 @@ module.exports = function(grunt) {
         thresholds: grunt.file.readJSON('.analyzecssrc')
       },
       ananlyzeCSS: {
-        cwd: project.res.css.devDir,
-        src: [project.res.css.filename + '.min.css'],
+        cwd: project.res.css.dir,
+        src: ['*.css'],
         expand: true
       }
     },
@@ -142,13 +129,10 @@ module.exports = function(grunt) {
         options: {
           transform: [['babelify', {'presets': ['es2015']}]]
         },
-        files: {
-          bundleFiles: function() {
-            var bundleFilesObject = {};
-            bundleFilesObject[project.res.js.dir + project.res.js.filename + '.js'] = [project.res.js.devDir + project.res.js.filename + '.js'];
-            return bundleFilesObject;
-          }
-        }.bundleFiles()
+        cwd: project.res.js.devDir,
+        src: ['*.js'],
+        dest: project.res.js.dir,
+        expand: true
       }
     },
 
@@ -157,10 +141,10 @@ module.exports = function(grunt) {
         sourceMap: true,
         precision: 5
       },
-      generateCSS: {
+      generate: {
         cwd: project.res.css.sass,
-        src: ['**/*.{scss,sass}', '!**/tx/*.{scss,sass}'],
-        dest: project.res.css.devDir,
+        src: ['**/*.{scss,sass}'],
+        dest: project.res.css.dir,
         ext: '.css',
         expand: true
       }
@@ -171,62 +155,53 @@ module.exports = function(grunt) {
         browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'Explorer >= 7'],
         cascade: false
       },
-      prefixCSS: {
-        cwd: project.res.css.devDir,
-        src: ['**/*.css', '!**/*-IE.css'],
-        dest: project.res.css.devDir,
-        expand: true
-      }
-    },
-
-    csscomb: {
-      options: {
-        config: '.csscombrc'
-      },
-      cssSortDev: {
-        cwd: project.res.css.devDir,
+      prefix: {
+        cwd: project.res.css.dir,
         src: ['*.css'],
-        dest: project.res.css.devDir,
+        dest: project.res.css.dir,
         expand: true
       }
     },
 
     processhtml: {
       options: {
-        includeBase: project.templates.comp,
+        includeBase: project.res.templates.comp,
         commentMarker: '@tx-process',
         recursive: true
       },
       templates: {
-        cwd: project.templates.dir,
-        src: ['*.html', '!* copy.html'],
+        cwd: project.res.templates.dir,
+        src: ['*.html', '!* copy*.html', '!* - Copy*.html'],
         dest: project.dir,
-        ext: '.html',
         expand: true
       }
+    },
+
+    clean: {
+      reports: [`*.css`],
     },
 
     watch: {
       options: {
         spawn: false
       },
-      javascript: {
-        files: [project.res.js.devDir + '**/*.js'],
-        tasks: ['browserify']
+      html: {
+        files: [`${project.res.templates.dir}**/*.html`],
+        tasks: ['processhtml']
       },
       sass: {
         files: [project.res.css.sass + '**/*.{scss,sass}'],
         tasks: ['sass', 'autoprefixer']
       },
-      html: {
-        files: [project.templates.dir + '**/*.html'],
-        tasks: ['processhtml']
+      javascript: {
+        files: [project.res.js.devDir + '**/*.js'],
+        tasks: ['browserify']
       },
       livereload: {
         options: {
           livereload: true
         },
-        files: [project.dir + '*.html', project.res.css.devDir + '**/*.css', project.res.js.dir + '**/*.js']
+        files: [`${project.dir}*.html`, `${project.res.css.dir}**/*.css`, `${project.res.js.dir}**/*.{js,json}`]
       }
     },
     concurrent: {
@@ -234,21 +209,45 @@ module.exports = function(grunt) {
         logConcurrentOutput: true,
         limit: 4
       },
-      projectWatch: ['watch:javascript', 'watch:sass', 'watch:html', 'watch:livereload']
+      projectWatch: ['watch:html', 'watch:sass', 'watch:javascript', 'watch:livereload']
     }
 
   });
 
-  grunt.registerTask('quality', ['htmlhint', 'jscs', 'jshint', 'jsinspect', 'scsslint', 'csslint', 'csscss', 'arialinter']);
+  grunt.registerTask('quality', [
+    'htmlhint',
+    'scsslint',
+    'csslint',
+    'csscss',
+    'jscs',
+    'jshint',
+    'jsinspect',
+    'clean'
+  ]);
 
-  grunt.registerTask('performance', ['analyzecss']);
+  grunt.registerTask('performance', [
+    'analyzecss'
+  ]);
 
-  grunt.registerTask('generate-css', ['sass', 'autoprefixer']);
+  grunt.registerTask('generate-css', [
+    'sass',
+    'autoprefixer'
+  ]);
 
-  grunt.registerTask('watch-project', ['concurrent']);
+  grunt.registerTask('watch-project', [
+    'concurrent'
+  ]);
 
-  grunt.registerTask('compile', ['browserify', 'generate-css', 'processhtml']);
+  grunt.registerTask('compile', [
+    'processhtml',
+    'generate-css',
+    'browserify'
+  ]);
 
-  grunt.registerTask('build', ['compile']);
+  grunt.registerTask('build', [
+    'compile',
+    'quality',
+    'performance'
+  ]);
 
 };

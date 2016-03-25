@@ -1,0 +1,17 @@
+// Layout
+
+$breakpoints: (
+  desktopMin: 980px,
+  desktopWide: 1366px,
+  desktopMax: 1920px,
+  phoneMax: 720px
+);
+
+$breakpointsRem: (
+  desktopMin: txf-breakpointRem(desktopMin),
+  desktopWide: txf-breakpointRem(desktopWide),
+  desktopMax: txf-breakpointRem(desktopMax),
+  phoneMax: txf-breakpointRem(phoneMax)
+);
+
+$gap: 30px;

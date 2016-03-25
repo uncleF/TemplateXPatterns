@@ -2,9 +2,9 @@
 
 'use strict';
 
-var querySelectorPolyfill = require('./tx-selector.js');
+var querySelectorPolyfill = require('./tx-querySelectorAll.js');
 var textContentPolyfill = require('./tx-textContent.js');
-var addEvent = require('./tx-event');
+var eventTools = require('./tx-event');
 
 module.exports = (selectors, text) => {
 
@@ -25,7 +25,7 @@ module.exports = (selectors, text) => {
     function fieldClick(event) {
       event.preventDefault();
       event.stopPropagation();
-      addEvent.trigger(input, 'click', false);
+      eventTools.trigger(input, 'click', false);
     }
 
     function wrap() {
@@ -50,9 +50,9 @@ module.exports = (selectors, text) => {
     className = input.className.split(' ')[0];
     activeClassName = `${className}-is-active`;
     wrap(input);
-    addEvent.bind(input, 'change', fieldChange);
-    addEvent.bind(wrapElement, 'click', fieldClick);
-    addEvent.bind(buttonElement, 'click', fieldClick);
+    eventTools.bind(input, 'change', fieldChange);
+    eventTools.bind(wrapElement, 'click', fieldClick);
+    eventTools.bind(buttonElement, 'click', fieldClick);
 
   }
 

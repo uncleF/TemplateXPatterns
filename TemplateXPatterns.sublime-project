@@ -1,7 +1,8 @@
 {
   "color_variables_files":
   [
-    "/Users/uncleFucka/Projects/TemplateXPatterns/dev/res/sass-dev/project/_project.scss"
+    "/Users/uncleFucka/Projects/TemplateXPatterns/dev/res/sass/project/_project.scss",
+    "D:/Projects/Projects/TemplateXPatterns/dev/res/sass/project/_project.scss"
   ],
   "folders":
   [
@@ -21,11 +22,11 @@
     }, {
       "follow_symlinks": true,
       "name": "TemplateXPatterns: HTML",
-      "path": "dev/templates"
+      "path": "dev/res/templates"
     }, {
       "follow_symlinks": true,
       "name": "TemplateXPatterns: Sass",
-      "path": "dev/res/sass-dev"
+      "path": "dev/res/sass"
     }, {
       "follow_symlinks": true,
       "name": "TemplateXPatterns: JavaScript",

@@ -1,0 +1,23 @@
+/* File Input */
+
+@import '../patterns/_tx-fileInput';
+
+.file {
+
+  &-is-wrapped {
+    @extend %tx-file-input;
+  }
+
+  &-wrap {
+    @extend %tx-file;
+  }
+
+  &-value {
+    @extend %tx-file-value;
+  }
+
+  &-button {
+    @extend %tx-file-button;
+  }
+
+}

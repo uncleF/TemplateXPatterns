@@ -1,0 +1,23 @@
+/* Hamburger */
+
+@import '../patterns/_tx-hamburger';
+
+.navToggle {
+  @extend %tx-hamburger;
+  @include tx-inline-block;
+  position: relative;
+
+  &-is-active {
+    @extend %tx-hamburger-is-active;
+  }
+
+}
+
+.navToggleLabel {
+  @extend %tx-hamburgerleLabel;
+
+  .navToggle-is-active & {
+    @extend %tx-hamburgerleLabel-is-active;
+  }
+
+}

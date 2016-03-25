@@ -1,0 +1,15 @@
+/* Transform */
+
+.transformThis {
+  $transformThis-size: 100px;
+  $transformThis-fontSize: 18px;
+  $transformThis-color: $white;
+  $transformThis-background: $red;
+
+  @include tx-font-size($transformThis-fontSize, none);
+  width: $transformThis-size;
+  color: $transformThis-color;
+  background: $transformThis-background;
+  text-align: center;
+  line-height: $transformThis-size;
+}

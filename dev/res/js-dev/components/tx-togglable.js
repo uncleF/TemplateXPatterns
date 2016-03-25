@@ -2,7 +2,7 @@
 
 'use strict';
 
-var addEvent = require('./tx-event');
+var eventTools = require('./tx-event');
 
 module.exports = (element, callback) => {
 
@@ -31,7 +31,7 @@ module.exports = (element, callback) => {
     task = callback;
     active = false;
     activeClassName = `${object.className.split(' ')[0]}-is-active`;
-    addEvent.bind(object, 'click', toggle);
+    eventTools.bind(object, 'click', toggle);
   } else {
     return false;
   }

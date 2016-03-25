@@ -1,0 +1,10 @@
+/* Field */
+
+@import '../patterns/_tx-field';
+
+.field {
+  $field-width: 300px;
+
+  @extend %tx-field;
+  width: ($field-width - $tx-field-padding * 2);
+}

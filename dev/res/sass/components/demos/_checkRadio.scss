@@ -1,0 +1,26 @@
+/* Checkbox & Radio Button */
+
+@import '../patterns/_tx-checkRadio';
+
+%label {
+  @include tx-inline-block;
+  border: 0;
+}
+
+.checkbox {
+  @extend %tx-checkbox;
+}
+
+.checkboxLabel {
+  @extend %tx-checkboxLabel;
+  @extend %label;
+}
+
+.radio {
+  @extend %tx-radio;
+}
+
+.radioLabel {
+  @extend %tx-radioLabel;
+  @extend %label;
+}

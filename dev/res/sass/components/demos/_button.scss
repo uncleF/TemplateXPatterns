@@ -1,0 +1,12 @@
+/* Button */
+
+@import '../patterns/_tx-button';
+
+.buttonLink {
+  @extend %tx-button-link;
+  @include tx-inline-block;
+}
+
+.buttonInput {
+  @extend %tx-button-input;
+}

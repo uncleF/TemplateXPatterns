@@ -1,0 +1,11 @@
+/* Highlight */
+
+@import '../patterns/_tx-highlight';
+
+.hightlight {
+  @extend %tx-hightlight;
+}
+
+.narrowTextHolder {
+  width: 200px;
+}

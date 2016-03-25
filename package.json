@@ -1,6 +1,6 @@
 {
   "name": "templatexpatterns",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "TemplateXPatterns",
   "private": true,
   "dependencies": {
@@ -12,14 +12,13 @@
     "babelify": "^7.2.0",
     "grunt": "^0.4.5",
     "grunt-analyze-css": "^1.0.0",
-    "grunt-arialinter": "^0.2.1",
     "grunt-autoprefixer": "^3.0.3",
     "grunt-browserify": "^4.0.1",
     "grunt-concurrent": "^2.2.1",
+    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-csslint": "^0.4.0",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-csscomb": "^3.0.0",
     "grunt-csscss": "^0.6.2",
     "grunt-htmlhint": "^0.4.1",
     "grunt-jscs": "^1.8.0",

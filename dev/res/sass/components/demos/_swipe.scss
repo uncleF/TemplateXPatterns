@@ -1,0 +1,121 @@
+/* Swipe */
+
+.swipeDemo {
+  height: 100%;
+  text-align: center;
+}
+
+.swipeDemoBody {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+
+  &:before {
+    @include tx-pseudo-va;
+    margin: 0 -5px 0 0;
+  }
+
+}
+
+.sliderHolder {
+  $sliderHolder-color: $white;
+
+  @include tx-inline-block;
+  overflow: hidden;
+  width: 100%;
+  color: $sliderHolder-color;
+  font-size: 4em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.slides {
+  position: relative;
+  transform: translateZ(0);
+
+  &:before {
+    @include tx-pseudo;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 10000px;
+  }
+
+}
+
+.slide {
+  @include tx-inline-block;
+  width: 100%;
+  line-height: 300px;
+  vertical-align: top;
+
+  &1 {
+    $slide1-background: $red;
+
+    background: $slide1-background;
+  }
+
+  &2 {
+    $slide2-background: $blue;
+
+    background: $slide2-background;
+  }
+
+  &3 {
+    $slide3-background: $blueDark;
+
+    background: $slide3-background;
+  }
+
+  &4 {
+    $slide4-background: $purple;
+
+    background: $slide4-background;
+  }
+
+  &5 {
+    $slide5-background: $black;
+
+    background: $slide5-background;
+  }
+
+}
+
+.js-slidesNavigation {
+  height: 6px;
+  padding: 0;
+  margin: 20px 0 0;
+  text-align: center;
+}
+
+.js-slidesNavigationPage {
+  $slidesNavigationPage-background: $gray;
+  $slidesNavigationPage-backgroundActive: $black;
+
+  @include tx-inline-block;
+  overflow: hidden;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin: 0 5px;
+  background: $slidesNavigationPage-background;
+  font-size: 0;
+  vertical-align: top;
+
+  &-is-active {
+    background: $slidesNavigationPage-backgroundActive;
+  }
+
+}
+
+.slides-are-fixing {
+  transition: .25s;
+}
+
+.slides-are-swiping {
+  pointer-events: none;
+  user-select: none;
+}

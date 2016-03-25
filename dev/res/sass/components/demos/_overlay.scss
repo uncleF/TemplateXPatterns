@@ -1,0 +1,12 @@
+/* Overlay */
+
+@import '../patterns/_tx-overlay';
+
+.overlay {
+  @extend %tx-overlay;
+
+  &-is-active {
+    @extend %tx-overlay-is-active;
+  }
+
+}
