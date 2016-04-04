@@ -1,6 +1,8 @@
-/* Hamburger */
-
 @import '../patterns/_tx-hamburger';
+
+
+
+/* Hamburger */
 
 .navToggle {
   @extend %tx-hamburger;
@@ -14,10 +16,10 @@
 }
 
 .navToggleLabel {
-  @extend %tx-hamburgerleLabel;
+  @extend %tx-hamburger-label;
 
   .navToggle-is-active & {
-    @extend %tx-hamburgerleLabel-is-active;
+    @extend %tx-hamburger-label-is-active;
   }
 
 }

@@ -13,6 +13,11 @@
   height: 100%;
   vertical-align: middle; }
 
+/* Fast Touch */
+a, label, select, button {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation; }
+
 /* Typography & Vertical Rhythm */
 html {
   font-size: 16px;
@@ -261,14 +266,10 @@ hr {
 a:focus, input:focus, select:focus, button:focus, textarea:focus {
   outline: 1px dotted #ccc; }
 
-/* Fast Touch */
-a, label, select, button {
-  -ms-touch-action: manipulation;
-  touch-action: manipulation; }
-
 /* Links */
 a {
   color: #337ab7;
+  -webkit-tap-highlight-color: rgba(35, 82, 124, 0.25);
   text-decoration: underline;
   -webkit-text-decoration-color: rgba(51, 122, 183, 0.5);
   -moz-text-decoration-color: rgba(51, 122, 183, 0.5);
@@ -324,7 +325,7 @@ input[type='radio'], input[type='checkbox'] {
   box-sizing: border-box;
   vertical-align: middle; }
 
-input[type='search'], input[type='number'] {
+input[type='submit'], input[type='search'], input[type='number'], button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none; }
@@ -382,7 +383,6 @@ textarea {
   font-size: inherit; }
 
 /* Button */
-/* Button */
 .buttonLink, .file-button, .buttonInput {
   height: 44px;
   padding: 0 28px;
@@ -394,44 +394,41 @@ textarea {
   .buttonLink, .file-button {
     text-decoration: none;
     line-height: 44px; }
-    .buttonLink:visited, .file-button:visited {
-      color: #fff;
-      background: #337ab7; }
   .buttonInput {
+    line-height: 1;
     cursor: pointer; }
+  .buttonLink:visited, .file-button:visited {
+    color: #fff;
+    background: #337ab7; }
   .buttonLink:hover, .file-button:hover, .buttonInput:hover, .buttonLink:active, .file-button:active, .buttonInput:active {
     color: #337ab7;
     background: #fff; }
 
-/* Checkbox & Radio Button */
+/* Button */
 /* Checkbox & Radio Button */
 .checkbox, .radio {
   position: absolute;
   z-index: -1;
   left: -10000px; }
-
-.checkboxLabel, .radioLabel {
-  position: relative;
-  padding: 0 0 0 30px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
-.checkboxLabel:before, .radioLabel:before {
-  top: 50%;
-  left: 0;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #ccc;
-  margin: -10px 0 0; }
-
-.checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after {
-  top: 50%;
-  left: 10px; }
-
-.checkbox:focus + .checkboxLabel:before, .radio:focus + .radioLabel:before {
-  outline: 1px dotted #ccc; }
+  .checkboxLabel, .radioLabel {
+    position: relative;
+    padding: 0 0 0 30px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
+  .checkboxLabel:before, .radioLabel:before {
+    top: 50%;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    margin: -10px 0 0; }
+  .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after {
+    top: 50%;
+    left: 10px; }
+  .checkbox:focus + .checkboxLabel:before, .radio:focus + .radioLabel:before {
+    outline: 1px dotted #ccc; }
 
 /* Checkbox */
 .checkbox:checked + .checkboxLabel:after {
@@ -451,20 +448,20 @@ textarea {
   margin: -4px 0 0 -4px;
   background: #337ab7; }
 
+/* Checkbox & Radio Button */
 .checkboxLabel, .radioLabel {
   border: 0; }
 
-/* Field */
 /* Field */
 .field {
   height: 44px;
   padding: 0 15px;
   border: 2px solid #ccc; }
 
+/* Field */
 .field {
   width: 270px; }
 
-/* File Input */
 /* Button */
 .file-wrap {
   position: relative;
@@ -482,7 +479,7 @@ textarea {
     top: -2px;
     right: -2px; }
 
-/* Hamburger */
+/* File Input */
 /* Hamburger */
 .navToggle {
   height: 19px;
@@ -505,6 +502,15 @@ textarea {
     -webkit-transform: translateY(-8px) rotate(-135deg);
     -ms-transform: translateY(-8px) rotate(-135deg);
     transform: translateY(-8px) rotate(-135deg); }
+  .navToggle:before, .navToggle:after, .navToggleLabel:before {
+    width: 25px;
+    height: 3px;
+    background: #d9534f;
+    -webkit-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-transition: 0.3s;
+    transition: 0.3s; }
 
 .navToggleLabel {
   position: relative;
@@ -522,20 +528,10 @@ textarea {
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg); }
 
-.navToggle:before, .navToggle:after, .navToggleLabel:before {
-  width: 25px;
-  height: 3px;
-  background: #d9534f;
-  -webkit-transform-origin: 50% 50%;
-  -ms-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
-  -webkit-transition: 0.3s;
-  transition: 0.3s; }
-
+/* Hamburger */
 .navToggle {
   position: relative; }
 
-/* Highlight */
 /* Highlight */
 .hightlight {
   -webkit-box-decoration-break: clone;
@@ -544,10 +540,27 @@ textarea {
   color: #fff;
   background: #d9534f; }
 
+/* Highlight */
 .narrowTextHolder {
   width: 200px; }
 
-/* Overlay */
+/* Simple Fade In and Out */
+.overlay {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translateX(-100%) translateZ(0);
+  transform: translateX(-100%) translateZ(0);
+  -webkit-transition: opacity 0.15s, visibility 0.0001s 0.15s, -webkit-transform 0.0001s 0.15s;
+  transition: opacity 0.15s, visibility 0.0001s 0.15s, transform 0.0001s 0.15s; }
+
+.overlay-is-active {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-transition: opacity 0.15s, -webkit-transform 0.0001s, visibility 0.0001s;
+  transition: opacity 0.15s, transform 0.0001s, visibility 0.0001s; }
+
 /* Overlay */
 .overlay {
   z-index: 100;
@@ -559,21 +572,9 @@ textarea {
   background: #333;
   background: rgba(51, 51, 51, 0.75);
   text-align: center;
-  white-space: nowrap;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transform: translateX(-100%) translateZ(0);
-  transform: translateX(-100%) translateZ(0);
-  -webkit-transition: opacity 0.15s, visibility 0.0001s 0.15s, -webkit-transform 0.0001s 0.15s;
-  transition: opacity 0.15s, visibility 0.0001s 0.15s, transform 0.0001s 0.15s; }
-  .overlay-is-active {
-    visibility: visible;
-    opacity: 1;
-    -webkit-transform: translateX(0) translateZ(0);
-    transform: translateX(0) translateZ(0);
-    -webkit-transition: opacity 0.15s, visibility 0.0001s, -webkit-transform 0.0001s;
-    transition: opacity 0.15s, visibility 0.0001s, transform 0.0001s; }
+  white-space: nowrap; }
 
+/* Overlay */
 /* Swipe */
 .swipeDemo {
   height: 100%;
