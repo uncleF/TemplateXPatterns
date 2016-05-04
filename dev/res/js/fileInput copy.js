@@ -167,7 +167,6 @@ module.exports = function (_) {
 (function () {
 
   var fileInput = require('./components/tx-fileInput');
-
   fileInput('#file');
 })();
 

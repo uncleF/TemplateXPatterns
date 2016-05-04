@@ -1,0 +1,32 @@
+@import '../patterns/_tx-icon';
+
+
+
+/* Button */
+
+.icon {
+  @extend %tx-icon;
+  position: relative;
+  padding: 0 0 0 20px;
+  transition: .25s;
+
+  &:before,
+  &:after {
+    @include tx-pseudo;
+    top: 50%;
+    left: 0;
+    width: 16px;
+    height: 11px;
+    margin: -5px 0 0;
+    transition: inherit;
+  }
+
+  &:before {
+    background: url(../images/arrowBlackDown.png);
+  }
+
+  &:after {
+    background: url(../images/arrowBrownDown.png);
+  }
+
+}

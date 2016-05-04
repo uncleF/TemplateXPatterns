@@ -31,18 +31,24 @@ function trigger(object, event, propagate) {
   }
 }
 
+function target(event) {
+  return event.target || event.srcElement;
+}
+
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
+exports.target = target;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-var eventTools = require('./tx-event');
-
 module.exports = function (element, callback) {
+
+  var eventTools = require('./tx-event');
+  var trigger = require('./tx-toggle');
 
   var object;
   var task;
@@ -53,12 +59,8 @@ module.exports = function (element, callback) {
     if (event) {
       event.preventDefault();
     }
-    if (active) {
-      object.className = object.className.replace(activeClassName, '');
-    } else {
-      object.className += ' ' + activeClassName;
-    }
-    if (task) {
+    trigger.toggle(object, activeClassName, active);
+    if (typeof task === 'function') {
       task();
     }
     active = !active;
@@ -68,7 +70,7 @@ module.exports = function (element, callback) {
     object = element;
     task = callback;
     active = false;
-    activeClassName = object.className.split(' ')[0] + '-is-active';
+    activeClassName = object.className.split(' ').shift() + '-is-active';
     eventTools.bind(object, 'click', toggle);
   } else {
     return false;
@@ -79,7 +81,38 @@ module.exports = function (element, callback) {
   };
 };
 
-},{"./tx-event":1}],3:[function(require,module,exports){
+},{"./tx-event":1,"./tx-toggle":3}],3:[function(require,module,exports){
+/* jshint browser:true */
+
+'use strict';
+
+function activate(object, className) {
+  object.className += ' ' + className;
+}
+
+function deactivate(object, className) {
+  object.className = object.className.replace(' ' + className, '');
+}
+
+function state(object, className) {
+  return object.className.indexOf(className) > -1;
+}
+
+function toggle(object, className, externalState) {
+  var triggerState = typeof externalState !== 'undefined' ? externalState : state(object, className);
+  if (triggerState) {
+    deactivate(object, className);
+  } else {
+    activate(object, className);
+  }
+}
+
+exports.toggle = toggle;
+exports.activate = activate;
+exports.deactivate = deactivate;
+exports.state = state;
+
+},{}],4:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
@@ -93,4 +126,4 @@ module.exports = function (element, callback) {
   eventTools.bind(document.getElementById('overlayTrigger'), 'click', overlay.toggle);
 })();
 
-},{"./components/tx-event":1,"./components/tx-togglable":2}]},{},[3]);
+},{"./components/tx-event":1,"./components/tx-togglable":2}]},{},[4]);

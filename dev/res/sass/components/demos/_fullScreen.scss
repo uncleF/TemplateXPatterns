@@ -1,0 +1,19 @@
+@import '../patterns/_tx-fullScreen';
+
+
+
+/* Full Screen */
+
+html {
+  @extend %tx-fullScreen-root;
+}
+
+body {
+  @extend %tx-fullScreen-ancestor;
+  margin: 0;
+}
+
+.fullScreenSection {
+  @extend %tx-fullScreen;
+  background: red;
+}

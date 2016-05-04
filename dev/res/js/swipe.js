@@ -3,13 +3,62 @@
 
 'use strict';
 
-var transition = require('./tx-transition')();
-var translateGallery = require('./tx-translate').css;
+function bind(object, type, callback) {
+  if (document.addEventListener) {
+    object.addEventListener(type, callback);
+  } else {
+    object.attachEvent('on' + type, callback);
+  }
+}
 
-var SLIDE_THRESHOLD = 15;
-var NEXT_SHIFT = 50;
+function unbind(object, type, callback) {
+  if (document.removeEventListener) {
+    object.removeEventListener(type, callback);
+  } else {
+    object.detachEvent('on' + type, callback);
+  }
+}
+
+function trigger(object, event, propagate) {
+  propagate = propagate || false;
+  if (document.createEvent) {
+    var eventObj = document.createEvent('MouseEvents');
+    eventObj.initEvent(event, propagate, false);
+    object.dispatchEvent(eventObj);
+  } else {
+    var _eventObj = document.createEventObject();
+    object.fireEvent('on' + event, _eventObj);
+  }
+}
+
+function target(event) {
+  return event.target || event.srcElement;
+}
+
+exports.bind = bind;
+exports.unbind = unbind;
+exports.trigger = trigger;
+exports.target = target;
+
+},{}],2:[function(require,module,exports){
+/* jshint browser:true */
+
+'use strict';
+
+var DOT_NAVIGATION_CLASS = 'js-dotsNavigation';
+var DOT_CLASS = 'js-dotsPage';
+var DOT_CLASS_ACTIVE = 'js-dotsPage-is-active';
+var CLASS_ACTIVE_SUFFIX = '-is-active';
 
 function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
+
+  var transition = require('./tx-transition')();
+  var translateGallery = require('./tx-translate').css;
+
+  var SLIDE_THRESHOLD = 15;
+  var NEXT_SHIFT = 50;
+  var SLIDES_CLASS_FIXING = 'slides-are-fixing';
+  var SLIDES_CLASS_CHANGING = 'slides-are-changing';
 
   var doc;
   var object;
@@ -41,8 +90,7 @@ function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
   }
 
   function finalizeSlide() {
-    object.removeClass('slides-are-fixing');
-    object.off(transition);
+    object.removeClass(SLIDES_CLASS_FIXING + ' ' + SLIDES_CLASS_CHANGING).off(transition);
   }
 
   function fixSlide() {
@@ -52,11 +100,10 @@ function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
       } else if (pointDiffX < -NEXT_SHIFT && galleryStatus !== 'end') {
         index += 1;
       }
-      linkActive.removeClass(linkClassName + '-is-active js-dotsPage-is-active');
-      links.filter('.' + linkClassName + ':eq(' + index + ')').addClass(linkClassName + '-is-active js-dotsPage-is-active');
-      object.addClass('slides-are-fixing').trigger('swipe');
-      object.on(transition, finalizeSlide);
-      object.css(translateGallery('x', -100 * index + '%'));
+      linkActive.removeClass('' + linkClassName + CLASS_ACTIVE_SUFFIX + ' ' + DOT_CLASS_ACTIVE);
+      links.filter('.' + linkClassName + ':eq(' + index + ')').addClass('' + linkClassName + CLASS_ACTIVE_SUFFIX + ' ' + DOT_CLASS_ACTIVE);
+      object.addClass(SLIDES_CLASS_FIXING).trigger('swipe');
+      object.on(transition, finalizeSlide).css(translateGallery('x', -100 * index + '%'));
     }
   }
 
@@ -64,7 +111,7 @@ function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
     pointStartX = event ? event.originalEvent.touches[0].pageX : 0;
     pointShift = 1;
     positionStart = object.offset().left;
-    linkActive = links.filter('.' + linkClassName + '-is-active');
+    linkActive = links.filter('.' + linkClassName + CLASS_ACTIVE_SUFFIX);
     index = links.index(linkActive);
     if (index === 0) {
       galleryStatus = 'start';
@@ -80,22 +127,30 @@ function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
     fixSlide();
   }
 
-  function prev() {
+  function preChange(event) {
+    if (event) {
+      event.preventDefault();
+    }
     getData();
+    object.addClass(SLIDES_CLASS_CHANGING);
+  }
+
+  function prevItem(event) {
+    preChange(event);
     if (galleryStatus !== 'start') {
       fakeSwipe(NEXT_SHIFT + 1);
     }
   }
 
-  function next() {
-    getData();
+  function nextItem(event) {
+    preChange(event);
     if (galleryStatus !== 'end') {
       fakeSwipe(-NEXT_SHIFT - 1);
     }
   }
 
   function touchStart(event) {
-    if (!object.is('.slides-are-fixing')) {
+    if (!object.is('.' + SLIDES_CLASS_FIXING) || !object.is('.' + SLIDES_CLASS_CHANGING)) {
       pointDiffX = 0;
       getData(event);
       doc.on('touchmove', touchMove).on('touchend', touchEnd);
@@ -116,19 +171,38 @@ function swipe(gallery, navigation, navigationItemClassName, jQDocument) {
     requestAnimationFrame(fixSlide);
   }
 
-  function setup() {
-    doc = jQDocument;
-    object = gallery;
-    links = navigation;
-    linkClassName = navigationItemClassName;
-    object.on('touchstart', touchStart);
+  function updateLinks() {
+    linkActive.removeClass('' + linkClassName + CLASS_ACTIVE_SUFFIX + ' ' + DOT_CLASS_ACTIVE);
+    links.filter('.' + linkClassName + ':eq(' + index + ')').addClass('' + linkClassName + CLASS_ACTIVE_SUFFIX + ' ' + DOT_CLASS_ACTIVE);
   }
 
-  setup();
+  function setItem(newIndex) {
+    linkActive = links.filter('.' + linkClassName + CLASS_ACTIVE_SUFFIX);
+    index = newIndex;
+    object.css(translateGallery('x', -100 * index + '%'));
+    updateLinks();
+  }
+
+  function getNumber() {
+    return index + 1;
+  }
+
+  function getSize() {
+    return links.length;
+  }
+
+  doc = jQDocument;
+  object = gallery;
+  links = navigation;
+  linkClassName = navigationItemClassName;
+  object.on('touchstart', touchStart);
 
   return {
-    prev: prev,
-    next: next
+    prev: prevItem,
+    next: nextItem,
+    set: setItem,
+    number: getNumber,
+    size: getSize
   };
 }
 
@@ -137,18 +211,18 @@ function init(gallery, navigation, navigationItemClassName, jQDocument) {
 }
 
 function dots(size, listClass, pageClass) {
-  var navigation = '<ul class="' + listClass + ' js-dotsNavigation u-listReset">';
-  for (var index = 0; index < size; index += 1) {
-    navigation = index === 0 ? navigation + ('<li class="' + pageClass + ' ' + pageClass + '-is-active js-dotsPage-is-active js-dotsPage"></li>') : navigation + ('<li class="' + pageClass + ' js-dotsPage"></li>');
+  var navigation = '<ol class="' + listClass + ' ' + DOT_NAVIGATION_CLASS + '"><li class="' + pageClass + ' ' + pageClass + CLASS_ACTIVE_SUFFIX + ' ' + DOT_CLASS_ACTIVE + ' ' + DOT_CLASS + '"></li>';
+  for (var index = 1; index < size; index += 1) {
+    navigation += '<li class="' + pageClass + ' ' + DOT_CLASS + '"></li>';
   }
-  navigation += '</ul>';
+  navigation += '</ol>';
   return navigation;
 }
 
 exports.init = init;
 exports.dots = dots;
 
-},{"./tx-transition":2,"./tx-translate":3}],2:[function(require,module,exports){
+},{"./tx-transition":3,"./tx-translate":4}],3:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
@@ -170,7 +244,7 @@ module.exports = function (_) {
   }
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
@@ -202,26 +276,33 @@ function translateString(axis, distance) {
 exports.css = translateCSS;
 exports.string = translateString;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
 
-var $ = require('jquery');
-
 (function () {
 
+  var $ = require('jquery');
   var swipe = require('./components/tx-swipe');
+  var eventTool = require('./components/tx-event');
 
+  var gallery;
   var slides = $('.slides');
-  var dotsSize = $('.slide').size();
+  var dotsSize = $('.slide').length;
+  var next = document.getElementById('next');
+  var prev = document.getElementById('prev');
+
   slides.after(swipe.dots(dotsSize, 'js-slidesNavigation', 'js-slidesNavigationPage'));
-  swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
+  gallery = swipe.init(slides, $('.js-slidesNavigationPage'), 'js-slidesNavigationPage', $(document));
+  eventTool.bind(next, 'click', gallery.next);
+  eventTool.bind(prev, 'click', gallery.prev);
+  console.log(gallery.size());
 })();
 
-},{"./components/tx-swipe":1,"jquery":5}],5:[function(require,module,exports){
+},{"./components/tx-event":1,"./components/tx-swipe":2,"jquery":6}],6:[function(require,module,exports){
 /*!
- * jQuery JavaScript Library v2.2.2
+ * jQuery JavaScript Library v2.2.3
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -231,7 +312,7 @@ var $ = require('jquery');
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2016-03-17T17:51Z
+ * Date: 2016-04-05T19:26Z
  */
 
 (function( global, factory ) {
@@ -287,7 +368,7 @@ var support = {};
 
 
 var
-	version = "2.2.2",
+	version = "2.2.3",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -9697,7 +9778,7 @@ jQuery.fn.load = function( url, params, callback ) {
 		// If it fails, this function gets "jqXHR", "status", "error"
 		} ).always( callback && function( jqXHR, status ) {
 			self.each( function() {
-				callback.apply( self, response || [ jqXHR.responseText, status, jqXHR ] );
+				callback.apply( this, response || [ jqXHR.responseText, status, jqXHR ] );
 			} );
 		} );
 	}
@@ -10063,4 +10144,4 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}]},{},[4]);
+},{}]},{},[5]);

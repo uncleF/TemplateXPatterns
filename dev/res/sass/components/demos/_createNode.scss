@@ -1,0 +1,16 @@
+/* Node */
+
+.parent {
+  width: 250px;
+  background: $red;
+  text-align: center;
+  line-height: 250px;
+}
+
+.child {
+  @include tx-inline-block;
+  width: 100px;
+  color: $white;
+  background: $blue;
+  line-height: 100px;
+}

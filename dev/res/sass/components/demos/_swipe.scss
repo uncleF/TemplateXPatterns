@@ -23,6 +23,7 @@
   $sliderHolder-color: $white;
 
   @include tx-inline-block;
+  position: relative;
   overflow: hidden;
   width: 100%;
   color: $sliderHolder-color;
@@ -115,7 +116,61 @@
   transition: .25s;
 }
 
+.slides-are-changing {
+  transition: .5s;
+}
+
 .slides-are-swiping {
   pointer-events: none;
   user-select: none;
+}
+
+%nav {
+  @include tx-font-size($fontSize);
+  position: absolute;
+  top: 0;
+  bottom: 26px;
+  display: block;
+  width: 25%;
+  min-width: 50px;
+  color: $white;
+  line-height: 320px;
+
+  &:hover,
+  &:active,
+  &:visited {
+    color: $white;
+  }
+
+  &:hover,
+  &:active {
+    background: rgba($black, .25);
+  }
+
+}
+
+.swipePrev {
+  @extend %nav;
+  left: 0;
+}
+
+.swipeNext {
+  @extend %nav;
+  right: 0;
+}
+
+@media handheld, only screen and (max-width: 720px) {
+
+  %navPhone {
+    display: none;
+  }
+
+  .swipePrev {
+    @extend %navPhone;
+  }
+
+  .swipeNext {
+    @extend %navPhone;
+  }
+
 }

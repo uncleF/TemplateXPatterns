@@ -31,19 +31,24 @@ function trigger(object, event, propagate) {
   }
 }
 
+function target(event) {
+  return event.target || event.srcElement;
+}
+
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
+exports.target = target;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-var querySelectorPolyfill = require('./tx-querySelectorAll.js');
-var eventTools = require('./tx-event');
-
 module.exports = function (_) {
+
+  var querySelectorPolyfill = require('./tx-querySelectorAll.js');
+  var eventTools = require('./tx-event');
 
   var fields;
 

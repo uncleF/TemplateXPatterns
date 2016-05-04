@@ -1,11 +1,16 @@
-.overlay:before, .swipeDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .file-button, .navToggle, .sliderHolder, .slide, .js-slidesNavigationPage {
+/* Inline-block */
+.overlay:before, .swipeDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .child, .file-button, .navToggle, .mdz-no-flexbox .item,
+.mdz-no-flexboxlegacy .item, .sliderHolder, .slide, .js-slidesNavigationPage {
   display: inline-block; }
 
-.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .slides:before {
+/* Inline-block IE */
+/* Pseudo Element */
+.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .icon:before, .icon:after, .slides:before {
   position: absolute;
   content: '';
   display: block; }
 
+/* Verticla Alignment */
 .overlay:before, .swipeDemoBody:before {
   position: relative;
   content: '';
@@ -13,10 +18,15 @@
   height: 100%;
   vertical-align: middle; }
 
+/* Sprite Block */
 /* Fast Touch */
 a, label, select, button {
   -ms-touch-action: manipulation;
   touch-action: manipulation; }
+
+/* Link Touch State */
+.mdz-touchevents a:hover, .mdz-touchevents .icon:hover, .mdz-touchevents a:active, .mdz-touchevents .icon:active {
+  color: #337ab7; }
 
 /* Typography & Vertical Rhythm */
 html {
@@ -271,26 +281,14 @@ a {
   color: #337ab7;
   -webkit-tap-highlight-color: rgba(35, 82, 124, 0.25);
   text-decoration: underline;
-  -webkit-text-decoration-color: rgba(51, 122, 183, 0.5);
-  -moz-text-decoration-color: rgba(51, 122, 183, 0.5);
-  text-decoration-color: rgba(51, 122, 183, 0.5);
-  -webkit-transition: color 0.15s, text-decoration-color 0.15s;
-  transition: color 0.15s, text-decoration-color 0.15s; }
+  -webkit-transition: 0.25s;
+  transition: 0.25s; }
   a:visited {
-    color: #6f5499;
-    -webkit-text-decoration-color: rgba(111, 84, 153, 0.5);
-    -moz-text-decoration-color: rgba(111, 84, 153, 0.5);
-    text-decoration-color: rgba(111, 84, 153, 0.5); }
+    color: #6f5499; }
   a:hover {
-    color: #d9534f;
-    -webkit-text-decoration-color: rgba(217, 83, 79, 0.5);
-    -moz-text-decoration-color: rgba(217, 83, 79, 0.5);
-    text-decoration-color: rgba(217, 83, 79, 0.5); }
+    color: #d9534f; }
   a:active {
-    color: #23527c;
-    -webkit-text-decoration-color: rgba(35, 82, 124, 0.5);
-    -moz-text-decoration-color: rgba(35, 82, 124, 0.5);
-    text-decoration-color: rgba(35, 82, 124, 0.5); }
+    color: #23527c; }
 
 /* Forms */
 label {
@@ -387,17 +385,15 @@ textarea {
   height: 44px;
   padding: 0 28px;
   border: 2px solid #337ab7;
-  color: #fff;
-  background: #337ab7;
-  -webkit-transition: 0.15s;
-  transition: 0.15s; }
+  -webkit-transition: 0.25s;
+  transition: 0.25s; }
   .buttonLink, .file-button {
     text-decoration: none;
     line-height: 44px; }
   .buttonInput {
     line-height: 1;
     cursor: pointer; }
-  .buttonLink:visited, .file-button:visited {
+  .buttonLink:link, .file-button:link, .buttonLink:visited, .file-button:visited, .buttonInput, .mdz-touchevents .buttonLink:hover, .mdz-touchevents .file-button:hover, .mdz-touchevents .buttonInput:hover, .mdz-touchevents .buttonLink:active, .mdz-touchevents .file-button:active, .mdz-touchevents .buttonInput:active {
     color: #fff;
     background: #337ab7; }
   .buttonLink:hover, .file-button:hover, .buttonInput:hover, .buttonLink:active, .file-button:active, .buttonInput:active {
@@ -452,6 +448,19 @@ textarea {
 .checkboxLabel, .radioLabel {
   border: 0; }
 
+/* Node */
+.parent {
+  width: 250px;
+  background: #d9534f;
+  text-align: center;
+  line-height: 250px; }
+
+.child {
+  width: 100px;
+  color: #fff;
+  background: #337ab7;
+  line-height: 100px; }
+
 /* Field */
 .field {
   height: 44px;
@@ -480,6 +489,21 @@ textarea {
     right: -2px; }
 
 /* File Input */
+/* Full Screen */
+.fullScreenSection {
+  min-height: 100%; }
+  html {
+    height: 100%; }
+  body {
+    height: inherit; }
+
+/* Full Screen */
+body {
+  margin: 0; }
+
+.fullScreenSection {
+  background: red; }
+
 /* Hamburger */
 .navToggle {
   height: 19px;
@@ -509,8 +533,8 @@ textarea {
     -webkit-transform-origin: 50% 50%;
     -ms-transform-origin: 50% 50%;
     transform-origin: 50% 50%;
-    -webkit-transition: 0.3s;
-    transition: 0.3s; }
+    -webkit-transition: 0.5s;
+    transition: 0.5s; }
 
 .navToggleLabel {
   position: relative;
@@ -544,22 +568,92 @@ textarea {
 .narrowTextHolder {
   width: 200px; }
 
+/* Link Touch State */
+.mdz-touchevents a:hover, .mdz-touchevents .icon:hover, .mdz-touchevents a:active, .mdz-touchevents .icon:active {
+  color: #337ab7; }
+
+/* Icon */
+.icon:before {
+  z-index: 1; }
+
+.icon:after {
+  z-index: 0;
+  opacity: 0; }
+
+.icon:hover:before, .icon:active:before {
+  opacity: 0; }
+
+.icon:hover:after, .icon:active:after {
+  opacity: 1; }
+
+.mdz-touchevents .icon:after {
+  display: none; }
+
+.mdz-touchevents .icon:hover:before, .mdz-touchevents .icon:active:before {
+  opacity: 1; }
+
+/* Button */
+.icon {
+  position: relative;
+  padding: 0 0 0 20px;
+  -webkit-transition: .25s;
+  transition: .25s; }
+  .icon:before, .icon:after {
+    top: 50%;
+    left: 0;
+    width: 16px;
+    height: 11px;
+    margin: -5px 0 0;
+    -webkit-transition: inherit;
+    transition: inherit; }
+  .icon:before {
+    background: url(../images/arrowBlackDown.png); }
+  .icon:after {
+    background: url(../images/arrowBrownDown.png); }
+
+/* No Flexbox */
+.mdz-no-flexbox .flexbox,
+.mdz-no-flexboxlegacy .flexbox {
+  display: block;
+  font-size: 0; }
+
+/* Button */
+.flexbox {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+.item {
+  width: 20%;
+  height: 100px; }
+  .item01 {
+    background: #d9534f; }
+  .item02 {
+    background: #337ab7; }
+  .item03 {
+    background: #23527c; }
+  .item04 {
+    background: #6f5499; }
+  .item05 {
+    background: #333; }
+
 /* Simple Fade In and Out */
 .overlay {
   visibility: hidden;
   opacity: 0;
   -webkit-transform: translateX(-100%) translateZ(0);
   transform: translateX(-100%) translateZ(0);
-  -webkit-transition: opacity 0.15s, visibility 0.0001s 0.15s, -webkit-transform 0.0001s 0.15s;
-  transition: opacity 0.15s, visibility 0.0001s 0.15s, transform 0.0001s 0.15s; }
+  -webkit-transition: opacity 0.25s, visibility 0.0001s 0.25s, -webkit-transform 0.0001s 0.25s;
+  transition: opacity 0.25s, visibility 0.0001s 0.25s, transform 0.0001s 0.25s; }
 
 .overlay-is-active {
   visibility: visible;
   opacity: 1;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-transition: opacity 0.15s, -webkit-transform 0.0001s, visibility 0.0001s;
-  transition: opacity 0.15s, transform 0.0001s, visibility 0.0001s; }
+  -webkit-transition: opacity 0.25s, -webkit-transform 0.0001s, visibility 0.0001s;
+  transition: opacity 0.25s, transform 0.0001s, visibility 0.0001s; }
 
 /* Overlay */
 .overlay {
@@ -590,6 +684,7 @@ textarea {
     margin: 0 -5px 0 0; }
 
 .sliderHolder {
+  position: relative;
   overflow: hidden;
   width: 100%;
   color: #fff;
@@ -645,12 +740,43 @@ textarea {
   -webkit-transition: .25s;
   transition: .25s; }
 
+.slides-are-changing {
+  -webkit-transition: .5s;
+  transition: .5s; }
+
 .slides-are-swiping {
   pointer-events: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
+
+.swipePrev, .swipeNext {
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.5;
+  position: absolute;
+  top: 0;
+  bottom: 26px;
+  display: block;
+  width: 25%;
+  min-width: 50px;
+  color: #fff;
+  line-height: 320px; }
+  .swipePrev:hover, .swipeNext:hover, .swipePrev:active, .swipeNext:active, .swipePrev:visited, .swipeNext:visited {
+    color: #fff; }
+  .swipePrev:hover, .swipeNext:hover, .swipePrev:active, .swipeNext:active {
+    background: rgba(51, 51, 51, 0.25); }
+
+.swipePrev {
+  left: 0; }
+
+.swipeNext {
+  right: 0; }
+
+@media handheld, only screen and (max-width: 720px) {
+  .swipePrev, .swipeNext {
+    display: none; } }
 
 /* Transform */
 .transformThis {

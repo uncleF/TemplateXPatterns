@@ -1,0 +1,37 @@
+@import '../patterns/_tx-noFlexbox';
+
+
+
+/* Button */
+
+.flexbox {
+  @extend %tx-noFlexbox-parent;
+  display: flex;
+}
+
+.item {
+  @extend %tx-noFlexbox;
+  width: 20%;
+  height: 100px;
+
+  &01 {
+    background: $red;
+  }
+
+  &02 {
+    background: $blue;
+  }
+
+  &03 {
+    background: $blueDark;
+  }
+
+  &04 {
+    background: $purple;
+  }
+
+  &05 {
+    background: $black;
+  }
+
+}
