@@ -70,7 +70,7 @@ module.exports = function (element, callback) {
     object = element;
     task = callback;
     active = false;
-    activeClassName = object.className.split(' ').shift() + '-is-active';
+    activeClassName = object.classList.item(0) + '-is-active';
     eventTools.bind(object, 'click', toggle);
   } else {
     return false;
@@ -87,11 +87,11 @@ module.exports = function (element, callback) {
 'use strict';
 
 function activate(object, className) {
-  object.className += ' ' + className;
+  object.classList.add(className);
 }
 
 function deactivate(object, className) {
-  object.className = object.className.replace(' ' + className, '');
+  object.classList.remove(className);
 }
 
 function state(object, className) {

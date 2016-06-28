@@ -85,12 +85,12 @@ module.exports = function (selectors, text) {
       wrapElement.appendChild(buttonElement);
       parent.insertBefore(wrapElement, input);
       wrapElement.appendChild(input);
-      input.className += ' ' + className + '-is-wrapped';
+      input.classList.add(className + '-is-wrapped');
     }
 
     input = field;
     buttonText = text || 'Browse';
-    className = input.className.split(' ')[0];
+    className = input.classList.item(0);
     activeClassName = className + '-is-active';
     wrap(input);
     eventTools.bind(input, 'change', fieldChange);

@@ -52,6 +52,8 @@ module.exports = function (_) {
 
   var fields;
 
+  var ACTIVE_CLASS = 'js-input-is-showingPlaceholder';
+
   function selectFields() {
     var fields;
     var fieldsPlaceholders = [];
@@ -73,14 +75,14 @@ module.exports = function (_) {
 
   function addPlaceholder(field) {
     if (field.value === '') {
-      field.className = field.className + ' js-input-is-showingPlaceholder';
+      field.classList.add(ACTIVE_CLASS);
       field.value = field.getAttribute('placeholder');
     }
   }
 
   function removePlaceholder(field) {
     if (field.value === field.getAttribute('placeholder')) {
-      field.className = field.className.replace(' js-input-is-showingPlaceholder', '');
+      field.classList.remove(ACTIVE_CLASS);
       field.value = '';
     }
   }
