@@ -1,6 +1,6 @@
 /* Inline-block */
 .overlay:before, .swipeDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .child, .file-button, .navToggle, .mdz-no-flexbox .item,
-.mdz-no-flexboxlegacy .item, .sliderHolder, .slide, .js-slidesNavigationPage {
+.mdz-no-flexboxlegacy .item, .slide, .sliderHolder, .js-slidesNavigationPage {
   display: inline-block; }
 
 /* Inline-block IE */
@@ -44,9 +44,9 @@ body {
   hyphens: manual;
   color: #333;
   font-family: "Segoe UI", Roboto, "Droid Sans", "Helvetica Neue", Helvetica, Calibri, Arial, sans-serif;
-  -webkit-font-feature-settings: 'liga', 'kern';
-  -moz-font-feature-settings: 'liga', 'kern';
-  font-feature-settings: 'liga', 'kern'; }
+  -webkit-font-feature-settings: 'liga' 1, 'clig' 1, 'kern' 1, 'frac' 1;
+  -moz-font-feature-settings: 'liga' 1, 'clig' 1, 'kern' 1, 'frac' 1;
+  font-feature-settings: 'liga' 1, 'clig' 1, 'kern' 1, 'frac' 1; }
 
 article, aside, canvas, figure, figcaption, footer, header, hgroup, nav, main, progress, section, summary {
   display: block; }
@@ -663,6 +663,56 @@ body {
   white-space: nowrap; }
 
 /* Overlay */
+/* Sticky Footer */
+.content {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1; }
+
+.stickyFooterDemo {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+/* Sticky Footer */
+.stickyFooterDemo {
+  min-height: 100%; }
+
+.content {
+  min-height: 300px;
+  background: #337ab7; }
+
+.footer {
+  min-height: 50px;
+  background: #d9534f; }
+
+/* Swipe */
+.sliderHolder {
+  position: relative;
+  overflow: hidden; }
+
+.slides {
+  position: relative;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0); }
+  .slides:before {
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 10000px; }
+
+.slide {
+  width: 100%;
+  vertical-align: top; }
+
 /* Swipe */
 .swipeDemo {
   height: 100%;
@@ -678,29 +728,14 @@ body {
     margin: 0 -5px 0 0; }
 
 .sliderHolder {
-  position: relative;
-  overflow: hidden;
   width: 100%;
   color: #fff;
   font-size: 4em;
   vertical-align: middle;
   white-space: nowrap; }
 
-.slides {
-  position: relative;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0); }
-  .slides:before {
-    z-index: -1;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 10000px; }
-
 .slide {
-  width: 100%;
-  line-height: 300px;
-  vertical-align: top; }
+  line-height: 300px; }
   .slide1 {
     background: #d9534f; }
   .slide2 {

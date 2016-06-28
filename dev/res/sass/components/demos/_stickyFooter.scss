@@ -1,0 +1,21 @@
+@import '../patterns/_tx-stickyFooter';
+
+
+
+/* Sticky Footer */
+
+.stickyFooterDemo {
+  @extend %tx-stickyFooterWrap;
+  min-height: 100%;
+}
+
+.content {
+  @extend %tx-stickyFooterContent;
+  min-height: 300px;
+  background: $blue;
+}
+
+.footer {
+  min-height: 50px;
+  background: $red;
+}

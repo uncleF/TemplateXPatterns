@@ -93,13 +93,13 @@ linters:
     force_nesting: true
 
   NameFormat:
-    enabled: false
-    allow_leading_underscore: true
-    convention: hyphenated_lowercase
+    enabled: true
+    allow_leading_underscore: false
+    convention: ^[a-zA-Z]{1}[a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)*$
 
   NestingDepth:
     enabled: true
-    max_depth: 3
+    max_depth: 4
     ignore_parent_selectors: false
 
   PlaceholderInExtend:
@@ -367,8 +367,8 @@ linters:
     max_depth: 4
 
   SelectorFormat:
-    enabled: false
-    convention: hyphenated_lowercase
+    enabled: true
+    convention: ^[a-z]{1}[a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)*$
 
   Shorthand:
     enabled: true
@@ -438,7 +438,7 @@ linters:
     enabled: true
 
   UrlQuotes:
-    enabled: false
+    enabled: true
 
   VariableForProperty:
     enabled: false

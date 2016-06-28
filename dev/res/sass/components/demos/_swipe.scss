@@ -1,3 +1,7 @@
+@import '../patterns/_tx-swipe';
+
+
+
 /* Swipe */
 
 .swipeDemo {
@@ -22,9 +26,8 @@
 .sliderHolder {
   $sliderHolder-color: $white;
 
+  @extend %tx-swipeHolder;
   @include tx-inline-block;
-  position: relative;
-  overflow: hidden;
   width: 100%;
   color: $sliderHolder-color;
   font-size: 4em;
@@ -33,25 +36,12 @@
 }
 
 .slides {
-  position: relative;
-  transform: translateZ(0);
-
-  &:before {
-    @include tx-pseudo;
-    z-index: -1;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 10000px;
-  }
-
+  @extend %tx-swipeSlides;
 }
 
 .slide {
-  @include tx-inline-block;
-  width: 100%;
+  @extend %tx-swipeSlide;
   line-height: 300px;
-  vertical-align: top;
 
   &1 {
     $slide1-background: $red;
