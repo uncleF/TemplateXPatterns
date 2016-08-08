@@ -1,15 +1,15 @@
-@import '../patterns/_tx-swipe';
+@import '../patterns/_tx-slider';
 
 
 
 /* Swipe */
 
-.swipeDemo {
+.sliderDemo {
   height: 100%;
   text-align: center;
 }
 
-.swipeDemoBody {
+.sliderDemoBody {
   position: relative;
   height: 100%;
   padding: 0;
@@ -26,7 +26,7 @@
 .sliderHolder {
   $sliderHolder-color: $white;
 
-  @extend %tx-swipeHolder;
+  @extend %tx-sliderHolder;
   @include tx-inline-block;
   width: 100%;
   color: $sliderHolder-color;
@@ -35,12 +35,26 @@
   white-space: nowrap;
 }
 
-.slides {
-  @extend %tx-swipeSlides;
+.slider {
+  @extend %tx-sliderBody;
+
+  &-is-fixing {
+    transition: .25s;
+  }
+
+  &-is-changing {
+    transition: .5s;
+  }
+
+  &-is-swiping {
+    pointer-events: none;
+    user-select: none;
+  }
+
 }
 
 .slide {
-  @extend %tx-swipeSlide;
+  @extend %tx-sliderSlide;
   line-height: 300px;
 
   &1 {
@@ -75,14 +89,14 @@
 
 }
 
-.js-slidesNavigation {
+.js-sliderNavigation {
   height: 6px;
   padding: 0;
   margin: 20px 0 0;
   text-align: center;
 }
 
-.js-slidesNavigationPage {
+.js-sliderNavigationPage {
   $slidesNavigationPage-background: $gray;
   $slidesNavigationPage-backgroundActive: $black;
 
@@ -102,49 +116,67 @@
 
 }
 
-.slides-are-fixing {
-  transition: .25s;
-}
-
-.slides-are-changing {
-  transition: .5s;
-}
-
-.slides-are-swiping {
-  pointer-events: none;
-  user-select: none;
-}
-
 %nav {
   @include tx-font-size($fontSize);
+  @include tx-link($white, $all: true);
   position: absolute;
   top: 0;
   bottom: 26px;
   display: block;
   width: 25%;
   min-width: 50px;
-  color: $white;
   line-height: 320px;
+  transform: translateZ(0);
 
-  &:hover,
-  &:active,
-  &:visited {
-    color: $white;
+  &:before {
+    @include tx-pseudo;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba($black, .25);
+    opacity: 0;
+    transform: translateZ(0);
+    transition: inherit;
+  }
+
+  &:after {
+    @include tx-pseudo;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+    border: $focus-outlineWidth dotted $focus-outlineColor;
+    opacity: 0;
+    transform: translateZ(0);
   }
 
   &:hover,
   &:active {
-    background: rgba($black, .25);
+
+    &:before {
+      opacity: 1;
+    }
+
+  }
+
+  &:focus {
+    outline: none;
+
+    &:after {
+      opacity: 1;
+    }
+
   }
 
 }
 
-.swipePrev {
+.slidePrev {
   @extend %nav;
   left: 0;
 }
 
-.swipeNext {
+.slideNext {
   @extend %nav;
   right: 0;
 }
@@ -155,11 +187,11 @@
     display: none;
   }
 
-  .swipePrev {
+  .slidePrev {
     @extend %navPhone;
   }
 
-  .swipeNext {
+  .slideNext {
     @extend %navPhone;
   }
 
