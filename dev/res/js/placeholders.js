@@ -13,41 +13,41 @@ function getData(event) {
 }
 
 function bind(object, type, callback) {
-  if (document.addEventListener) {
-    object.addEventListener(type, callback);
-  } else {
-    object.attachEvent('on' + type, callback);
-  }
+  object.addEventListener(type, callback);
 }
 
 function unbind(object, type, callback) {
-  if (document.removeEventListener) {
-    object.removeEventListener(type, callback);
-  } else {
-    object.detachEvent('on' + type, callback);
+  object.removeEventListener(type, callback);
+}
+
+function triggerCreateEvent(object, eventName, propagate, data) {
+  var event = document.createEvent('UIEvents');
+  if (data) {
+    setData(event, data);
   }
+  event.initEvent(eventName, propagate, false);
+  object.dispatchEvent(event);
+}
+
+function triggerCreateEventObject(object, eventName, propagate, data) {
+  var event = document.createEventObject();
+  if (data) {
+    setData(event, data);
+  }
+  object.fireEvent('on' + eventName, event);
 }
 
 function trigger(object, eventName, propagate, data) {
   propagate = propagate || false;
   if (document.createEvent) {
-    var event = document.createEvent('UIEvents');
-    if (data) {
-      setData(event, data);
-    }
-    event.initEvent(eventName, propagate, false);
-    object.dispatchEvent(event);
+    triggerCreateEvent(object, eventName, propagate, data);
   } else {
-    var _event = document.createEventObject();
-    if (data) {
-      setData(_event, data);
-    }
-    object.fireEvent('on' + eventName, _event);
+    triggerCreateEventObject(object, eventName, propagate, data);
   }
 }
 
 function target(event) {
-  return event.target || event.srcElement;
+  return event.target;
 }
 
 exports.bind = bind;
@@ -55,98 +55,101 @@ exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
 exports.getData = getData;
-exports.setData = setData;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-module.exports = function (_) {
+var eventTool = require('./tx-event');
 
-  var querySelectorPolyfill = require('./tx-querySelectorAll.js');
-  var eventTools = require('./tx-event');
+var ACTIVE_CLASS_NAME = 'js-field-is-showingPlaceholder';
 
-  var fields;
+function fieldPlaceholder(node) {
 
-  var ACTIVE_CLASS = 'js-input-is-showingPlaceholder';
+  var field;
 
-  function selectFields() {
-    var fields;
-    var fieldsPlaceholders = [];
-    if (!document.querySelectorAll) {
-      querySelectorPolyfill();
-    }
-    fields = document.querySelectorAll('input, textarea');
-    for (var index = 0, length = fields.length; index < length; index += 1) {
-      if (fields[index].getAttribute('placeholder') !== null) {
-        fieldsPlaceholders.push(fields[index]);
-      }
-    }
-    return fieldsPlaceholders;
-  }
-
-  function getTarget(event) {
-    return event.currentTarget || event.srcElement;
-  }
+  /* Actions */
 
   function addPlaceholder(field) {
     if (field.value === '') {
-      field.classList.add(ACTIVE_CLASS);
+      field.classList.add(ACTIVE_CLASS_NAME);
       field.value = field.getAttribute('placeholder');
     }
   }
 
   function removePlaceholder(field) {
     if (field.value === field.getAttribute('placeholder')) {
-      field.classList.remove(ACTIVE_CLASS);
+      field.classList.remove(ACTIVE_CLASS_NAME);
       field.value = '';
     }
   }
 
-  function fieldFocus(event) {
-    removePlaceholder(getTarget(event));
+  /* Interactions */
+
+  function onFocus(event) {
+    removePlaceholder(eventTool.target(event));
   }
 
-  function fieldBlur(event) {
-    addPlaceholder(getTarget(event));
+  function onBlur(event) {
+    addPlaceholder(eventTool.target(event));
   }
 
-  fields = selectFields();
-  for (var index = 0, length = fields.length; index < length; index += 1) {
-    var field = fields[index];
+  function initInteractions() {
+    eventTool.bind(field, 'focus', onFocus);
+    eventTool.bind(field, 'blur', onBlur);
+  }
+
+  function removeInteractions() {
+    eventTool.unbind(field, 'focus', onFocus);
+    eventTool.unbind(field, 'blur', onBlur);
+  }
+
+  /* Initialization */
+
+  function initValues() {
+    field = node;
+  }
+
+  function initPlaceholder() {
+    initValues();
+    initInteractions();
     addPlaceholder(field);
-    eventTools.bind(field, 'focus', fieldFocus);
-    eventTools.bind(field, 'blur', fieldBlur);
   }
-};
 
-},{"./tx-event":1,"./tx-querySelectorAll.js":3}],3:[function(require,module,exports){
-'use strict';
+  function removeValues() {
+    field = null;
+  }
 
-/* jshint browser:true */
+  function destroy() {
+    removeInteractions();
+    removeValues();
+  }
 
-module.exports = function (_) {
-  document.querySelectorAll = document.body.querySelectorAll = Object.querySelectorAll = function querySelectorAllPolyfill(r, c, i, j, a) {
-    var d = document;
-    var s = d.createStyleSheet();
-    a = d.all;
-    c = [];
-    r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
-    for (i = r.length; i--;) {
-      s.addRule(r[i], 'k:v');
-      for (j = a.length; j--;) {
-        if (a[j].currentStyle.k) {
-          c.push(a[j]);
-        }
-      }
-      s.removeRule(0);
-    }
-    return c;
+  initPlaceholder();
+
+  /* Interface */
+
+  return {
+    destroy: destroy
   };
-};
+}
 
-},{}],4:[function(require,module,exports){
+function init() {
+  var fields = document.querySelectorAll('input, textarea');
+  fields.forEach(fieldPlaceholder);
+}
+
+function destroy(fields) {
+  fields.forEach(function (field) {
+    return field.destroy();
+  });
+}
+
+exports.init = init;
+exports.destroy = destroy;
+
+},{"./tx-event":1}],3:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
@@ -157,8 +160,8 @@ module.exports = function (_) {
   var placeholders = require('./components/tx-placeholder');
 
   if (!Modernizr.input.placeholder) {
-    placeholders.polyfill();
+    placeholders.init();
   }
 })();
 
-},{"./components/tx-placeholder":2}]},{},[4]);
+},{"./components/tx-placeholder":2}]},{},[3]);

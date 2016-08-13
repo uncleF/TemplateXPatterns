@@ -1,0 +1,13 @@
+@import '../patterns/_tx-tooltip';
+
+
+
+/* Button */
+
+.tooltip {
+  @extend %tx-tooltip;
+  @include tx-inline-block;
+  position: relative;
+  top: 100px;
+  left: 100px;
+}

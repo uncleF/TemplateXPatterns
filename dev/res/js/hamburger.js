@@ -13,41 +13,41 @@ function getData(event) {
 }
 
 function bind(object, type, callback) {
-  if (document.addEventListener) {
-    object.addEventListener(type, callback);
-  } else {
-    object.attachEvent('on' + type, callback);
-  }
+  object.addEventListener(type, callback);
 }
 
 function unbind(object, type, callback) {
-  if (document.removeEventListener) {
-    object.removeEventListener(type, callback);
-  } else {
-    object.detachEvent('on' + type, callback);
+  object.removeEventListener(type, callback);
+}
+
+function triggerCreateEvent(object, eventName, propagate, data) {
+  var event = document.createEvent('UIEvents');
+  if (data) {
+    setData(event, data);
   }
+  event.initEvent(eventName, propagate, false);
+  object.dispatchEvent(event);
+}
+
+function triggerCreateEventObject(object, eventName, propagate, data) {
+  var event = document.createEventObject();
+  if (data) {
+    setData(event, data);
+  }
+  object.fireEvent('on' + eventName, event);
 }
 
 function trigger(object, eventName, propagate, data) {
   propagate = propagate || false;
   if (document.createEvent) {
-    var event = document.createEvent('UIEvents');
-    if (data) {
-      setData(event, data);
-    }
-    event.initEvent(eventName, propagate, false);
-    object.dispatchEvent(event);
+    triggerCreateEvent(object, eventName, propagate, data);
   } else {
-    var _event = document.createEventObject();
-    if (data) {
-      setData(_event, data);
-    }
-    object.fireEvent('on' + eventName, _event);
+    triggerCreateEventObject(object, eventName, propagate, data);
   }
 }
 
 function target(event) {
-  return event.target || event.srcElement;
+  return event.target;
 }
 
 exports.bind = bind;
@@ -55,81 +55,109 @@ exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
 exports.getData = getData;
-exports.setData = setData;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-module.exports = function (element, callback) {
+var eventTools = require('./tx-event');
 
-  var eventTools = require('./tx-event');
-  var trigger = require('./tx-toggle');
+var ACTIVE_CLASS_NAME_SUFFIX = '-is-active';
 
-  var object;
+module.exports = function (node, callback) {
+
+  var trigger;
   var task;
-  var active;
   var activeClassName;
+  var active;
 
-  function toggle(event) {
-    if (event) {
-      event.preventDefault();
-    }
-    trigger.toggle(object, activeClassName, active);
+  /* Actions */
+
+  function runTask() {
     if (typeof task === 'function') {
       task();
     }
-    active = !active;
   }
 
-  if (element) {
-    object = element;
-    task = callback;
-    active = false;
-    activeClassName = object.classList.item(0) + '-is-active';
-    eventTools.bind(object, 'click', toggle);
-  } else {
-    return false;
+  function activate() {
+    if (!active) {
+      active = true;
+      trigger.classList.add(activeClassName);
+      runTask();
+    }
   }
+
+  function deactivate() {
+    if (active) {
+      active = false;
+      trigger.classList.remove(activeClassName);
+      runTask();
+    }
+  }
+
+  function toggle(event) {
+    if (active) {
+      deactivate();
+    } else {
+      activate();
+    }
+  }
+
+  /* Interactions */
+
+  function onClick(event) {
+    event.preventDefault();
+    toggle();
+  }
+
+  function initInteractions() {
+    eventTools.bind(trigger, 'click', onClick);
+  }
+
+  function removeInteractions() {
+    eventTools.unbind(trigger, 'click', onClick);
+  }
+
+  /* Initialization */
+
+  function initValues() {
+    trigger = node;
+    task = callback;
+    activeClassName = '' + trigger.classList.item(0) + ACTIVE_CLASS_NAME_SUFFIX;
+    active = false;
+  }
+
+  function init() {
+    initValues();
+    initInteractions();
+  }
+
+  function removeValues() {
+    trigger = null;
+    task = null;
+    activeClassName = null;
+    active = null;
+  }
+
+  function destroy() {
+    removeInteractions();
+    removeValues();
+  }
+
+  init();
+
+  /* Interface */
 
   return {
+    destroy: destroy,
+    activate: activate,
+    deactivate: deactivate,
     toggle: toggle
   };
 };
 
-},{"./tx-event":1,"./tx-toggle":3}],3:[function(require,module,exports){
-/* jshint browser:true */
-
-'use strict';
-
-function activate(object, className) {
-  object.classList.add(className);
-}
-
-function deactivate(object, className) {
-  object.classList.remove(className);
-}
-
-function state(object, className) {
-  return object.className.indexOf(className) > -1;
-}
-
-function toggle(object, className, externalState) {
-  var triggerState = externalState || state(object, className);
-  if (triggerState) {
-    deactivate(object, className);
-  } else {
-    activate(object, className);
-  }
-}
-
-exports.toggle = toggle;
-exports.activate = activate;
-exports.deactivate = deactivate;
-exports.state = state;
-
-},{}],4:[function(require,module,exports){
+},{"./tx-event":1}],3:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
@@ -137,8 +165,9 @@ exports.state = state;
 (function () {
 
   var togglable = require('./components/tx-togglable');
+  var trigger = document.getElementById('navToggle');
 
-  togglable(document.getElementById('navToggle'));
+  togglable(trigger);
 })();
 
-},{"./components/tx-togglable":2}]},{},[4]);
+},{"./components/tx-togglable":2}]},{},[3]);

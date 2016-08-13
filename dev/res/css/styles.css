@@ -1,11 +1,11 @@
 /* Inline-block */
 .overlay:before, .sliderDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .child, .file-button, .navToggle, .mdz-no-flexbox .item,
-.mdz-no-flexboxlegacy .item, .slide, .sliderHolder, .js-sliderNavigationPage {
+.mdz-no-flexboxlegacy .item, .slide, .sliderHolder, .js-sliderNavigationPage, .tooltip {
   display: inline-block; }
 
 /* Inline-block IE */
 /* Pseudo Element */
-.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .icon:before, .icon:after, .slider:before, .slidePrev:before, .slideNext:before, .slidePrev:after, .slideNext:after {
+.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .icon:before, .icon:after, .slider:before, .slidePrev:before, .slideNext:before, .slidePrev:after, .slideNext:after, .tooltip:after {
   position: absolute;
   content: '';
   display: block; }
@@ -499,7 +499,7 @@ body {
   margin: 0; }
 
 .fullScreenSection {
-  background: red; }
+  background: #d9534f; }
 
 /* Hamburger */
 .navToggle {
@@ -604,9 +604,9 @@ body {
     -webkit-transition: inherit;
     transition: inherit; }
   .icon:before {
-    background: url(../images/arrowBlackDown.png); }
+    background: url("../images/arrowBlackDown.png"); }
   .icon:after {
-    background: url(../images/arrowBrownDown.png); }
+    background: url("../images/arrowBrownDown.png"); }
 
 /* No Flexbox */
 .mdz-no-flexbox .flexbox,
@@ -835,6 +835,98 @@ body {
 @media handheld, only screen and (max-width: 720px) {
   .slidePrev, .slideNext {
     display: none; } }
+
+/* Tabs */
+.tabs {
+  margin: 24px 0;
+  margin: 1.5rem 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 30px;
+  text-align: center;
+  list-style: none; }
+  .tabs li {
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    margin: 0 -1px; }
+
+.tab {
+  color: #337ab7;
+  height: 44px;
+  height: 2.75rem;
+  line-height: 2.75;
+  display: block;
+  border: 2px solid #337ab7;
+  border-radius: 15px 15px 0 0;
+  text-decoration: none; }
+  .tab:visited, .tab:hover, .tab:active {
+    color: #337ab7; }
+  .tab-is-active {
+    color: #fff;
+    background: #337ab7; }
+    .tab-is-active:visited, .tab-is-active:hover, .tab-is-active:active {
+      color: #fff; }
+
+.tabContent {
+  display: none;
+  padding: 0 30px; }
+  .tabContent-is-active {
+    display: block; }
+
+/* Tooltip */
+.tooltip {
+  position: relative; }
+  .tooltip:before, .tooltip:after {
+    bottom: 100%;
+    left: 50%;
+    background: #337ab7;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: 0.2s;
+    transition: 0.2s; }
+  .tooltip:hover:before, .tooltip:hover:after {
+    opacity: 1; }
+  .tooltip:before {
+    font-size: 12px;
+    font-size: 0.75rem;
+    line-height: 2;
+    position: absolute;
+    z-index: -1;
+    content: attr(data-tip);
+    display: block;
+    height: 30px;
+    padding: 0 15px;
+    border-radius: 5px;
+    color: #fff;
+    background: #337ab7;
+    line-height: 30px;
+    white-space: nowrap;
+    -webkit-transform: translateX(-50%) translateY(7px) translateZ(0);
+    transform: translateX(-50%) translateY(7px) translateZ(0); }
+  .tooltip:after {
+    z-index: -2;
+    width: 12px;
+    height: 12px;
+    background: -webkit-linear-gradient(135deg, #337ab7, #337ab7 7.25px, transparent 7.25px, transparent);
+    background: linear-gradient(-45deg, #337ab7, #337ab7 7.25px, transparent 7.25px, transparent);
+    -webkit-transform: translateX(-50%) translateY(11px) translateZ(0) rotate(45deg);
+    transform: translateX(-50%) translateY(11px) translateZ(0) rotate(45deg); }
+  .tooltip:hover:before {
+    -webkit-transform: translateX(-50%) translateY(-10px) translateZ(0);
+    transform: translateX(-50%) translateY(-10px) translateZ(0); }
+  .tooltip:hover:after {
+    -webkit-transform: translateX(-50%) translateY(-6px) translateZ(0) rotate(45deg);
+    transform: translateX(-50%) translateY(-6px) translateZ(0) rotate(45deg); }
+
+/* Button */
+.tooltip {
+  position: relative;
+  top: 100px;
+  left: 100px; }
 
 /* Transform */
 .transformThis {

@@ -2,10 +2,11 @@
 
 (function() {
 
-  var eventTools = require('./components/tx-event');
+  var eventTool = require('./components/tx-event');
   var togglable = require('./components/tx-togglable');
+  var trigger = document.getElementById('overlayTrigger');
 
   var overlay = togglable(document.getElementById('overlay'));
-  eventTools.bind(document.getElementById('overlayTrigger'), 'click', overlay.toggle);
+  eventTool.bind(trigger, 'click', overlay.toggle);
 
 })();

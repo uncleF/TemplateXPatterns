@@ -3,7 +3,8 @@
 (function() {
 
   var togglable = require('./components/tx-togglable');
+  var trigger = document.getElementById('navToggle');
 
-  togglable(document.getElementById('navToggle'));
+  togglable(trigger);
 
 })();

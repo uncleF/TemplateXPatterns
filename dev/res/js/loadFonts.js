@@ -9,13 +9,12 @@ var FontFaceObserver = require('fontfaceobserver');
 module.exports = function (fontCritical, fontsRest, className, object) {
   var critical = new FontFaceObserver(fontCritical);
   critical.check().then(function (_) {
-    var restChecks = [];
     object.classList.add(className + 'Critical-is-loaded');
-    for (var index, length = fontsRest.length; index < length; index += 1) {
-      restChecks.push(new FontFaceObserver(fontsRest[index]).check());
-    }
+    var restChecks = fontsRest.map(function (font) {
+      return restChecks.push(new FontFaceObserver(font).check());
+    });
     Promise.all(restChecks).then(function (_) {
-      object.classList.add(className + 'Rest-is-loaded');
+      return object.classList.add(className + 'Rest-is-loaded');
     });
   });
 };

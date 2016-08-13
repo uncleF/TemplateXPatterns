@@ -13,41 +13,41 @@ function getData(event) {
 }
 
 function bind(object, type, callback) {
-  if (document.addEventListener) {
-    object.addEventListener(type, callback);
-  } else {
-    object.attachEvent('on' + type, callback);
-  }
+  object.addEventListener(type, callback);
 }
 
 function unbind(object, type, callback) {
-  if (document.removeEventListener) {
-    object.removeEventListener(type, callback);
-  } else {
-    object.detachEvent('on' + type, callback);
+  object.removeEventListener(type, callback);
+}
+
+function triggerCreateEvent(object, eventName, propagate, data) {
+  var event = document.createEvent('UIEvents');
+  if (data) {
+    setData(event, data);
   }
+  event.initEvent(eventName, propagate, false);
+  object.dispatchEvent(event);
+}
+
+function triggerCreateEventObject(object, eventName, propagate, data) {
+  var event = document.createEventObject();
+  if (data) {
+    setData(event, data);
+  }
+  object.fireEvent('on' + eventName, event);
 }
 
 function trigger(object, eventName, propagate, data) {
   propagate = propagate || false;
   if (document.createEvent) {
-    var event = document.createEvent('UIEvents');
-    if (data) {
-      setData(event, data);
-    }
-    event.initEvent(eventName, propagate, false);
-    object.dispatchEvent(event);
+    triggerCreateEvent(object, eventName, propagate, data);
   } else {
-    var _event = document.createEventObject();
-    if (data) {
-      setData(_event, data);
-    }
-    object.fireEvent('on' + eventName, _event);
+    triggerCreateEventObject(object, eventName, propagate, data);
   }
 }
 
 function target(event) {
-  return event.target || event.srcElement;
+  return event.target;
 }
 
 exports.bind = bind;
@@ -55,128 +55,135 @@ exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
 exports.getData = getData;
-exports.setData = setData;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
 
-var querySelectorPolyfill = require('./tx-querySelectorAll.js');
-var textContentPolyfill = require('./tx-textContent.js');
-var eventTools = require('./tx-event');
+var eventTool = require('./tx-event');
 
-module.exports = function (selectors, text) {
+var WRAP_CLASS_NAME_SUFFIX = '-wrap';
+var VALUE_CLASS_NAME_SUFFIX = '-value';
+var BUTTON_CLASS_NAME_SUFFIX = '-button';
+var WRAPED_CLASS_NAME_SUFFIX = '-is-wrapped';
 
-  function fileInput(field, text) {
+function createWrap(className) {
+  var element = document.createElement('div');
+  element.className = '' + className + WRAP_CLASS_NAME_SUFFIX;
+  return element;
+}
 
-    var input;
-    var className;
-    var activeClassName;
-    var wrapElement;
-    var valueElement;
-    var buttonElement;
-    var buttonText;
+function createValue(className) {
+  var element = document.createElement('div');
+  element.className = '' + className + VALUE_CLASS_NAME_SUFFIX;
+  return element;
+}
 
-    function fieldChange(event) {
-      valueElement.textContent = input.value.split('\\')[2];
-    }
+function createButton(className, text) {
+  var element = document.createElement('a');
+  element.href = '#';
+  element.textContent = text;
+  element.className = '' + className + BUTTON_CLASS_NAME_SUFFIX;
+  return element;
+}
 
-    function fieldClick(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      eventTools.trigger(input, 'click', false);
-    }
+function wrapInput(className, input, wrap, value, button) {
+  var parent = input.parentNode;
+  wrap.appendChild(value);
+  wrap.appendChild(button);
+  parent.insertBefore(wrap, input);
+  wrap.appendChild(input);
+  input.classList.add('' + className + WRAPED_CLASS_NAME_SUFFIX);
+}
 
-    function wrap() {
-      var parent = input.parentNode;
-      wrapElement = document.createElement('div');
-      wrapElement.className = className + '-wrap';
-      valueElement = document.createElement('div');
-      valueElement.className = className + '-value';
-      buttonElement = document.createElement('a');
-      buttonElement.href = '#';
-      buttonElement.textContent = buttonText;
-      buttonElement.className = className + '-button';
-      wrapElement.appendChild(valueElement);
-      wrapElement.appendChild(buttonElement);
-      parent.insertBefore(wrapElement, input);
-      wrapElement.appendChild(input);
-      input.classList.add(className + '-is-wrapped');
-    }
+function fileInput(field, text) {
 
+  var input;
+  var className;
+  var wrap;
+  var value;
+  var button;
+
+  /* Interactions */
+
+  function onChange(event) {
+    value.textContent = input.value.split('\\')[2];
+  }
+
+  function onClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    eventTool.trigger(input, 'click', false);
+  }
+
+  function initInteractions() {
+    eventTool.bind(input, 'change', onChange);
+    eventTool.bind(wrap, 'click', onClick);
+    eventTool.bind(button, 'click', onClick);
+  }
+
+  function removeInteractions() {
+    eventTool.unbind(input, 'change', onChange);
+    eventTool.unbind(wrap, 'click', onClick);
+    eventTool.unbind(button, 'click', onClick);
+  }
+
+  /* Initialization */
+
+  function initValues() {
     input = field;
-    buttonText = text || 'Browse';
     className = input.classList.item(0);
-    activeClassName = className + '-is-active';
-    wrap(input);
-    eventTools.bind(input, 'change', fieldChange);
-    eventTools.bind(wrapElement, 'click', fieldClick);
-    eventTools.bind(buttonElement, 'click', fieldClick);
+    wrap = createWrap(className);
+    value = createValue(className);
+    button = createButton(className, text);
   }
 
-  function selectFields(selectors) {
-    if (!document.querySelectorAll) {
-      querySelectorPolyfill();
-    }
-    return document.querySelectorAll(selectors);
+  function initField() {
+    initValues();
+    wrapInput(className, input, wrap, value, button);
+    initInteractions();
   }
 
-  var fields = selectFields(selectors);
-  textContentPolyfill();
-  for (var index = 0, length = fields.length; index < length; index += 1) {
-    var field = fields[index];
-    fileInput(field, text);
+  function removeValues() {
+    input = null;
+    className = null;
+    wrap = null;
+    value = null;
+    button = null;
   }
-};
 
-},{"./tx-event":1,"./tx-querySelectorAll.js":3,"./tx-textContent.js":4}],3:[function(require,module,exports){
-'use strict';
+  function destroyField() {
+    removeInteractions();
+    removeValues();
+  }
 
-/* jshint browser:true */
+  initField();
 
-module.exports = function (_) {
-  document.querySelectorAll = document.body.querySelectorAll = Object.querySelectorAll = function querySelectorAllPolyfill(r, c, i, j, a) {
-    var d = document;
-    var s = d.createStyleSheet();
-    a = d.all;
-    c = [];
-    r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
-    for (i = r.length; i--;) {
-      s.addRule(r[i], 'k:v');
-      for (j = a.length; j--;) {
-        if (a[j].currentStyle.k) {
-          c.push(a[j]);
-        }
-      }
-      s.removeRule(0);
-    }
-    return c;
+  /* Interface */
+
+  return {
+    destroy: destroyField
   };
-};
+}
 
-},{}],4:[function(require,module,exports){
-/* jshint browser:true */
+function init(selector, text) {
+  var fields = document.querySelectorAll(selector);
+  fields.forEach(function (field) {
+    return fileInput(field, text);
+  });
+}
 
-'use strict';
+function destroy(fields) {
+  fields.forEach(function (field) {
+    return field.destroy();
+  });
+}
 
-module.exports = function (_) {
-  if (Object.defineProperty && Object.getOwnPropertyDescriptor && Object.getOwnPropertyDescriptor(Element.prototype, 'textContent') && !Object.getOwnPropertyDescriptor(Element.prototype, 'textContent').get) {
-    (function () {
-      var innerText = Object.getOwnPropertyDescriptor(Element.prototype, 'innerText');
-      Object.defineProperty(Element.prototype, 'textContent', {
-        get: function get() {
-          return innerText.get.call(this);
-        },
-        set: function set(s) {
-          return innerText.set.call(this, s);
-        }
-      });
-    })();
-  }
-};
+exports.init = init;
+exports.destroy = destroy;
 
-},{}],5:[function(require,module,exports){
+},{"./tx-event":1}],3:[function(require,module,exports){
 'use strict';
 
 /* jshint browser:true */
@@ -185,7 +192,7 @@ module.exports = function (_) {
 
   var fileInput = require('./components/tx-fileInput');
 
-  fileInput('#file');
+  fileInput.init('#file', 'Browse');
 })();
 
-},{"./components/tx-fileInput":2}]},{},[5]);
+},{"./components/tx-fileInput":2}]},{},[3]);

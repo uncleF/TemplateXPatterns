@@ -15,5 +15,5 @@ body {
 
 .fullScreenSection {
   @extend %tx-fullScreen;
-  background: red;
+  background: $red;
 }

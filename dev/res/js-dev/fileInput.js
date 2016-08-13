@@ -4,6 +4,6 @@
 
   var fileInput = require('./components/tx-fileInput');
 
-  fileInput('#file');
+  fileInput.init('#file', 'Browse');
 
 })();

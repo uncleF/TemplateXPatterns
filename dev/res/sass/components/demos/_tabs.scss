@@ -1,0 +1,40 @@
+/* Tabs */
+
+.tabs {
+  @include tx-rhythm(1, 1);
+  display: flex;
+  padding: 0 $gap;
+  text-align: center;
+  list-style: none;
+
+  li {
+    flex-grow: 1;
+    margin: 0 -1px;
+  }
+
+}
+
+.tab {
+  @include tx-link($blue, $all: true);
+  @include tx-grid-height(2, 2);
+  display: block;
+  border: 2px solid $blue;
+  border-radius: 15px 15px 0 0;
+  text-decoration: none;
+
+  &-is-active {
+    @include tx-link($white, $all: true);
+    background: $blue;
+  }
+
+}
+
+.tabContent {
+  display: none;
+  padding: 0 $gap;
+
+  &-is-active {
+    display: block;
+  }
+
+}
