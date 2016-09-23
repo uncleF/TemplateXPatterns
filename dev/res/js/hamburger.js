@@ -1,7 +1,23 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+/* jshint browser:true */
+
+(function () {
+
+  var togglable = require('./patterns/tx-togglable');
+
+  var trigger = document.getElementById('navToggle');
+
+  togglable(trigger);
+})();
+
+},{"./patterns/tx-togglable":3}],2:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
+
+/* Event Data */
 
 function setData(event, data) {
   event.data = data;
@@ -12,6 +28,8 @@ function getData(event) {
   return event.data;
 }
 
+/* Event Binding */
+
 function bind(object, type, callback) {
   object.addEventListener(type, callback);
 }
@@ -20,8 +38,11 @@ function unbind(object, type, callback) {
   object.removeEventListener(type, callback);
 }
 
-function triggerCreateEvent(object, eventName, propagate, data) {
-  var event = document.createEvent('UIEvents');
+/* Event Trigger */
+
+function triggerCreateEvent(object, eventName, propagate, type, data) {
+  var eventType = type || 'MouseEvents';
+  var event = document.createEvent(eventType);
   if (data) {
     setData(event, data);
   }
@@ -46,17 +67,21 @@ function trigger(object, eventName, propagate, data) {
   }
 }
 
+/* Event Target */
+
 function target(event) {
   return event.target;
 }
 
+/* Interface */
+
+exports.getData = getData;
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
-exports.getData = getData;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /* jshint browser:true */
 
 'use strict';
@@ -157,17 +182,4 @@ module.exports = function (node, callback) {
   };
 };
 
-},{"./tx-event":1}],3:[function(require,module,exports){
-'use strict';
-
-/* jshint browser:true */
-
-(function () {
-
-  var togglable = require('./components/tx-togglable');
-  var trigger = document.getElementById('navToggle');
-
-  togglable(trigger);
-})();
-
-},{"./components/tx-togglable":2}]},{},[3]);
+},{"./tx-event":2}]},{},[1]);

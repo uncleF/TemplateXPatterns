@@ -5,12 +5,12 @@
 /* Sticky Footer */
 
 .stickyFooterDemo {
-  @extend %tx-stickyFooterWrap;
+  @extend %tx-stickyFooterHolder;
   min-height: 100%;
 }
 
 .content {
-  @extend %tx-stickyFooterContent;
+  @extend %tx-stickyFooterBody;
   min-height: 300px;
   background: $blue;
 }

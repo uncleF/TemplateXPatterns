@@ -2,6 +2,8 @@
 
 'use strict';
 
+/* Event Data */
+
 function setData(event, data) {
   event.data = data;
   return event;
@@ -11,6 +13,8 @@ function getData(event) {
   return event.data;
 }
 
+/* Event Binding */
+
 function bind(object, type, callback) {
   object.addEventListener(type, callback);
 }
@@ -19,8 +23,11 @@ function unbind(object, type, callback) {
   object.removeEventListener(type, callback);
 }
 
-function triggerCreateEvent(object, eventName, propagate, data) {
-  let event = document.createEvent('UIEvents');
+/* Event Trigger */
+
+function triggerCreateEvent(object, eventName, propagate, type, data) {
+  let eventType = type || 'MouseEvents';
+  let event = document.createEvent(eventType);
   if (data) {
     setData(event, data);
   }
@@ -45,12 +52,16 @@ function trigger(object, eventName, propagate, data) {
   }
 }
 
+/* Event Target */
+
 function target(event) {
   return event.target;
 }
 
+/* Interface */
+
+exports.getData = getData;
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
-exports.getData = getData;

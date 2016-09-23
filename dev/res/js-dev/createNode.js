@@ -2,7 +2,7 @@
 
 (function() {
 
-  var createNode = require('./components/tx-createNode');
+  var createNode = require('./patterns/tx-createNode');
 
   var html = '<div id="child" class="child">Child</div>';
   var parent = document.getElementById('parent');

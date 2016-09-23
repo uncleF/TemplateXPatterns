@@ -2,7 +2,7 @@
 
 (function() {
 
-  var tabs = require('./components/tx-tabs.js');
+  var tabs = require('./patterns/tx-tabs.js');
 
   tabs('tab', 0);
 

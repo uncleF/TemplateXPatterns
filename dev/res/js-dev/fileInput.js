@@ -2,7 +2,7 @@
 
 (function() {
 
-  var fileInput = require('./components/tx-fileInput');
+  var fileInput = require('./patterns/tx-fileInput');
 
   fileInput.init('#file', 'Browse');
 

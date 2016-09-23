@@ -27,9 +27,9 @@ module.exports = function (_) {
 
 (function () {
 
-  var whichTransition = require('./components/tx-transition');
+  var whichTransition = require('./patterns/tx-transition');
 
   console.log(whichTransition());
 })();
 
-},{"./components/tx-transition":1}]},{},[2]);
+},{"./patterns/tx-transition":1}]},{},[2]);

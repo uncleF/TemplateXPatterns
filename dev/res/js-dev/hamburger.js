@@ -2,7 +2,8 @@
 
 (function() {
 
-  var togglable = require('./components/tx-togglable');
+  var togglable = require('./patterns/tx-togglable');
+
   var trigger = document.getElementById('navToggle');
 
   togglable(trigger);

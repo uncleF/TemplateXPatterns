@@ -2,11 +2,17 @@
 
 (function() {
 
-  var eventTool = require('./components/tx-event');
-  var togglable = require('./components/tx-togglable');
-  var trigger = document.getElementById('overlayTrigger');
+  var eventTool = require('./patterns/tx-event');
+  var togglable = require('./patterns/tx-togglable');
 
+  var trigger = document.getElementById('overlayTrigger');
   var overlay = togglable(document.getElementById('overlay'));
-  eventTool.bind(trigger, 'click', overlay.toggle);
+
+  function onClick(event) {
+    event.preventDefault();
+    overlay.toggle();
+  }
+
+  eventTool.bind(trigger, 'click', onClick);
 
 })();

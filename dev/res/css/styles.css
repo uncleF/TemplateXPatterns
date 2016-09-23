@@ -1,6 +1,5 @@
 /* Inline-block */
-.overlay:before, .sliderDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .child, .file-button, .navToggle, .mdz-no-flexbox .item,
-.mdz-no-flexboxlegacy .item, .slide, .sliderHolder, .js-sliderNavigationPage, .tooltip {
+.overlay:before, .sliderDemoBody:before, kbd, .buttonLink, .checkboxLabel, .radioLabel, .child, .file-button, .navToggle, .mdz-no-flexbox.mdz-no-flexboxlegacy .item, .slide, .sliderHolder, .js-sliderNavigationPage, .tooltip {
   display: inline-block; }
 
 /* Inline-block IE */
@@ -468,7 +467,7 @@ textarea {
 .field {
   width: 270px; }
 
-/* Button */
+/* File Input */
 .file-wrap {
   position: relative;
   height: 44px;
@@ -476,8 +475,8 @@ textarea {
   border: 2px solid #ccc; }
   .file-is-wrapped {
     position: absolute;
-    left: -10000px;
-    visibility: hidden; }
+    z-index: -1;
+    left: -10000px; }
   .file-value {
     line-height: 44px; }
   .file-button {
@@ -609,15 +608,13 @@ body {
     background: url("../images/arrowBrownDown.png"); }
 
 /* No Flexbox */
-.mdz-no-flexbox .flexbox,
-.mdz-no-flexboxlegacy .flexbox {
+.mdz-no-flexbox.mdz-no-flexboxlegacy .flexbox {
   display: block;
   font-size: 0; }
 
 /* Button */
 .flexbox {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
 
@@ -635,7 +632,7 @@ body {
   .item05 {
     background: #333; }
 
-/* Simple Fade In and Out */
+/* Simple Fade In & Out */
 .overlay {
   visibility: hidden;
   opacity: 0;
@@ -667,22 +664,19 @@ body {
 
 /* Overlay */
 /* Sticky Footer */
-.content {
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1; }
-
 .stickyFooterDemo {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column; }
+
+.content {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1; }
 
 /* Sticky Footer */
 .stickyFooterDemo {
@@ -841,7 +835,6 @@ body {
   margin: 24px 0;
   margin: 1.5rem 0;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0 30px;
@@ -849,7 +842,6 @@ body {
   list-style: none; }
   .tabs li {
     -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
     flex-grow: 1;
     margin: 0 -1px; }

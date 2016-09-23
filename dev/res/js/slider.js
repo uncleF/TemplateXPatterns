@@ -14,6 +14,8 @@ module.exports = function (html) {
 
 'use strict';
 
+/* Event Data */
+
 function setData(event, data) {
   event.data = data;
   return event;
@@ -23,6 +25,8 @@ function getData(event) {
   return event.data;
 }
 
+/* Event Binding */
+
 function bind(object, type, callback) {
   object.addEventListener(type, callback);
 }
@@ -31,8 +35,11 @@ function unbind(object, type, callback) {
   object.removeEventListener(type, callback);
 }
 
-function triggerCreateEvent(object, eventName, propagate, data) {
-  var event = document.createEvent('UIEvents');
+/* Event Trigger */
+
+function triggerCreateEvent(object, eventName, propagate, type, data) {
+  var eventType = type || 'MouseEvents';
+  var event = document.createEvent(eventType);
   if (data) {
     setData(event, data);
   }
@@ -57,15 +64,19 @@ function trigger(object, eventName, propagate, data) {
   }
 }
 
+/* Event Target */
+
 function target(event) {
   return event.target;
 }
 
+/* Interface */
+
+exports.getData = getData;
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
-exports.getData = getData;
 
 },{}],3:[function(require,module,exports){
 /* jshint browser:true */
@@ -89,6 +100,8 @@ var createNode = require('./tx-createNode');
 var transition = require('./tx-transition')();
 var translateGallery = require('./tx-translate').css;
 
+/* Dots */
+
 function generateNavigationDots(size, pageClassName) {
   var navigationDots = '';
   for (var index = 0; index < size; index += 1) {
@@ -101,6 +114,8 @@ function dots(size, listClassName, pageClassName) {
   var navigation = '<ol class="' + listClassName + ' ' + DOT_NAVIGATION_CLASS_NAME + '">' + generateNavigationDots(size, pageClassName) + '</ol>';
   return createNode(navigation);
 }
+
+/* Slider Constructor */
 
 function init(object, navigationObject, pageClassName) {
 
@@ -221,7 +236,7 @@ function init(object, navigationObject, pageClassName) {
     animationFrame = frame;
   }
 
-  /* Utilities */
+  /* Slider Utilities */
 
   function updateDots() {
     getActiveSlideDot().classList.remove(getSliderDotActiveClassName(), DOT_ACTIVE_CLASS_NAME);
@@ -298,7 +313,7 @@ function init(object, navigationObject, pageClassName) {
     }
   }
 
-  /* Actions */
+  /* Slider Actions */
 
   function slide(index) {
     setActiveSlideIndex(index);
@@ -342,7 +357,7 @@ function init(object, navigationObject, pageClassName) {
     }
   }
 
-  /* Interactions */
+  /* Slider Interactions */
 
   function touchStart(event) {
     if (!getSlider().classList.contains(SLIDER_FIXING_CLASS_NAME) || !getSlider().classList.contains(SLIDER_CHANGING_CLASS_NAME)) {
@@ -371,7 +386,7 @@ function init(object, navigationObject, pageClassName) {
     eventTool.bind(getSlider(), 'touchstart', touchStart);
   }
 
-  /* Inititalization */
+  /* Slider Inititalization */
 
   function setDefaultValues() {
     setSlider();
@@ -382,10 +397,14 @@ function init(object, navigationObject, pageClassName) {
     setActiveSlideDot();
   }
 
-  setDefaultValues();
-  interactions();
+  function init() {
+    setDefaultValues();
+    interactions();
+  }
 
-  /* Interface */
+  init();
+
+  /* Slider Interface */
 
   return {
     prev: prevItem,
@@ -393,6 +412,8 @@ function init(object, navigationObject, pageClassName) {
     set: slide
   };
 }
+
+/* Interface */
 
 exports.dots = dots;
 exports.init = init;
@@ -424,6 +445,8 @@ module.exports = function (_) {
 
 'use strict';
 
+/* Utilities */
+
 function properties(axis, distance) {
   var property = 'translate' + axis.toUpperCase() + '(' + distance + ')';
   return {
@@ -431,6 +454,8 @@ function properties(axis, distance) {
     propertyLayer: property + ' translateZ(0)'
   };
 }
+
+/* CSS Object */
 
 function translateCSS(axis, distance) {
   var css = properties(axis, distance);
@@ -443,10 +468,14 @@ function translateCSS(axis, distance) {
   };
 }
 
+/* CSS String */
+
 function translateString(axis, distance) {
   var css = properties(axis, distance);
   return '-webkit-transform:' + css.propertyLayer + ';-moz-transform:' + css.propertyLayer + ';-ms-transform:' + css.property + ';-o-transform:' + css.property + ';transform:' + css.propertyLayer + ';';
 }
+
+/* Interface */
 
 exports.css = translateCSS;
 exports.string = translateString;
@@ -458,8 +487,8 @@ exports.string = translateString;
 
 (function () {
 
-  var slider = require('./components/tx-slider');
-  var eventTool = require('./components/tx-event');
+  var slider = require('./patterns/tx-slider');
+  var eventTool = require('./patterns/tx-event');
 
   var gallery;
   var slides = document.getElementById('slider');
@@ -474,4 +503,4 @@ exports.string = translateString;
   eventTool.bind(prev, 'click', gallery.prev);
 })();
 
-},{"./components/tx-event":2,"./components/tx-slider":3}]},{},[6]);
+},{"./patterns/tx-event":2,"./patterns/tx-slider":3}]},{},[6]);

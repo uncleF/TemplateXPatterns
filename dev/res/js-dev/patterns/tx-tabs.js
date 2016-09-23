@@ -27,16 +27,17 @@ module.exports = (nodeSelector, defaultTab) => {
     return pairs.filter(activeFilter)[0];
   }
 
-  /* Actions */
-
   function makePairs() {
     var tabObjects = typeof nodeSelector === 'string' ? document.getElementsByClassName(nodeSelector) : nodeSelector;
-    [].forEach.call(tabObjects, addPair);
+    tabObjects = [].slice.call(tabObjects);
+    tabObjects.forEach(addPair);
   }
 
   function destroyPairs() {
     pairs.forEach(destroyPair);
   }
+
+  /* Actions */
 
   function deactivateActive() {
     var active = findActive();

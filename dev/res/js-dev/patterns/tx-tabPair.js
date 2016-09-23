@@ -11,7 +11,7 @@ const CONTENT_ACTIVE_CLASS_NAME = `${CONTENT_CLASS_NAME}${ACTIVE_CLASS_NAME_SUFF
 
 var eventTool = require('./tx-event.js');
 
-module.exports = node => {
+module.exports = element => {
 
   var tab;
   var content;
@@ -64,7 +64,7 @@ module.exports = node => {
   /* Initialization */
 
   function defaultValues() {
-    tab = node;
+    tab = element;
     content = document.getElementById(getId());
     active = false;
   }
@@ -75,7 +75,7 @@ module.exports = node => {
   }
 
   function removeValues() {
-    node = null;
+    element = null;
     tab = null;
     content = null;
     active = null;

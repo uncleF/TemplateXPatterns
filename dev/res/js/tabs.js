@@ -3,6 +3,8 @@
 
 'use strict';
 
+/* Event Data */
+
 function setData(event, data) {
   event.data = data;
   return event;
@@ -12,6 +14,8 @@ function getData(event) {
   return event.data;
 }
 
+/* Event Binding */
+
 function bind(object, type, callback) {
   object.addEventListener(type, callback);
 }
@@ -20,8 +24,11 @@ function unbind(object, type, callback) {
   object.removeEventListener(type, callback);
 }
 
-function triggerCreateEvent(object, eventName, propagate, data) {
-  var event = document.createEvent('UIEvents');
+/* Event Trigger */
+
+function triggerCreateEvent(object, eventName, propagate, type, data) {
+  var eventType = type || 'MouseEvents';
+  var event = document.createEvent(eventType);
   if (data) {
     setData(event, data);
   }
@@ -46,15 +53,19 @@ function trigger(object, eventName, propagate, data) {
   }
 }
 
+/* Event Target */
+
 function target(event) {
   return event.target;
 }
 
+/* Interface */
+
+exports.getData = getData;
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
-exports.getData = getData;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
@@ -70,7 +81,7 @@ var CONTENT_ACTIVE_CLASS_NAME = '' + CONTENT_CLASS_NAME + ACTIVE_CLASS_NAME_SUFF
 
 var eventTool = require('./tx-event.js');
 
-module.exports = function (node) {
+module.exports = function (element) {
 
   var tab;
   var content;
@@ -123,7 +134,7 @@ module.exports = function (node) {
   /* Initialization */
 
   function defaultValues() {
-    tab = node;
+    tab = element;
     content = document.getElementById(getId());
     active = false;
   }
@@ -134,7 +145,7 @@ module.exports = function (node) {
   }
 
   function removeValues() {
-    node = null;
+    element = null;
     tab = null;
     content = null;
     active = null;
@@ -187,16 +198,17 @@ module.exports = function (nodeSelector, defaultTab) {
     return pairs.filter(activeFilter)[0];
   }
 
-  /* Actions */
-
   function makePairs() {
     var tabObjects = typeof nodeSelector === 'string' ? document.getElementsByClassName(nodeSelector) : nodeSelector;
-    [].forEach.call(tabObjects, addPair);
+    tabObjects = [].slice.call(tabObjects);
+    tabObjects.forEach(addPair);
   }
 
   function destroyPairs() {
     pairs.forEach(destroyPair);
   }
+
+  /* Actions */
 
   function deactivateActive() {
     var active = findActive();
@@ -265,9 +277,9 @@ module.exports = function (nodeSelector, defaultTab) {
 
 (function () {
 
-  var tabs = require('./components/tx-tabs.js');
+  var tabs = require('./patterns/tx-tabs.js');
 
   tabs('tab', 0);
 })();
 
-},{"./components/tx-tabs.js":3}]},{},[4]);
+},{"./patterns/tx-tabs.js":3}]},{},[4]);

@@ -3,7 +3,7 @@
 
 (function() {
 
-  var placeholders = require('./components/tx-placeholder');
+  var placeholders = require('./patterns/tx-placeholder');
 
   if (!Modernizr.input.placeholder) {
     placeholders.init();

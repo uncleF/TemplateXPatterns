@@ -2,8 +2,8 @@
 
 (function() {
 
-  var slider = require('./components/tx-slider');
-  var eventTool = require('./components/tx-event');
+  var slider = require('./patterns/tx-slider');
+  var eventTool = require('./patterns/tx-event');
 
   var gallery;
   var slides = document.getElementById('slider');

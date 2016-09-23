@@ -2,7 +2,7 @@
 
 (function() {
 
-  var loadFonts = require('./components/tx-loadFonts');
+  var loadFonts = require('./patterns/tx-loadFonts');
 
   loadFonts('RobotoCritical', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], 'roboto', document.documentElement);
 

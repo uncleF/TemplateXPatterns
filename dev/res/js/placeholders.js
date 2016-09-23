@@ -3,6 +3,8 @@
 
 'use strict';
 
+/* Event Data */
+
 function setData(event, data) {
   event.data = data;
   return event;
@@ -12,6 +14,8 @@ function getData(event) {
   return event.data;
 }
 
+/* Event Binding */
+
 function bind(object, type, callback) {
   object.addEventListener(type, callback);
 }
@@ -20,8 +24,11 @@ function unbind(object, type, callback) {
   object.removeEventListener(type, callback);
 }
 
-function triggerCreateEvent(object, eventName, propagate, data) {
-  var event = document.createEvent('UIEvents');
+/* Event Trigger */
+
+function triggerCreateEvent(object, eventName, propagate, type, data) {
+  var eventType = type || 'MouseEvents';
+  var event = document.createEvent(eventType);
   if (data) {
     setData(event, data);
   }
@@ -46,15 +53,19 @@ function trigger(object, eventName, propagate, data) {
   }
 }
 
+/* Event Target */
+
 function target(event) {
   return event.target;
 }
 
+/* Interface */
+
+exports.getData = getData;
 exports.bind = bind;
 exports.unbind = unbind;
 exports.trigger = trigger;
 exports.target = target;
-exports.getData = getData;
 
 },{}],2:[function(require,module,exports){
 /* jshint browser:true */
@@ -65,11 +76,13 @@ var eventTool = require('./tx-event');
 
 var ACTIVE_CLASS_NAME = 'js-field-is-showingPlaceholder';
 
+/* Placeholder Constructor */
+
 function fieldPlaceholder(node) {
 
   var field;
 
-  /* Actions */
+  /* Field Actions */
 
   function addPlaceholder(field) {
     if (field.value === '') {
@@ -85,7 +98,7 @@ function fieldPlaceholder(node) {
     }
   }
 
-  /* Interactions */
+  /* Field Interactions */
 
   function onFocus(event) {
     removePlaceholder(eventTool.target(event));
@@ -105,7 +118,7 @@ function fieldPlaceholder(node) {
     eventTool.unbind(field, 'blur', onBlur);
   }
 
-  /* Initialization */
+  /* Field Initialization */
 
   function initValues() {
     field = node;
@@ -128,15 +141,17 @@ function fieldPlaceholder(node) {
 
   initPlaceholder();
 
-  /* Interface */
+  /* Filed Interface */
 
   return {
     destroy: destroy
   };
 }
 
+/* Inititalization */
+
 function init() {
-  var fields = document.querySelectorAll('input, textarea');
+  var fields = [].slice.call(document.querySelectorAll('input, textarea'));
   fields.forEach(fieldPlaceholder);
 }
 
@@ -145,6 +160,8 @@ function destroy(fields) {
     return field.destroy();
   });
 }
+
+/* Interface */
 
 exports.init = init;
 exports.destroy = destroy;
@@ -157,11 +174,11 @@ exports.destroy = destroy;
 
 (function () {
 
-  var placeholders = require('./components/tx-placeholder');
+  var placeholders = require('./patterns/tx-placeholder');
 
   if (!Modernizr.input.placeholder) {
     placeholders.init();
   }
 })();
 
-},{"./components/tx-placeholder":2}]},{},[3]);
+},{"./patterns/tx-placeholder":2}]},{},[3]);
