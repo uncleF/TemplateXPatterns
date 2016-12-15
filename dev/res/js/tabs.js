@@ -81,10 +81,11 @@ var CONTENT_ACTIVE_CLASS_NAME = '' + CONTENT_CLASS_NAME + ACTIVE_CLASS_NAME_SUFF
 
 var eventTool = require('./tx-event.js');
 
-module.exports = function (element) {
+module.exports = function (element, holder) {
 
   var tab;
   var content;
+  var catcher;
   var active;
 
   /* Utilities */
@@ -97,7 +98,7 @@ module.exports = function (element) {
 
   function activate() {
     if (!active) {
-      eventTool.trigger(document, EVENT, false, 'UIEvent');
+      eventTool.trigger(catcher, EVENT, false, 'UIEvent');
       active = true;
       tab.classList.add(TAB_ACTIVE_CLASS_NAME);
       content.classList.add(CONTENT_ACTIVE_CLASS_NAME);
@@ -136,6 +137,7 @@ module.exports = function (element) {
   function defaultValues() {
     tab = element;
     content = document.getElementById(getId());
+    catcher = holder;
     active = false;
   }
 
@@ -146,8 +148,10 @@ module.exports = function (element) {
 
   function removeValues() {
     element = null;
+    holder = null;
     tab = null;
     content = null;
+    catcher = null;
     active = null;
   }
 
@@ -176,14 +180,15 @@ module.exports = function (element) {
 var tabPair = require('./tx-tabPair.js');
 var eventTool = require('./tx-event.js');
 
-module.exports = function (nodeSelector, defaultTab) {
+module.exports = function (holderID, nodeSelector, defaultTab) {
 
+  var holder;
   var pairs;
 
   /* Utilities */
 
   function addPair(tab) {
-    pairs.push(tabPair(tab));
+    pairs.push(tabPair(tab, holder));
   }
 
   function destroyPair(pair) {
@@ -224,11 +229,11 @@ module.exports = function (nodeSelector, defaultTab) {
   }
 
   function initEvents() {
-    eventTool.bind(document, 'tabswitch', onTabSwitch);
+    eventTool.bind(holder, 'tabswitch', onTabSwitch);
   }
 
   function removeEvents() {
-    eventTool.unbind(document, 'tabswitch', onTabSwitch);
+    eventTool.unbind(holder, 'tabswitch', onTabSwitch);
   }
 
   /* Inititlization */
@@ -243,6 +248,7 @@ module.exports = function (nodeSelector, defaultTab) {
   }
 
   function init() {
+    holder = document.getElementById(holderID);
     defaultValues();
     initEvents();
     makePairs();
@@ -279,7 +285,7 @@ module.exports = function (nodeSelector, defaultTab) {
 
   var tabs = require('./patterns/tx-tabs.js');
 
-  tabs('tab', 0);
+  tabs('tabs', 'tab', 0);
 })();
 
 },{"./patterns/tx-tabs.js":3}]},{},[4]);

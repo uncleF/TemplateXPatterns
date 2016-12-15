@@ -4,6 +4,6 @@
 
   var tabs = require('./patterns/tx-tabs.js');
 
-  tabs('tab', 0);
+  tabs('tabs', 'tab', 0);
 
 })();
