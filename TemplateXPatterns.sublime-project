@@ -7,9 +7,15 @@
   "folders":
   [
     {
-      "folder_exclude_patterns":
-      [
-        "*"
+      "folder_exclude_patterns": [
+        "build",
+        "design",
+        "dev",
+        "docs",
+        "meta",
+        "node_modules",
+        "sources",
+        "tests"
       ],
       "file_exclude_patterns":
       [
@@ -32,21 +38,9 @@
       "name": "TemplateXPatterns: JavaScript",
       "path": "dev/res/js-dev"
     }, {
-      "file_exclude_patterns":
-      [
-        "*.jpg",
-        "*.gif",
-        "*.png",
-        "*.ico",
-        "*.svg"
-      ],
       "follow_symlinks": true,
-      "name": "TemplateXPatterns: Meta",
-      "path": "meta"
-    }, {
-      "follow_symlinks": true,
-      "name": "TemplateXPatterns: Docs",
-      "path": "docs"
+      "name": "TemplateXPatterns: Tests",
+      "path": "test"
     }
   ]
 }
