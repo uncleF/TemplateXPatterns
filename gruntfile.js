@@ -181,6 +181,18 @@ module.exports = function(grunt) {
       reports: [`*.css`],
     },
 
+    connect: {
+      options: {
+        keepalive: true,
+        port: 8000
+      },
+      dev: {
+        options: {
+          base: project.dir
+        }
+      }
+    },
+
     watch: {
       options: {
         spawn: false
