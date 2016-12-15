@@ -97,7 +97,7 @@ module.exports = function (element) {
 
   function activate() {
     if (!active) {
-      eventTool.trigger(document, EVENT, false, 'UIEvents');
+      eventTool.trigger(document, EVENT, false, 'UIEvent');
       active = true;
       tab.classList.add(TAB_ACTIVE_CLASS_NAME);
       content.classList.add(CONTENT_ACTIVE_CLASS_NAME);

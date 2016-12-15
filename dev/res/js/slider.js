@@ -124,6 +124,9 @@ function init(object, navigationObject, pageClassName) {
   var sliderDotClassName;
   var sliderDotActiveClassName;
 
+  var sliderFixing;
+  var sliderChanging;
+
   var sliderMax;
   var activeSlideIndex;
   var activeSlideDot;
@@ -189,6 +192,13 @@ function init(object, navigationObject, pageClassName) {
     return animationFrame;
   }
 
+  function getStatus() {
+    return {
+      fixing: sliderFixing,
+      changing: sliderChanging
+    };
+  }
+
   /* Set */
 
   function setSlider() {
@@ -236,6 +246,11 @@ function init(object, navigationObject, pageClassName) {
     animationFrame = frame;
   }
 
+  function setStatus(fixing, changing) {
+    sliderFixing = fixing || sliderFixing;
+    sliderChanging = changing || sliderChanging;
+  }
+
   /* Slider Utilities */
 
   function updateDots() {
@@ -271,8 +286,9 @@ function init(object, navigationObject, pageClassName) {
   }
 
   function finalizeSlide() {
+    setStatus(false, false);
     getSlider().classList.remove(SLIDER_FIXING_CLASS_NAME, SLIDER_CHANGING_CLASS_NAME);
-    eventTool.unbind(slider, transition, finalizeSlide);
+    eventTool.unbind(getSlider(), transition, finalizeSlide);
   }
 
   function updateInteractionParameters(event) {
@@ -324,6 +340,7 @@ function init(object, navigationObject, pageClassName) {
   function fakeSwipe(fakeShift) {
     updateInteractionParameters();
     setPointDiffX(fakeShift);
+    setStatus(true, true);
     getSlider().classList.add(SLIDER_CHANGING_CLASS_NAME);
     fixSlider();
   }
@@ -343,8 +360,9 @@ function init(object, navigationObject, pageClassName) {
   }
 
   function positionSlider() {
-    eventTool.trigger(slider, SLIDER_EVENT, false, 'UIEvents');
-    eventTool.bind(slider, transition, finalizeSlide);
+    eventTool.trigger(getSlider(), SLIDER_EVENT, false, 'UIEvents');
+    eventTool.bind(getSlider(), transition, finalizeSlide);
+    setStatus(true, true);
     getSlider().classList.add(SLIDER_FIXING_CLASS_NAME);
     translateSlider(calculateCompleteDistance());
   }
@@ -360,7 +378,8 @@ function init(object, navigationObject, pageClassName) {
   /* Slider Interactions */
 
   function touchStart(event) {
-    if (!getSlider().classList.contains(SLIDER_FIXING_CLASS_NAME) || !getSlider().classList.contains(SLIDER_CHANGING_CLASS_NAME)) {
+    var status = getStatus();
+    if (!status.fixing || !status.changing) {
       updateInteractionParameters(event);
       eventTool.bind(document, 'touchmove', touchMove);
       eventTool.bind(document, 'touchend', touchEnd);
