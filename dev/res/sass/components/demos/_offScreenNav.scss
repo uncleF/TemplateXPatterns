@@ -1,0 +1,38 @@
+@import '../patterns/_tx-offScreenNav';
+
+
+
+/* Navigation */
+
+.navigation {
+  @extend %tx-offScreenNav;
+  position: fixed;
+  width: 400px;
+  height: 100%;
+  padding: 100px 50px 50px;
+  background: $black;
+  transition: $UITransitionSlow;
+
+  &-is-active {
+    @extend %tx-offScreenNav-is-active;
+  }
+
+}
+
+.navItems {
+  margin: 0;
+  list-style: none;
+}
+
+.navItem {
+  margin: 0;
+}
+
+.navLink {
+  @include tx-font-size(h1, none);
+  @include tx-link($white, $all: true);
+  @include tx-rhythm-padding(1, 1);
+  display: block;
+  text-decoration: none;
+  line-height: 1;
+}
