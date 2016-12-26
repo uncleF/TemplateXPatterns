@@ -940,6 +940,39 @@ body {
 }
 
 /* Overlay */
+/* Progress Hoder */
+.progressTrack {
+  stroke: #ccc;
+}
+
+.progressIndicator {
+  stroke: #337ab7;
+  stroke-dasharray: 0 10000;
+  stroke-dashoffset: 1;
+}
+
+.progressPercentage {
+  font-size: 39.81312px;
+  font-size: 2.48832rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  color: #337ab7;
+  text-align: center;
+  line-height: 200px;
+}
+
+.progressTrack, .progressIndicator {
+  -webkit-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+  -webkit-transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
+  stroke-width: 4px;
+  fill: none;
+}
+
 /* Sticky Footer */
 .stickyFooterDemo {
   display: -webkit-box;

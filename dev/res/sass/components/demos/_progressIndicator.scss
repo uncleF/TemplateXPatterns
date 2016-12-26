@@ -1,0 +1,17 @@
+@import '../patterns/_tx-progressIndicator';
+
+.progress {
+
+  &Track {
+    @extend %tx-progress-track;
+  }
+
+  &Indicator {
+    @extend %tx-progress-indicator;
+  }
+
+  &Percentage {
+    @extend %tx-progress-percentage;
+  }
+
+}
