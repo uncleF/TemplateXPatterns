@@ -1,0 +1,107 @@
+@import '../patterns/_tx-spinner';
+
+
+
+/* Spinner */
+
+$spinner-length: 622;
+
+$spinnerIndicator1-stroke: $blue;
+$spinnerIndicator2-stroke: $purple;
+$spinnerIndicator3-stroke: $red;
+
+.spinner {
+
+  &Track {
+    @extend %spinner-track;
+  }
+
+  &Indicator {
+    @extend %spinner-indicator;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+
+    &1 {
+      animation-name: spin1;
+      stroke: $spinnerIndicator1-stroke;
+    }
+
+    &2 {
+      animation-name: spin2;
+      stroke: $spinnerIndicator2-stroke;
+    }
+
+    &3 {
+      animation-name: spin3;
+      stroke: $spinnerIndicator3-stroke;
+    }
+
+  }
+
+}
+
+@keyframes spin1 {
+
+  0% {
+    stroke-dasharray: 0 0 0 622;
+  }
+
+  10% {
+    stroke-dasharray: 0 0 0 622;
+  }
+
+  50% {
+    stroke-dasharray: 0 0 622 0;
+  }
+
+  90% {
+    stroke-dasharray: 0 622 0 0;
+  }
+
+  100% {
+    stroke-dasharray: 0 622 0 0;
+  }
+
+}
+
+@keyframes spin2 {
+
+  0% {
+    stroke-dasharray: 0 0 0 622;
+  }
+
+  5% {
+    stroke-dasharray: 0 0 0 622;
+  }
+
+  50% {
+    stroke-dasharray: 0 0 622 0;
+  }
+
+  95% {
+    stroke-dasharray: 0 622 0 0;
+  }
+
+  100% {
+    stroke-dasharray: 0 622 0 0;
+  }
+
+}
+
+@keyframes spin3 {
+
+  0% {
+    stroke-dasharray: 0 0 0 622;
+  }
+
+  50% {
+    stroke-dasharray: 0 0 622 0;
+  }
+
+  100% {
+    stroke-dasharray: 0 622 0 0;
+  }
+
+}
+
+

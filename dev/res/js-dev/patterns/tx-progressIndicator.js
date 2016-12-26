@@ -53,7 +53,7 @@ module.exports = (id, className) => {
   }
 
   function calculatePercentage() {
-    return `${100 * progress}%`
+    return `${100 * progress}%`;
   }
 
   function calculateDashArray() {
