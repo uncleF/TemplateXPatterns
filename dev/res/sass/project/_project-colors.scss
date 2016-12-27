@@ -1,26 +1,58 @@
-// Colors
+// White
 
 $white: #fff;
-$red: #d9534f;
-$blue: #337ab7;
-$blueDark: #23527c;
+
+
+
+// Black
+
+$black: #000;
+$black-light: #333;
+
+
+
+// Gray
+
+$gray: #666;
+$gray-light: #ccc;
+$gray-dark: #4d4d4d;
+
+
+
+// Red
+
+$red: #ff3f2e;
+$red-light: #ff6969;
+$red-dark: #6e080c;
+
+
+
+// Blue
+
+$blue: #176191;
+$blue-light: #5698c4;
+$blue-dark: #0f4263;
+
+
+
+// Purple
+
 $purple: #6f5499;
-$gray: #ccc;
-$black: #333;
-
-$underlineOpacity: .5;
+$purple-light: #937bb7;
+$purple-dark: #302442;
 
 
 
-// Default Colors
+// Yellow
 
-$text: $black;
-$background: $white;
+$yellow: #d8d62c;
+$yellow-light: #ffda48;
+$yellow-dark: #f90;
 
-$print-color: $text;
-$print-background: $background;
 
-$link: $blue;
-$visited: $purple;
-$hover: $red;
-$active: $blueDark;
+
+// Green
+
+$green: #009448;
+$green-light: #90ee90;
+$green-dark: #185b3b;

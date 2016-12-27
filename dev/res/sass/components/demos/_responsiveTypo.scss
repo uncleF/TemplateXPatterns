@@ -1,0 +1,9 @@
+/* Responsive Typography */
+
+// @include tx-responsive-typo();
+
+.responsiveContent {
+  max-width: 1280px;
+  padding: 0 $gap;
+  margin: 0 auto;
+}
