@@ -1207,11 +1207,32 @@ body {
 
 /* Spinner */
 .spinnerTrack {
+  opacity: .25;
   stroke: #666;
 }
 
 .spinnerIndicator {
+  -webkit-animation-duration: 1.5s;
+          animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  stroke-width: 4px;
   stroke-dashoffset: 1;
+}
+
+.spinnerIndicator1 {
+  -webkit-animation-name: spin1;
+          animation-name: spin1;
+}
+
+.spinnerIndicator2 {
+  -webkit-animation-name: spin2;
+          animation-name: spin2;
+}
+
+.spinnerIndicator3 {
+  -webkit-animation-name: spin3;
+          animation-name: spin3;
 }
 
 .progressTrack, .progressIndicator, .spinnerTrack, .spinnerIndicator {
@@ -1219,130 +1240,128 @@ body {
           transform: rotate(-90deg);
   -webkit-transform-origin: 50% 50%;
           transform-origin: 50% 50%;
-  stroke-width: 4px;
   fill: none;
-}
-
-/* Spinner */
-.spinnerIndicator {
-  -webkit-animation-duration: 3s;
-          animation-duration: 3s;
-  -webkit-animation-iteration-count: infinite;
-          animation-iteration-count: infinite;
-}
-
-.spinnerIndicator1 {
-  -webkit-animation-name: spin1;
-          animation-name: spin1;
-  stroke: #176191;
-}
-
-.spinnerIndicator2 {
-  -webkit-animation-name: spin2;
-          animation-name: spin2;
-  stroke: #6f5499;
-}
-
-.spinnerIndicator3 {
-  -webkit-animation-name: spin3;
-          animation-name: spin3;
-  stroke: #ff3f2e;
 }
 
 @-webkit-keyframes spin1 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   10% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
-  50% {
-    stroke-dasharray: 0 0 622 0;
+  55% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   90% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
 }
 
 @keyframes spin1 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   10% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
-  50% {
-    stroke-dasharray: 0 0 622 0;
+  55% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   90% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
 }
 
 @-webkit-keyframes spin2 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   5% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   50% {
-    stroke-dasharray: 0 0 622 0;
+    stroke-dasharray: 0 0 621.72px 0;
+  }
+  60% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   95% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
 }
 
 @keyframes spin2 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   5% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
   50% {
-    stroke-dasharray: 0 0 622 0;
+    stroke-dasharray: 0 0 621.72px 0;
+  }
+  60% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   95% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
 }
 
 @-webkit-keyframes spin3 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
-  50% {
-    stroke-dasharray: 0 0 622 0;
+  45% {
+    stroke-dasharray: 0 0 621.72px 0;
+  }
+  65% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
 }
 
 @keyframes spin3 {
   0% {
-    stroke-dasharray: 0 0 0 622;
+    stroke-dasharray: 0 0 0 621.72px;
   }
-  50% {
-    stroke-dasharray: 0 0 622 0;
+  45% {
+    stroke-dasharray: 0 0 621.72px 0;
+  }
+  65% {
+    stroke-dasharray: 0 0 621.72px 0;
   }
   100% {
-    stroke-dasharray: 0 622 0 0;
+    stroke-dasharray: 0 621.72px 0 0;
   }
+}
+
+/* Spinner */
+.spinnerIndicator1 {
+  stroke: #176191;
+}
+
+.spinnerIndicator2 {
+  stroke: #6f5499;
+}
+
+.spinnerIndicator3 {
+  stroke: #ff3f2e;
 }
 
 /* Tabs */
