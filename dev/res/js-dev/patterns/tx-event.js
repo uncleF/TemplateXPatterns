@@ -13,7 +13,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback, true);
+  object.addEventListener(type, callback);
 }
 
 function unbind(object, type, callback) {
