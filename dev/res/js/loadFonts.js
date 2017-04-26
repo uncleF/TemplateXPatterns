@@ -11,8 +11,6 @@
 })();
 
 },{"./patterns/tx-loadFonts":2}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 var FontFaceObserver = require('fontfaceobserver/fontfaceobserver.js');

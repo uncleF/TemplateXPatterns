@@ -21,21 +21,18 @@
 })();
 
 },{"./patterns/tx-gMap":2}],2:[function(require,module,exports){
-/* jshint browser:true */
-/* global google */
-
 'use strict';
+
+/* global google */
 
 var markers = require('./tx-gMarkers');
 
 module.exports = function (mapID, centerCoords, markersCoords, markerImage) {
-
   var center = new google.maps.LatLng(centerCoords.lat, centerCoords.lon);
   var options = {
     center: center,
     zoom: 16
   };
-
   var dom = document.getElementById(mapID);
   var map = new google.maps.Map(dom, options);
 
@@ -48,17 +45,18 @@ module.exports = function (mapID, centerCoords, markersCoords, markerImage) {
 },{"./tx-gMarkers":3}],3:[function(require,module,exports){
 "use strict";
 
-/* jshint browser:true */
 /* global google */
 
 module.exports = function (map, markers, icon) {
-  return markers.map(function (marker) {
+  function newMarker(marker) {
     return new google.maps.Marker({
       position: new google.maps.LatLng(marker.lat, marker.lon),
       map: map,
       icon: icon
     });
-  });
+  }
+
+  return markers.map(newMarker);
 };
 
 },{}]},{},[1]);

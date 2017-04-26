@@ -13,15 +13,14 @@
 })();
 
 },{"./patterns/tx-togglable":3}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Event Data */
 
 function setData(event, data) {
-  event.data = data;
-  return event;
+  var newEvent = event;
+  newEvent.data = data;
+  return newEvent;
 }
 
 function getData(event) {
@@ -31,7 +30,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback);
+  object.addEventListener(type, callback, true);
 }
 
 function unbind(object, type, callback) {
@@ -57,9 +56,11 @@ function triggerCreateEventObject(object, eventName, propagate, data) {
   object.fireEvent('on' + eventName, event);
 }
 
-function trigger(object, eventName, propagate, eventType, data) {
-  propagate = propagate || false;
-  eventType = eventType || 'MouseEvents';
+function trigger(object, eventName) {
+  var propagate = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var eventType = arguments.length <= 3 || arguments[3] === undefined ? 'MouseEvents' : arguments[3];
+  var data = arguments[4];
+
   if (document.createEvent) {
     triggerCreateEvent(object, eventName, propagate, eventType, data);
   } else {
@@ -82,20 +83,17 @@ exports.trigger = trigger;
 exports.target = target;
 
 },{}],3:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
-var eventTools = require('./tx-event');
+var eventTool = require('./tx-event');
 
 var ACTIVE_CLASS_NAME_SUFFIX = '-is-active';
 
 module.exports = function (node, callback) {
-
-  var trigger;
-  var task;
-  var activeClassName;
-  var active;
+  var trigger = void 0;
+  var task = void 0;
+  var activeClassName = void 0;
+  var active = void 0;
 
   /* Actions */
 
@@ -121,7 +119,7 @@ module.exports = function (node, callback) {
     }
   }
 
-  function toggle(event) {
+  function toggle() {
     if (active) {
       deactivate();
     } else {
@@ -137,11 +135,11 @@ module.exports = function (node, callback) {
   }
 
   function initInteractions() {
-    eventTools.bind(trigger, 'click', onClick);
+    eventTool.bind(trigger, 'click', onClick);
   }
 
   function removeInteractions() {
-    eventTools.unbind(trigger, 'click', onClick);
+    eventTool.unbind(trigger, 'click', onClick);
   }
 
   /* Initialization */

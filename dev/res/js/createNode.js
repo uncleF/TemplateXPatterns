@@ -13,8 +13,6 @@
 })();
 
 },{"./patterns/tx-createNode":2}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 module.exports = function (html) {

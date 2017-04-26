@@ -5,7 +5,7 @@
 
 /* Inline-block IE */
 /* Pseudo Element */
-.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .icon:before, .icon:after, .slider:before, .slidePrev:before, .slideNext:before, .slidePrev:after, .slideNext:after, .tooltip:after {
+.checkboxLabel:before, .radioLabel:before, .checkbox:checked + .checkboxLabel:after, .radio:checked + .radioLabel:after, .navToggle:before, .navToggle:after, .navToggleLabel:before, .icon:before, .icon:after, .slidePrev:before, .slideNext:before, .slidePrev:after, .slideNext:after, .tooltip:after {
   position: absolute;
   content: '';
   display: block;
@@ -319,7 +319,6 @@ a {
   color: #176191;
   -webkit-tap-highlight-color: rgba(15, 66, 99, 0.25);
   text-decoration: underline;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
 }
 
@@ -409,11 +408,6 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   opacity: 1;
 }
 
-input::-moz-placeholder, textarea::-moz-placeholder {
-  color: #666;
-  opacity: 1;
-}
-
 input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   color: #666;
   opacity: 1;
@@ -466,7 +460,6 @@ textarea {
   height: 44px;
   padding: 0 28px;
   border: 2px solid #176191;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
 }
 
@@ -713,7 +706,6 @@ body {
   background: #ff3f2e;
   -webkit-transform-origin: 50% 50%;
           transform-origin: 50% 50%;
-  -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
@@ -794,7 +786,6 @@ body {
 .icon {
   position: relative;
   padding: 0 0 0 20px;
-  -webkit-transition: .25s;
   transition: .25s;
 }
 
@@ -804,7 +795,6 @@ body {
   width: 16px;
   height: 11px;
   margin: -5px 0 0;
-  -webkit-transition: inherit;
   transition: inherit;
 }
 
@@ -881,7 +871,6 @@ body {
   height: 100%;
   padding: 100px 50px 50px;
   background: #000;
-  -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
@@ -915,7 +904,6 @@ body {
   opacity: 0;
   -webkit-transform: translateX(-100%) translateZ(0);
           transform: translateX(-100%) translateZ(0);
-  -webkit-transition: opacity 0.2s, visibility 0.2s step-end, -webkit-transform 0.2s step-end;
   transition: opacity 0.2s, visibility 0.2s step-end, -webkit-transform 0.2s step-end;
   transition: opacity 0.2s, visibility 0.2s step-end, transform 0.2s step-end;
   transition: opacity 0.2s, visibility 0.2s step-end, transform 0.2s step-end, -webkit-transform 0.2s step-end;
@@ -926,7 +914,6 @@ body {
   opacity: 1;
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
-  -webkit-transition: opacity 0.2s, visibility 0.2s step-start, -webkit-transform 0.2s step-start;
   transition: opacity 0.2s, visibility 0.2s step-start, -webkit-transform 0.2s step-start;
   transition: opacity 0.2s, visibility 0.2s step-start, transform 0.2s step-start;
   transition: opacity 0.2s, visibility 0.2s step-start, transform 0.2s step-start, -webkit-transform 0.2s step-start;
@@ -1032,17 +1019,15 @@ body {
           transform: translateZ(0);
 }
 
-.slider:before {
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 10000px;
-}
-
 .slide {
   width: 100%;
   vertical-align: top;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
 }
 
 /* Swipe */
@@ -1072,12 +1057,10 @@ body {
 }
 
 .slider-is-fixing {
-  -webkit-transition: .25s;
   transition: .25s;
 }
 
 .slider-is-changing {
-  -webkit-transition: .5s;
   transition: .5s;
 }
 
@@ -1164,7 +1147,6 @@ body {
   opacity: 0;
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
-  -webkit-transition: inherit;
   transition: inherit;
 }
 
@@ -1428,7 +1410,6 @@ body {
   background: #176191;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
 }
 
@@ -1459,7 +1440,6 @@ body {
   z-index: -2;
   width: 12px;
   height: 12px;
-  background: -webkit-linear-gradient(135deg, #176191, #176191 7.25px, transparent 7.25px, transparent);
   background: linear-gradient(-45deg, #176191, #176191 7.25px, transparent 7.25px, transparent);
   -webkit-transform: translateX(-50%) translateY(11px) translateZ(0) rotate(45deg);
           transform: translateX(-50%) translateY(11px) translateZ(0) rotate(45deg);

@@ -32,15 +32,14 @@
 })();
 
 },{"./patterns/tx-gestures":3}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Event Data */
 
 function setData(event, data) {
-  event.data = data;
-  return event;
+  var newEvent = event;
+  newEvent.data = data;
+  return newEvent;
 }
 
 function getData(event) {
@@ -50,7 +49,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback);
+  object.addEventListener(type, callback, true);
 }
 
 function unbind(object, type, callback) {
@@ -76,9 +75,11 @@ function triggerCreateEventObject(object, eventName, propagate, data) {
   object.fireEvent('on' + eventName, event);
 }
 
-function trigger(object, eventName, propagate, eventType, data) {
-  propagate = propagate || false;
-  eventType = eventType || 'MouseEvents';
+function trigger(object, eventName) {
+  var propagate = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var eventType = arguments.length <= 3 || arguments[3] === undefined ? 'MouseEvents' : arguments[3];
+  var data = arguments[4];
+
   if (document.createEvent) {
     triggerCreateEvent(object, eventName, propagate, eventType, data);
   } else {
@@ -101,24 +102,23 @@ exports.trigger = trigger;
 exports.target = target;
 
 },{}],3:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 var eventManager = require('./tx-event');
 
+var SINGLE_SWIPE = 'singleswipe';
+var DOUBLE_EVENT = 'doubleswipe';
+var PINCH_EVENT = 'pinch';
+var PINCH_THRESHOLD = 100;
+
 module.exports = function (catcher) {
-
-  var SINGLE_SWIPE = 'singleswipe';
-  var DOUBLE_EVENT = 'doubleswipe';
-  var PINCH_EVENT = 'pinch';
-  var PINCH_THRESHOLD = 100;
-
   var downTouches = void 0;
   var downDistance = void 0;
 
   function calculateDistance(touches) {
-    return Math.sqrt(Math.pow(touches[1].clientX - touches[0].clientX, 2) + Math.pow(touches[1].clientY - touches[0].clientY, 2));
+    var sqrDiffX = Math.pow(touches[1].clientX - touches[0].clientX, 2);
+    var sqrDiffY = Math.pow(touches[1].clientY - touches[0].clientY, 2);
+    return Math.sqrt(sqrDiffX + sqrDiffY);
   }
 
   function claculateDelta(touch) {
@@ -129,21 +129,21 @@ module.exports = function (catcher) {
   }
 
   function onSingleToucheMove(event) {
-    requestAnimationFrame(function (_) {
+    requestAnimationFrame(function () {
       var delta = claculateDelta(event.touches[0]);
       eventManager.trigger(catcher, SINGLE_SWIPE, false, 'UIEvent', { delta: delta });
     });
   }
 
   function onDoubleToucheMove(event) {
-    requestAnimationFrame(function (_) {
+    requestAnimationFrame(function () {
       var delta = claculateDelta(event.touches[0]);
       eventManager.trigger(catcher, DOUBLE_EVENT, false, 'UIEvent', { delta: delta });
     });
   }
 
   function onPinch(event) {
-    requestAnimationFrame(function (_) {
+    requestAnimationFrame(function () {
       var delta = calculateDistance(event.touches) - downDistance;
       eventManager.trigger(catcher, PINCH_EVENT, false, 'UIEvent', { delta: delta });
     });

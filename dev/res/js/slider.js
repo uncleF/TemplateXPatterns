@@ -1,6 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 module.exports = function (html) {
@@ -10,15 +8,14 @@ module.exports = function (html) {
 };
 
 },{}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Event Data */
 
 function setData(event, data) {
-  event.data = data;
-  return event;
+  var newEvent = event;
+  newEvent.data = data;
+  return newEvent;
 }
 
 function getData(event) {
@@ -28,7 +25,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback);
+  object.addEventListener(type, callback, true);
 }
 
 function unbind(object, type, callback) {
@@ -54,9 +51,11 @@ function triggerCreateEventObject(object, eventName, propagate, data) {
   object.fireEvent('on' + eventName, event);
 }
 
-function trigger(object, eventName, propagate, eventType, data) {
-  propagate = propagate || false;
-  eventType = eventType || 'MouseEvents';
+function trigger(object, eventName) {
+  var propagate = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var eventType = arguments.length <= 3 || arguments[3] === undefined ? 'MouseEvents' : arguments[3];
+  var data = arguments[4];
+
   if (document.createEvent) {
     triggerCreateEvent(object, eventName, propagate, eventType, data);
   } else {
@@ -79,9 +78,12 @@ exports.trigger = trigger;
 exports.target = target;
 
 },{}],3:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
+
+var eventTool = require('./tx-event');
+var createNode = require('./tx-createNode');
+var transition = require('./tx-transition')();
+var translateGallery = require('./tx-translate').css;
 
 var SLIDE_THRESHOLD = 15;
 var NEXT_SHIFT = 50;
@@ -94,11 +96,6 @@ var SLIDE_ACTIVE_CLASS_NAME_SUFFIX = '-is-active';
 var DOT_NAVIGATION_CLASS_NAME = 'js-dotsNavigation';
 var DOT_CLASS_NAME = 'js-dotsPage';
 var DOT_ACTIVE_CLASS_NAME = '' + DOT_CLASS_NAME + SLIDE_ACTIVE_CLASS_NAME_SUFFIX;
-
-var eventTool = require('./tx-event');
-var createNode = require('./tx-createNode');
-var transition = require('./tx-transition')();
-var translateGallery = require('./tx-translate').css;
 
 /* Dots */
 
@@ -118,25 +115,20 @@ function dots(size, listClassName, pageClassName) {
 /* Slider Constructor */
 
 function init(object, navigationObject, pageClassName) {
-
-  var slider;
-  var sliderDots;
-  var sliderDotClassName;
-  var sliderDotActiveClassName;
-
-  var sliderFixing;
-  var sliderChanging;
-
-  var sliderMax;
-  var activeSlideIndex;
-  var activeSlideDot;
-
-  var pointStartX;
-  var pointShift;
-  var pointDiffX;
-  var positionStart;
-
-  var animationFrame;
+  var slider = void 0;
+  var sliderDots = void 0;
+  var sliderDotClassName = void 0;
+  var sliderDotActiveClassName = void 0;
+  var sliderFixing = void 0;
+  var sliderChanging = void 0;
+  var sliderMax = void 0;
+  var activeSlideIndex = void 0;
+  var activeSlideDot = void 0;
+  var pointStartX = void 0;
+  var pointShift = void 0;
+  var pointDiffX = void 0;
+  var positionStart = void 0;
+  var animationFrame = void 0;
 
   /* Get */
 
@@ -188,7 +180,7 @@ function init(object, navigationObject, pageClassName) {
     return positionStart;
   }
 
-  function getAnimationFrame(frame) {
+  function getAnimationFrame() {
     return animationFrame;
   }
 
@@ -247,8 +239,8 @@ function init(object, navigationObject, pageClassName) {
   }
 
   function setStatus(fixing, changing) {
-    sliderFixing = fixing || sliderFixing;
-    sliderChanging = changing || sliderChanging;
+    sliderFixing = fixing;
+    sliderChanging = changing;
   }
 
   /* Slider Utilities */
@@ -288,7 +280,7 @@ function init(object, navigationObject, pageClassName) {
   function finalizeSlide() {
     setStatus(false, false);
     getSlider().classList.remove(SLIDER_FIXING_CLASS_NAME, SLIDER_CHANGING_CLASS_NAME);
-    eventTool.unbind(getSlider(), transition, finalizeSlide);
+    getSlider().removeEventListener(transition, finalizeSlide);
   }
 
   function updateInteractionParameters(event) {
@@ -337,6 +329,22 @@ function init(object, navigationObject, pageClassName) {
     translateSlider(calculateCompleteDistance());
   }
 
+  function positionSlider() {
+    eventTool.trigger(getSlider(), SLIDER_EVENT, false, 'UIEvents');
+    getSlider().addEventListener(transition, finalizeSlide);
+    setStatus(true, true);
+    getSlider().classList.add(SLIDER_FIXING_CLASS_NAME);
+    translateSlider(calculateCompleteDistance());
+  }
+
+  function fixSlider() {
+    if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
+      updateIndex();
+      updateDots();
+      positionSlider();
+    }
+  }
+
   function fakeSwipe(fakeShift) {
     updateInteractionParameters();
     setPointDiffX(fakeShift);
@@ -359,35 +367,11 @@ function init(object, navigationObject, pageClassName) {
     }
   }
 
-  function positionSlider() {
-    eventTool.trigger(getSlider(), SLIDER_EVENT, false, 'UIEvents');
-    eventTool.bind(getSlider(), transition, finalizeSlide);
-    setStatus(true, true);
-    getSlider().classList.add(SLIDER_FIXING_CLASS_NAME);
-    translateSlider(calculateCompleteDistance());
-  }
-
-  function fixSlider() {
-    if (Math.abs(pointDiffX) > SLIDE_THRESHOLD) {
-      updateIndex();
-      updateDots();
-      positionSlider();
-    }
-  }
-
   /* Slider Interactions */
-
-  function touchStart(event) {
-    var status = getStatus();
-    if (!status.fixing || !status.changing) {
-      updateInteractionParameters(event);
-      eventTool.bind(document, 'touchmove', touchMove);
-      eventTool.bind(document, 'touchend', touchEnd);
-    }
-  }
 
   function touchMove(event) {
     setPointDiffX(event.touches[0].pageX - getPointStartX());
+    console.log(Math.abs(getPointDiffX()) > SLIDE_THRESHOLD);
     if (Math.abs(getPointDiffX()) > SLIDE_THRESHOLD) {
       event.preventDefault();
       setAnimationFrame(requestAnimationFrame(shiftSlider));
@@ -395,14 +379,24 @@ function init(object, navigationObject, pageClassName) {
   }
 
   function touchEnd() {
-    eventTool.unbind(document, 'touchmove', touchMove);
-    eventTool.unbind(document, 'touchend', touchEnd);
+    document.removeEventListener('touchmove', touchMove, true);
+    document.removeEventListener('touchend', touchEnd);
     cancelAnimationFrame(getAnimationFrame());
     requestAnimationFrame(fixSlider);
   }
 
-  function interactions() {
-    eventTool.bind(getSlider(), 'touchstart', touchStart);
+  function touchStart(event) {
+    event.preventDefault();
+    var status = getStatus();
+    if (!status.fixing || !status.changing) {
+      updateInteractionParameters(event);
+      document.addEventListener('touchmove', touchMove, true);
+      document.addEventListener('touchend', touchEnd);
+    }
+  }
+
+  function subscribe() {
+    getSlider().parentElement.addEventListener('touchstart', touchStart);
   }
 
   /* Slider Inititalization */
@@ -416,12 +410,12 @@ function init(object, navigationObject, pageClassName) {
     setActiveSlideDot();
   }
 
-  function init() {
+  function initSlider() {
     setDefaultValues();
-    interactions();
+    subscribe();
   }
 
-  init();
+  initSlider();
 
   /* Slider Interface */
 
@@ -438,39 +432,34 @@ exports.dots = dots;
 exports.init = init;
 
 },{"./tx-createNode":1,"./tx-event":2,"./tx-transition":4,"./tx-translate":5}],4:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
-module.exports = function (_) {
-  var transition;
+module.exports = function () {
+  var transitionEvents = ['transitionend', 'oTransitionEnd', 'MSTransitionEnd', 'transitionend', 'webkitTransitionEnd'];
+  var transitions = ['transition', 'oTransition', 'MSTransition', 'MozTransition', 'WebkitTransition'];
   var element = document.createElement('element');
-  var transitions = {
-    'transition': 'transitionend',
-    'oTransition': 'oTransitionEnd',
-    'MSTransition': 'MSTransitionEnd',
-    'MozTransition': 'transitionend',
-    'WebkitTransition': 'webkitTransitionEnd'
-  };
-  for (transition in transitions) {
-    if (element.style[transition] !== undefined) {
-      return transitions[transition];
+  var transitionEvent = void 0;
+  transitions.some(function (transition, index) {
+    var condition = element.style[transition] !== undefined;
+    if (condition) {
+      transitionEvent = transitionEvents[index];
     }
-  }
+    return condition;
+  });
+  return transitionEvent;
 };
 
 },{}],5:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Utilities */
 
 function properties(axis, distance) {
   var property = 'translate' + axis.toUpperCase() + '(' + distance + ')';
+  var propertyLayer = property + ' translateZ(0)';
   return {
     property: property,
-    propertyLayer: property + ' translateZ(0)'
+    propertyLayer: propertyLayer
   };
 }
 
@@ -483,7 +472,7 @@ function translateCSS(axis, distance) {
     '-moz-transform': css.propertyLayer,
     '-ms-transform': css.property,
     '-o-transform': css.property,
-    'transform': css.propertyLayer
+    transform: css.propertyLayer
   };
 }
 

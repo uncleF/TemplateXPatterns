@@ -1,13 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Event Data */
 
 function setData(event, data) {
-  event.data = data;
-  return event;
+  var newEvent = event;
+  newEvent.data = data;
+  return newEvent;
 }
 
 function getData(event) {
@@ -17,7 +16,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback);
+  object.addEventListener(type, callback, true);
 }
 
 function unbind(object, type, callback) {
@@ -43,9 +42,11 @@ function triggerCreateEventObject(object, eventName, propagate, data) {
   object.fireEvent('on' + eventName, event);
 }
 
-function trigger(object, eventName, propagate, eventType, data) {
-  propagate = propagate || false;
-  eventType = eventType || 'MouseEvents';
+function trigger(object, eventName) {
+  var propagate = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var eventType = arguments.length <= 3 || arguments[3] === undefined ? 'MouseEvents' : arguments[3];
+  var data = arguments[4];
+
   if (document.createEvent) {
     triggerCreateEvent(object, eventName, propagate, eventType, data);
   } else {
@@ -68,12 +69,9 @@ exports.trigger = trigger;
 exports.target = target;
 
 },{}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 var eventManager = require('./tx-event');
-
 var task = void 0;
 
 function go(url) {

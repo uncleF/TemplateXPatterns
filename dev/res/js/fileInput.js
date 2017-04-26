@@ -11,15 +11,14 @@
 })();
 
 },{"./patterns/tx-fileInput":3}],2:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 /* Event Data */
 
 function setData(event, data) {
-  event.data = data;
-  return event;
+  var newEvent = event;
+  newEvent.data = data;
+  return newEvent;
 }
 
 function getData(event) {
@@ -29,7 +28,7 @@ function getData(event) {
 /* Event Binding */
 
 function bind(object, type, callback) {
-  object.addEventListener(type, callback);
+  object.addEventListener(type, callback, true);
 }
 
 function unbind(object, type, callback) {
@@ -55,9 +54,11 @@ function triggerCreateEventObject(object, eventName, propagate, data) {
   object.fireEvent('on' + eventName, event);
 }
 
-function trigger(object, eventName, propagate, eventType, data) {
-  propagate = propagate || false;
-  eventType = eventType || 'MouseEvents';
+function trigger(object, eventName) {
+  var propagate = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var eventType = arguments.length <= 3 || arguments[3] === undefined ? 'MouseEvents' : arguments[3];
+  var data = arguments[4];
+
   if (document.createEvent) {
     triggerCreateEvent(object, eventName, propagate, eventType, data);
   } else {
@@ -80,8 +81,6 @@ exports.trigger = trigger;
 exports.target = target;
 
 },{}],3:[function(require,module,exports){
-/* jshint browser:true */
-
 'use strict';
 
 var eventTool = require('./tx-event');
@@ -125,20 +124,19 @@ function wrapInput(className, input, wrap, value, button) {
 /* Field Constructor */
 
 function fileInput(field, text) {
-
-  var input;
-  var className;
-  var wrap;
-  var value;
-  var button;
+  var input = void 0;
+  var className = void 0;
+  var wrap = void 0;
+  var value = void 0;
+  var button = void 0;
 
   /* Field Interactions */
 
-  function onChange(event) {
-    value.textContent = input.value.split('\\')[2];
+  function onChange() {
+    value.textContent = input.value.split('\\').pop();
   }
 
-  function onWrapClick(event) {
+  function onWrapClick() {
     eventTool.trigger(input, 'click');
   }
 
