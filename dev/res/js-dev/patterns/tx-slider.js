@@ -1,6 +1,6 @@
 const eventTool = require('./tx-event');
 const createNode = require('./tx-createNode');
-const transition = require('./tx-transition')();
+const transition = require('./tx-transition')('transition', 'end');
 const translateGallery = require('./tx-translate').css;
 
 const SLIDE_THRESHOLD = 15;
@@ -289,7 +289,6 @@ function init(object, navigationObject, pageClassName) {
 
   function touchMove(event) {
     setPointDiffX(event.touches[0].pageX - getPointStartX());
-    console.log(Math.abs(getPointDiffX()) > SLIDE_THRESHOLD);
     if (Math.abs(getPointDiffX()) > SLIDE_THRESHOLD) {
       event.preventDefault();
       setAnimationFrame(requestAnimationFrame(shiftSlider));
@@ -330,7 +329,7 @@ function init(object, navigationObject, pageClassName) {
 
   function initSlider() {
     setDefaultValues();
-    subscribe()
+    subscribe();
   }
 
   initSlider();

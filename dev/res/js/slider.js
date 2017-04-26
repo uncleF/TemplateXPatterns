@@ -82,7 +82,7 @@ exports.target = target;
 
 var eventTool = require('./tx-event');
 var createNode = require('./tx-createNode');
-var transition = require('./tx-transition')();
+var transition = require('./tx-transition')('transition', 'end');
 var translateGallery = require('./tx-translate').css;
 
 var SLIDE_THRESHOLD = 15;
@@ -371,7 +371,6 @@ function init(object, navigationObject, pageClassName) {
 
   function touchMove(event) {
     setPointDiffX(event.touches[0].pageX - getPointStartX());
-    console.log(Math.abs(getPointDiffX()) > SLIDE_THRESHOLD);
     if (Math.abs(getPointDiffX()) > SLIDE_THRESHOLD) {
       event.preventDefault();
       setAnimationFrame(requestAnimationFrame(shiftSlider));
@@ -434,9 +433,16 @@ exports.init = init;
 },{"./tx-createNode":1,"./tx-event":2,"./tx-transition":4,"./tx-translate":5}],4:[function(require,module,exports){
 'use strict';
 
-module.exports = function () {
-  var transitionEvents = ['transitionend', 'oTransitionEnd', 'MSTransitionEnd', 'transitionend', 'webkitTransitionEnd'];
-  var transitions = ['transition', 'oTransition', 'MSTransition', 'MozTransition', 'WebkitTransition'];
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+module.exports = function (event, state) {
+  var eventEnd = '' + event + state;
+  var eventCap = capitalize(event);
+  var eventEndCap = '' + capitalize(event) + capitalize(state);
+  var transitionEvents = [eventEnd, 'o' + eventEndCap, 'MS' + eventEndCap, eventEnd, 'webkit' + eventEndCap];
+  var transitions = [event, 'o' + eventCap, 'MS' + eventCap, 'Moz' + eventCap, 'Webkit' + eventCap];
   var element = document.createElement('element');
   var transitionEvent = void 0;
   transitions.some(function (transition, index) {
