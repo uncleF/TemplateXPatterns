@@ -1,30 +1,21 @@
-/* jshint browser:true */
+import gestures from 'patterns/tx-gestures';
 
-(function() {
+const catcher = document.body;
+const demo = document.getElementById('gesture');
 
-  let gestures = require('./patterns/tx-gestures');
+function onSingleSwipe(event) {
+  demo.textContent = `Single swipe: ${event.data.delta.x}, ${event.data.delta.y}`;
+}
 
-  let catcher;
-  let demo;
+function onDoubleSwipe(event) {
+  demo.textContent = `Double swipe: ${event.data.delta.x}, ${event.data.delta.y}`;
+}
 
-  function onSingleSwipe(event) {
-    demo.textContent = `Single swipe: ${event.data.delta.x}, ${event.data.delta.y}`;
-  }
+function onPinch(event) {
+  demo.textContent = `Pinch: ${event.data.delta}`;
+}
 
-  function onDoubleSwipe(event) {
-    demo.textContent = `Double swipe: ${event.data.delta.x}, ${event.data.delta.y}`;
-  }
-
-  function onPinch(event) {
-    demo.textContent = `Pinch: ${event.data.delta}`;
-  }
-
-  catcher = document.body;
-  demo = document.getElementById('gesture');
-
-  gestures(catcher);
-  catcher.addEventListener('singleswipe', onSingleSwipe);
-  catcher.addEventListener('doubleswipe', onDoubleSwipe);
-  catcher.addEventListener('pinch', onPinch);
-
-})();
+gestures(catcher);
+catcher.addEventListener('gesture:singleswipe', onSingleSwipe);
+catcher.addEventListener('gesture:doubleswipe', onDoubleSwipe);
+catcher.addEventListener('gesture:pinch', onPinch);

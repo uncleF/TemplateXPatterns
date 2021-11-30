@@ -1,9 +1,3 @@
-/* jshint browser:true */
+import * as fileInput from 'patterns/tx-fileInput';
 
-(function() {
-
-  var fileInput = require('./patterns/tx-fileInput');
-
-  fileInput.init('#file', 'Browse');
-
-})();
+fileInput.init('#file', 'Browse');

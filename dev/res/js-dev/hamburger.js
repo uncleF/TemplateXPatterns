@@ -1,11 +1,6 @@
 /* jshint browser:true */
 
-(function() {
+import togglable from 'patterns/tx-togglable';
 
-  var togglable = require('./patterns/tx-togglable');
-
-  var trigger = document.getElementById('navToggle');
-
-  togglable(trigger);
-
-})();
+const trigger = document.getElementById('navToggle');
+togglable(trigger);

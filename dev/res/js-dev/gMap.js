@@ -1,19 +1,13 @@
-/* jshint browser:true */
+import gMap from 'patterns/tx-gMap';
 
-(function() {
+const CENTER = {
+  lat: 45.0861852,
+  lon: 39.0168742,
+};
 
-  let map = require('./patterns/tx-gMap');
+const MARKERS = [{
+  lat: 45.0861852,
+  lon: 39.0168742,
+}];
 
-  const center = {
-    lat: 45.0861852,
-    lon: 39.0168742
-  };
-
-  const markers = [{
-    lat: 45.0861852,
-    lon: 39.0168742
-  }];
-
-  map('map', center, markers);
-
-})();
+gMap('map', CENTER, MARKERS);

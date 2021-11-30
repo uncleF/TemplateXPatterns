@@ -1,9 +1,3 @@
-/* jshint browser:true */
+import loadFonts from 'patterns/tx-loadFonts';
 
-(function() {
-
-  var loadFonts = require('./patterns/tx-loadFonts');
-
-  loadFonts('RobotoCritical', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic'], 'roboto', document.documentElement);
-
-})();
+loadFonts('RobotoCritical', ['Roboto', 'RobotoBold', 'RobotoItalic', 'RobotoBoldItalic']);

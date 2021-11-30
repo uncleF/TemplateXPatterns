@@ -1,8 +1,12 @@
-@import '../patterns/_tx-progressIndicator';
+@import 'patterns/_tx-progressIndicator';
 
 
 
 /* Progress */
+
+.progressHolder {
+  position: relative;
+}
 
 .progress {
 

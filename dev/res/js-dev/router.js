@@ -2,7 +2,7 @@
 
 (function() {
 
-  const router = require('./patterns/tx-router');
+  const router = require('patterns/tx-router');
 
   const NAV_LINK_CLASS = 'navLink';
 

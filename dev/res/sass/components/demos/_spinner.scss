@@ -1,12 +1,12 @@
-@import '../patterns/_tx-spinner';
+@import 'patterns/_tx-spinner';
 
 
 
 /* Spinner */
 
-$spinnerIndicator1-stroke: $blue;
-$spinnerIndicator2-stroke: $purple;
-$spinnerIndicator3-stroke: $red;
+$spinnerIndicator1-stroke: $green-darkest;
+$spinnerIndicator2-stroke: $green;
+$spinnerIndicator3-stroke: $green-lightest;
 
 .spinner {
 

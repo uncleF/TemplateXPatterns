@@ -1,9 +1,3 @@
-/* jshint browser:true */
+import offScreenNav from 'patterns/tx-offScreenNav';
 
-(function() {
-
-  var offScreenNav = require('./patterns/tx-offScreenNav');
-
-  offScreenNav('navToggle', 'navigation');
-
-})();
+offScreenNav('navToggle', 'navigation');

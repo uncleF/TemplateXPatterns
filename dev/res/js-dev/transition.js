@@ -2,7 +2,7 @@
 
 (function() {
 
-  var whichTransition = require('./patterns/tx-transition');
+  var whichTransition = require('patterns/tx-transition');
 
   console.log(whichTransition());
 

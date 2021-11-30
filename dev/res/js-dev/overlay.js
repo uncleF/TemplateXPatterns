@@ -1,18 +1,12 @@
-/* jshint browser:true */
+import * as eventManager from 'patterns/tx-eventManager';
+import togglable from 'patterns/tx-togglable';
 
-(function() {
+const trigger = document.getElementById('overlayTrigger');
+const overlay = togglable(document.getElementById('overlay'));
 
-  var eventTool = require('./patterns/tx-event');
-  var togglable = require('./patterns/tx-togglable');
+function onClick(event) {
+  event.preventDefault();
+  overlay.toggle();
+}
 
-  var trigger = document.getElementById('overlayTrigger');
-  var overlay = togglable(document.getElementById('overlay'));
-
-  function onClick(event) {
-    event.preventDefault();
-    overlay.toggle();
-  }
-
-  eventTool.bind(trigger, 'click', onClick);
-
-})();
+eventManager.bind(trigger, 'click', onClick);

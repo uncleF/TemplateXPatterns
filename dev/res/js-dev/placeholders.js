@@ -1,12 +1,5 @@
-/* jshint browser:true */
 /* global Modernizr */
 
-(function() {
+import * as placeholders from 'patterns/tx-placeholders';
 
-  var placeholders = require('./patterns/tx-placeholder');
-
-  if (!Modernizr.input.placeholder) {
-    placeholders.init();
-  }
-
-})();
+if (!Modernizr.input.placeholder) placeholders.init();

@@ -1,11 +1,4 @@
-/* jshint browser:true */
+import progressIndicator from 'patterns/tx-progressIndicator';
 
-(function() {
-
-  let indicator = require('./patterns/tx-progressIndicator');
-
-  let indicatorInstance = indicator('progressHolder', 'progress');
-
-  indicatorInstance.set(0.10);
-
-})();
+const indicator = progressIndicator('progressHolder', 'progress');
+indicator.set(0.20);
